@@ -123,7 +123,7 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
-### Alternativamente, usando Docke
+### Alternativamente, usando Docker
 
 ```bash
 docker-compose up --build
