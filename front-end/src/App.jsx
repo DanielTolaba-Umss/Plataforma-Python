@@ -2,7 +2,11 @@ import AppRouter from "./routes/AppRouter";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-  return <AppRouter />;
+  return (
+    <div className="App">
+      <AppRouter />
+    </div>
+  );
 }
 
 export default App;
