@@ -1,8 +1,19 @@
-import AppRouter from "./routes/AppRouter";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import AppRutas from "./rutas/AppRutas";
+import Sidebar from "./componentes/layout/Sidebar";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-  return <AppRouter />;
+  return (
+    <>
+      <div
+        className="contenedorPrincipal"
+        style={{ display: "flex", justifyContent: "flex-start" }}
+      >
+        <Sidebar />
+        <AppRutas />
+      </div>
+    </>
+  );
 }
 
 export default App;

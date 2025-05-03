@@ -14,6 +14,7 @@
     "bootstrap": "^5.3.5",
     "front-end": "file:",
     "jsdoc": "^4.0.4",
+    "lucide-react": "^0.507.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
