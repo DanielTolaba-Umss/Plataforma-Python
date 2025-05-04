@@ -86,10 +86,18 @@ const GestionCursos = () => {
   return (
     <div className="min-vh-100 bg-light w-100">
       {/* Header */}
-      <header className="bg-white shadow-sm border-bottom">
+      <header>
         <div className="container py-3 d-flex justify-content-between align-items-center">
-          <h1 className="text-success fw-bold fs-4">Gestión de Cursos</h1>
-          <GraduationCapIcon className="h-6 w-6 text-success" />
+          <h1 className="fw-bold text-dark mb-4" style={{ fontSize: '1.875rem' }}>
+            Gestión de Cursos
+          </h1>
+
+          <div className="admin-profile d-flex align-items-center gap-2">
+            <span className="fw-semibold">Docente</span>
+            <div className="admin-avatar bg-success text-white rounded-circle d-flex justify-content-center align-items-center" style={{ width: '40px', height: '40px' }}>
+              GC
+            </div>
+          </div>
         </div>
       </header>
 

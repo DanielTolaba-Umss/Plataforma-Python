@@ -1,5 +1,5 @@
 import { useState } from "react";
-import './estilos/Dashboard.module.css';
+import "../docente/estilos/Dashboard.css";
 // Datos de resumen
 const summaryData = [
   { label: "Estudiantes", value: 120 },
@@ -257,7 +257,6 @@ export default function TeacherDashboard() {
   return (
     <div className="dashboard">
       <h1 className="dashboard-title">Dashboard Docente</h1>
-      
       {/* Tabs */}
       <div className="tabs">
         <button 
