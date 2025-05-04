@@ -1,4 +1,4 @@
-import AppRutas from "./rutas/AppRutas";
+import RutasAdmin from "./rutas/RutasAdmin";
 import Sidebar from "./componentes/layout/Sidebar";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -10,7 +10,7 @@ function App() {
         style={{ display: "flex", justifyContent: "flex-start" }}
       >
         <Sidebar />
-        <AppRutas />
+        <RutasAdmin />
       </div>
     </>
   );
