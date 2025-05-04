@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import { GraduationCapIcon, FileTextIcon, VideoIcon, FileIcon, CheckSquareIcon } from 'lucide-react';
-import ModuleCard from '../../../components/comunes/ModuleCard';
-import ManagementOption from '../../../components/comunes/ManagementOption';
+import {
+  GraduationCapIcon,
+  FileTextIcon,
+  VideoIcon,
+  FileIcon,
+  CheckSquareIcon,
+  Layers3Icon
+} from 'lucide-react';
 
 const GestionCursos = () => {
   const [selectedModule, setSelectedModule] = useState(null);
@@ -14,86 +19,136 @@ const GestionCursos = () => {
 
   const handleBackClick = () => setShowOptions(false);
 
+  const handleOptionClick = (actionType) => {
+    switch (actionType) {
+      case 'actividades':
+        alert("Crear Actividades");
+        break;
+      case 'practicas':
+        alert("Crear Prácticas");
+        break;
+      case 'examenes':
+        alert("Crear Exámenes");
+        break;
+      case 'videos':
+        alert("Subir Videos");
+        break;
+      case 'pdfs':
+        alert("Subir PDFs");
+        break;
+      case 'textos':
+        alert("Subir Archivos de Texto");
+        break;
+      default:
+        console.log("Acción no definida");
+    }
+  };
+
   const options = [
     {
       title: 'Crear Actividades',
-      icon: <CheckSquareIcon className="h-5 w-5 text-blue-600" />,
-      color: 'blue',
-      description: 'Crea nuevas actividades para los estudiantes.'
+      icon: <CheckSquareIcon className="h-6 w-6 text-primary" />,
+      description: 'Crea nuevas actividades para los estudiantes.',
+      actionType: 'actividades'
     },
     {
       title: 'Crear Prácticas',
-      icon: <CheckSquareIcon className="h-5 w-5 text-green-600" />,
-      color: 'green',
-      description: 'Desarrolla ejercicios prácticos para reforzar el aprendizaje.'
+      icon: <CheckSquareIcon className="h-6 w-6 text-success" />,
+      description: 'Ejercicios prácticos para reforzar el aprendizaje.',
+      actionType: 'practicas'
     },
     {
       title: 'Crear Exámenes',
-      icon: <FileTextIcon className="h-5 w-5 text-red-600" />,
-      color: 'red',
-      description: 'Prepara evaluaciones para medir el progreso de los estudiantes.'
+      icon: <FileTextIcon className="h-6 w-6 text-danger" />,
+      description: 'Evaluaciones para medir el progreso.',
+      actionType: 'examenes'
     },
     {
       title: 'Subir Videos',
-      icon: <VideoIcon className="h-5 w-5 text-purple-600" />,
-      color: 'purple',
-      description: 'Agrega contenido multimedia para enriquecer el aprendizaje.'
+      icon: <VideoIcon className="h-6 w-6 text-info" />,
+      description: 'Contenido multimedia educativo.',
+      actionType: 'videos'
     },
     {
       title: 'Subir PDFs',
-      icon: <FileIcon className="h-5 w-5 text-yellow-600" />,
-      color: 'yellow',
-      description: 'Comparte documentos de lectura y material complementario.'
+      icon: <FileIcon className="h-6 w-6 text-warning" />,
+      description: 'Material complementario en formato PDF.',
+      actionType: 'pdfs'
     },
     {
       title: 'Subir Archivos de Texto',
-      icon: <FileTextIcon className="h-5 w-5 text-indigo-600" />,
-      color: 'indigo',
-      description: 'Agrega instrucciones o guías adicionales para los estudiantes.'
+      icon: <FileTextIcon className="h-6 w-6 text-secondary" />,
+      description: 'Instrucciones o guías adicionales.',
+      actionType: 'textos'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 w-full">
+    <div className="min-vh-100 bg-light w-100">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-teal-600">Gestión de Cursos</h1>
-          <div className="flex items-center space-x-4">
-            <button className="text-gray-500 hover:text-gray-700">
-              <GraduationCapIcon className="h-6 w-6" />
-            </button>
-          </div>
+      <header className="bg-white shadow-sm border-bottom">
+        <div className="container py-3 d-flex justify-content-between align-items-center">
+          <h1 className="text-success fw-bold fs-4">Gestión de Cursos</h1>
+          <GraduationCapIcon className="h-6 w-6 text-success" />
         </div>
       </header>
 
       {/* Main */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="container py-4">
         {!showOptions ? (
           <>
-            <h2 className="text-xl font-semibold text-gray-800 mb-6">Selecciona un módulo para gestionar</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <h2 className="fs-5 fw-semibold mb-4">Selecciona un módulo para gestionar</h2>
+            <div className="row g-4">
               {['Básico', 'Intermedio', 'Avanzado'].map((modulo, idx) => (
-                <ModuleCard key={idx} modulo={modulo} idx={idx} onClick={handleModuleClick} />
+                <div className="col-md-4" key={idx}>
+                  <div
+                    className="card text-center shadow-sm h-100"
+                    onClick={() => handleModuleClick(modulo)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="card-body d-flex flex-column align-items-center">
+                      <Layers3Icon className="h-8 w-8 text-primary mb-3" />
+                      <h5 className="card-title">{modulo}</h5>
+                      <p className="card-text">Gestión del módulo {modulo.toLowerCase()}.</p>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </>
         ) : (
-          <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center">
-                <button className="mr-4 p-2 rounded-full hover:bg-gray-100" onClick={handleBackClick}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <h2 className="text-xl font-semibold text-gray-800">Gestionar Módulo {selectedModule}</h2>
-              </div>
+          <div className="bg-white rounded shadow p-4 mt-4">
+            <div className="position-relative mb-4">
+              <button
+                className="btn btn-outline-secondary position-absolute start-0 top-50 translate-middle-y"
+                onClick={handleBackClick}
+              >
+                &lt;
+              </button>
+              <h2 className="text-center text-dark fw-bold">
+                Gestionar Módulo "{selectedModule}"
+              </h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {options.map((item, index) => (
-                <ManagementOption key={index} {...item} />
-              ))}
+
+            {/* Opciones */}
+            <div className="container mt-4">
+              <div className="row">
+                {options.map((item, index) => (
+                  <div className="col-md-4 mb-4 d-flex" key={index}>
+                    <div
+                      className="card shadow-sm w-100 h-100 text-center"
+                      onClick={() => handleOptionClick(item.actionType)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <div className="card-body d-flex flex-column align-items-center justify-content-center">
+                        {item.icon}
+                        <h5 className="card-title mt-3">{item.title}</h5>
+                        <p className="card-text">{item.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
