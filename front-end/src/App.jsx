@@ -1,5 +1,6 @@
 import RutasAdmin from "./rutas/RutasAdmin";
 import Sidebar from "./componentes/layout/Sidebar";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
