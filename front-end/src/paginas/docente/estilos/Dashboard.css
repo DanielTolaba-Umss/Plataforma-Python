@@ -1,9 +1,12 @@
 /* Base styles */
 .dashboard {
-    padding: 2rem;
+    flex-grow: 1;
+    padding: 20px;
     background-color: #f9fafb;
     color: #1f2937;
-    min-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
     font-family: sans-serif;
   }
   
