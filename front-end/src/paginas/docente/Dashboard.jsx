@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Dashboard.modules.css";
+import "../stilos/Dashboard.css";
 
 // Datos de resumen
 const summaryData = [
