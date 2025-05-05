@@ -36,10 +36,13 @@ const TeacherList = () => {
   const [editMode, setEditMode] = useState(false);
   const [newTeacher, setNewTeacher] = useState({
     id: null,
-    nombre: "",
+    nombres: "",
+    apellidos: "",
     email: "",
+    telefono: "",
     modulos: "",
-    estado: "Activo",
+    password_hash: "",
+    activo: true,
   });
 
   const toggleForm = () => {
@@ -59,17 +62,25 @@ const TeacherList = () => {
   };
 
   const handleCreate = () => {
-    if (!newTeacher.nombre || !newTeacher.email || !newTeacher.modulos) {
+    const { nombres, apellidos, email, telefono, modulos, password_hash } =
+      newTeacher;
+
+    if (
+      !nombres ||
+      !apellidos ||
+      !email ||
+      !telefono ||
+      !modulos ||
+      !password_hash
+    ) {
       alert("Todos los campos son obligatorios");
       return;
     }
 
     const nuevoDocente = {
+      ...newTeacher,
       id: Date.now(),
-      nombre: newTeacher.nombre,
-      email: newTeacher.email,
-      modulos: newTeacher.modulos.split(",").map((m) => m.trim()),
-      estado: newTeacher.estado,
+      modulos: modulos.split(",").map((m) => m.trim()),
     };
 
     setTeachers((prev) => [...prev, nuevoDocente]);
@@ -80,32 +91,36 @@ const TeacherList = () => {
     setEditMode(true);
     setShowForm(true);
     setNewTeacher({
-      id: docente.id,
-      nombre: docente.nombre,
-      email: docente.email,
+      ...docente,
       modulos: docente.modulos.join(", "),
-      estado: docente.estado,
+      password_hash: "", // no precargar la contraseña
     });
   };
 
   const handleUpdate = () => {
-    if (!newTeacher.nombre || !newTeacher.email || !newTeacher.modulos) {
+    const { nombres, apellidos, email, telefono, modulos, password_hash } =
+      newTeacher;
+
+    if (
+      !nombres ||
+      !apellidos ||
+      !email ||
+      !telefono ||
+      !modulos ||
+      !password_hash
+    ) {
       alert("Todos los campos son obligatorios");
       return;
     }
 
     const actualizado = {
-      id: newTeacher.id,
-      nombre: newTeacher.nombre,
-      email: newTeacher.email,
-      modulos: newTeacher.modulos.split(",").map((m) => m.trim()),
-      estado: newTeacher.estado,
+      ...newTeacher,
+      modulos: modulos.split(",").map((m) => m.trim()),
     };
 
     setTeachers((prev) =>
       prev.map((doc) => (doc.id === actualizado.id ? actualizado : doc))
     );
-
     toggleForm();
   };
 
@@ -134,9 +149,16 @@ const TeacherList = () => {
         <div className="formulario-docente-inline">
           <input
             type="text"
-            name="nombre"
-            placeholder="Nombre completo"
-            value={newTeacher.nombre}
+            name="nombres"
+            placeholder="Nombres"
+            value={newTeacher.nombres}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="apellidos"
+            placeholder="Apellidos"
+            value={newTeacher.apellidos}
             onChange={handleChange}
           />
           <input
@@ -148,19 +170,39 @@ const TeacherList = () => {
           />
           <input
             type="text"
+            name="telefono"
+            placeholder="Teléfono"
+            value={newTeacher.telefono}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
             name="modulos"
             placeholder="Módulos (separados por coma)"
             value={newTeacher.modulos}
             onChange={handleChange}
           />
-          <select
-            name="estado"
-            value={newTeacher.estado}
+          <input
+            type="password"
+            name="password_hash"
+            placeholder="Contraseña"
+            value={newTeacher.password_hash}
             onChange={handleChange}
+          />
+          <select
+            name="activo"
+            value={newTeacher.activo ? "Activo" : "Inactivo"}
+            onChange={(e) =>
+              setNewTeacher({
+                ...newTeacher,
+                activo: e.target.value === "Activo",
+              })
+            }
           >
             <option value="Activo">Activo</option>
             <option value="Inactivo">Inactivo</option>
           </select>
+
           {editMode ? (
             <button className="btn-crear" onClick={handleUpdate}>
               Guardar Cambios
@@ -187,12 +229,15 @@ const TeacherList = () => {
             <th>Módulos</th>
             <th>Estado</th>
             <th>Acciones</th>
+            <th>Contraseña</th>
           </tr>
         </thead>
         <tbody>
           {teachers.map((docente) => (
             <tr key={docente.id}>
-              <td>{docente.nombre}</td>
+              <td>
+                {docente.nombres} {docente.apellidos}
+              </td>
               <td>{docente.email}</td>
               <td>
                 <div className="modulo-etiquetas">
@@ -220,6 +265,7 @@ const TeacherList = () => {
                   onClick={() => confirmDelete(docente)}
                 />
               </td>
+              <td>********</td>
             </tr>
           ))}
         </tbody>

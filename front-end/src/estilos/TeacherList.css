@@ -94,8 +94,8 @@
   color: #dc2626;
 }
 .formulario-docente-inline {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 0.75rem;
   margin-bottom: 1.5rem;
 }

@@ -44,7 +44,12 @@ const StudentList = () => {
   const [newStudent, setNewStudent] = useState({
     id: null,
     nombre: "",
+    apellidos: "",
     email: "",
+    telefono: "",
+    ciudad: "",
+    pais: "",
+    password_hash: "",
     modulos: "",
     estado: "Activo",
   });
@@ -55,7 +60,12 @@ const StudentList = () => {
     setNewStudent({
       id: null,
       nombre: "",
+      apellidos: "",
       email: "",
+      telefono: "",
+      ciudad: "",
+      pais: "",
+      password_hash: "",
       modulos: "",
       estado: "Activo",
     });
@@ -66,15 +76,26 @@ const StudentList = () => {
   };
 
   const handleCreate = () => {
-    if (!newStudent.nombre || !newStudent.email || !newStudent.modulos) {
-      alert("Todos los campos son obligatorios");
+    if (
+      !newStudent.nombre ||
+      !newStudent.email ||
+      !newStudent.modulos ||
+      !newStudent.apellidos ||
+      !newStudent.password_hash
+    ) {
+      alert("Todos los campos obligatorios deben estar llenos.");
       return;
     }
 
     const nuevoEstudiante = {
       id: Date.now(),
       nombre: newStudent.nombre,
+      apellidos: newStudent.apellidos,
       email: newStudent.email,
+      telefono: newStudent.telefono,
+      ciudad: newStudent.ciudad,
+      pais: newStudent.pais,
+      password_hash: newStudent.password_hash,
       modulos: newStudent.modulos.split(",").map((m) => m.trim()),
       estado: newStudent.estado,
     };
@@ -89,22 +110,37 @@ const StudentList = () => {
     setNewStudent({
       id: estudiante.id,
       nombre: estudiante.nombre,
+      apellidos: estudiante.apellidos || "",
       email: estudiante.email,
-      modulos: estudiante.modulos.join(", "),
+      telefono: estudiante.telefono || "",
+      ciudad: estudiante.ciudad || "",
+      pais: estudiante.pais || "",
+      password_hash: estudiante.password_hash || "",
+      modulos: estudiante.modulos?.join(", ") || "",
       estado: estudiante.estado,
     });
   };
 
   const handleUpdate = () => {
-    if (!newStudent.nombre || !newStudent.email || !newStudent.modulos) {
-      alert("Todos los campos son obligatorios");
+    if (
+      !newStudent.nombre ||
+      !newStudent.email ||
+      !newStudent.modulos ||
+      !newStudent.apellidos
+    ) {
+      alert("Todos los campos obligatorios deben estar llenos.");
       return;
     }
 
     const actualizado = {
       id: newStudent.id,
       nombre: newStudent.nombre,
+      apellidos: newStudent.apellidos,
       email: newStudent.email,
+      telefono: newStudent.telefono,
+      ciudad: newStudent.ciudad,
+      pais: newStudent.pais,
+      password_hash: newStudent.password_hash,
       modulos: newStudent.modulos.split(",").map((m) => m.trim()),
       estado: newStudent.estado,
     };
@@ -144,23 +180,52 @@ const StudentList = () => {
       {showForm && (
         <div className="formulario-estudiante-inline">
           <input
-            type="text"
             name="nombre"
-            placeholder="Nombre completo"
+            placeholder="Nombre"
             value={newStudent.nombre}
             onChange={handleChange}
           />
           <input
-            type="email"
+            name="apellidos"
+            placeholder="Apellidos"
+            value={newStudent.apellidos}
+            onChange={handleChange}
+          />
+          <input
             name="email"
+            type="email"
             placeholder="Correo electrónico"
             value={newStudent.email}
             onChange={handleChange}
           />
           <input
-            type="text"
+            name="telefono"
+            placeholder="Teléfono"
+            value={newStudent.telefono}
+            onChange={handleChange}
+          />
+          <input
+            name="ciudad"
+            placeholder="Ciudad"
+            value={newStudent.ciudad}
+            onChange={handleChange}
+          />
+          <input
+            name="pais"
+            placeholder="País"
+            value={newStudent.pais}
+            onChange={handleChange}
+          />
+          <input
+            name="password_hash"
+            type="password"
+            placeholder="Contraseña"
+            value={newStudent.password_hash}
+            onChange={handleChange}
+          />
+          <input
             name="modulos"
-            placeholder="Módulos (separados por coma)"
+            placeholder="Módulos (coma)"
             value={newStudent.modulos}
             onChange={handleChange}
           />
@@ -172,15 +237,12 @@ const StudentList = () => {
             <option value="Activo">Activo</option>
             <option value="Inactivo">Inactivo</option>
           </select>
-          {editMode ? (
-            <button className="btn-crear" onClick={handleUpdate}>
-              Guardar Cambios
-            </button>
-          ) : (
-            <button className="btn-crear" onClick={handleCreate}>
-              Crear Estudiante
-            </button>
-          )}
+          <button
+            onClick={editMode ? handleUpdate : handleCreate}
+            className="btn-crear"
+          >
+            {editMode ? "Guardar Cambios" : "Crear Estudiante"}
+          </button>
         </div>
       )}
 
@@ -195,7 +257,11 @@ const StudentList = () => {
           <tr>
             <th>Nombre</th>
             <th>Email</th>
-            <th>Módulos Inscritos</th>
+            <th>Teléfono</th>
+            <th>Ciudad</th>
+            <th>País</th>
+            <th>Contraseña</th>
+            <th>Módulos</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -203,16 +269,20 @@ const StudentList = () => {
         <tbody>
           {students.map((e) => (
             <tr key={e.id}>
-              <td>{e.nombre}</td>
-              <td>{e.email}</td>
               <td>
-                <div className="modulo-etiquetas">
-                  {e.modulos.map((m, idx) => (
-                    <span key={idx} className="etiqueta-modulo">
-                      {m}
-                    </span>
-                  ))}
-                </div>
+                {e.nombre} {e.apellidos}
+              </td>
+              <td>{e.email}</td>
+              <td>{e.telefono}</td>
+              <td>{e.ciudad}</td>
+              <td>{e.pais}</td>
+              <td>{"*".repeat(8)}</td>
+              <td>
+                {e.modulos.map((m, i) => (
+                  <span key={i} className="etiqueta-modulo">
+                    {m}
+                  </span>
+                ))}
               </td>
               <td>
                 <span className={`estado ${e.estado.toLowerCase()}`}>

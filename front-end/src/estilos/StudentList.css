@@ -93,11 +93,11 @@
 .accion.eliminar {
   color: #dc2626;
 }
-.formulario-estudiante-inline {
-  display: flex;
+.formulario-docente-inline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .formulario-estudiante-inline input,

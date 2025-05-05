@@ -6,31 +6,31 @@ import DeleteModal from "../comunes/DeleteModal"; // Ajusta la ruta si está en 
 const initialModules = [
   {
     id: 1,
-    nombre: "Python Básico",
-    estudiantes: 45,
-    docentes: 2,
-    estado: "Activo",
+    titulo: "Python Básico",
+    descripcion: "Introducción al lenguaje Python",
+    orden: 1,
+    activo: true,
   },
   {
     id: 2,
-    nombre: "Python Intermedio",
-    estudiantes: 32,
-    docentes: 1,
-    estado: "Activo",
+    titulo: "Python Intermedio",
+    descripcion: "Estructuras y funciones intermedias",
+    orden: 2,
+    activo: true,
   },
   {
     id: 3,
-    nombre: "Django Framework",
-    estudiantes: 28,
-    docentes: 2,
-    estado: "Activo",
+    titulo: "Django Framework",
+    descripcion: "Desarrollo web con Django",
+    orden: 3,
+    activo: true,
   },
   {
     id: 4,
-    nombre: "Data Science con Python",
-    estudiantes: 15,
-    docentes: 1,
-    estado: "Inactivo",
+    titulo: "Data Science con Python",
+    descripcion: "Análisis de datos con Python",
+    orden: 4,
+    activo: false,
   },
 ];
 
@@ -42,10 +42,10 @@ const ModuleList = () => {
   const [editMode, setEditMode] = useState(false);
   const [newModule, setNewModule] = useState({
     id: null,
-    nombre: "",
-    estudiantes: "",
-    docentes: "",
-    estado: "Activo",
+    titulo: "",
+    descripcion: "",
+    orden: "",
+    activo: true,
   });
 
   const toggleForm = () => {
@@ -53,10 +53,10 @@ const ModuleList = () => {
     setEditMode(false);
     setNewModule({
       id: null,
-      nombre: "",
-      estudiantes: "",
-      docentes: "",
-      estado: "Activo",
+      titulo: "",
+      descripcion: "",
+      orden: "",
+      activo: true,
     });
   };
 
@@ -65,7 +65,7 @@ const ModuleList = () => {
   };
 
   const handleCreate = () => {
-    if (!newModule.nombre || !newModule.estudiantes || !newModule.docentes) {
+    if (!newModule.titulo || !newModule.descripcion || !newModule.orden) {
       alert("Todos los campos son obligatorios");
       return;
     }
@@ -73,8 +73,7 @@ const ModuleList = () => {
     const nuevo = {
       ...newModule,
       id: Date.now(),
-      estudiantes: parseInt(newModule.estudiantes),
-      docentes: parseInt(newModule.docentes),
+      orden: parseInt(newModule.orden),
     };
 
     setModules((prev) => [...prev, nuevo]);
@@ -130,33 +129,36 @@ const ModuleList = () => {
         <div className="formulario-modulo">
           <input
             type="text"
-            name="nombre"
-            placeholder="Nombre del módulo"
-            value={newModule.nombre}
+            name="titulo"
+            placeholder="Título del módulo"
+            value={newModule.titulo}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="descripcion"
+            placeholder="Descripción"
+            value={newModule.descripcion}
             onChange={handleChange}
           />
           <input
             type="number"
-            name="estudiantes"
-            placeholder="Cantidad de estudiantes"
-            value={newModule.estudiantes}
+            name="orden"
+            placeholder="Orden"
+            value={newModule.orden}
             onChange={handleChange}
           />
-          <input
-            type="number"
-            name="docentes"
-            placeholder="Cantidad de docentes"
-            value={newModule.docentes}
-            onChange={handleChange}
-          />
-          <select
-            name="estado"
-            value={newModule.estado}
-            onChange={handleChange}
-          >
-            <option value="Activo">Activo</option>
-            <option value="Inactivo">Inactivo</option>
-          </select>
+          <label>
+            <input
+              type="checkbox"
+              name="activo"
+              checked={newModule.activo}
+              onChange={(e) =>
+                setNewModule({ ...newModule, activo: e.target.checked })
+              }
+            />
+            Activo
+          </label>
           {editMode ? (
             <button className="btn-crear" onClick={handleUpdate}>
               Guardar Cambios
@@ -178,22 +180,25 @@ const ModuleList = () => {
       <table className="tabla-modulos">
         <thead>
           <tr>
-            <th>Nombre</th>
-            <th>Estudiantes</th>
-            <th>Docentes</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Orden</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
+
         <tbody>
           {modules.map((modulo) => (
             <tr key={modulo.id}>
-              <td>{modulo.nombre}</td>
-              <td>{modulo.estudiantes}</td>
-              <td>{modulo.docentes}</td>
+              <td>{modulo.titulo}</td>
+              <td>{modulo.descripcion}</td>
+              <td>{modulo.orden}</td>
               <td>
-                <span className={`estado ${modulo.estado.toLowerCase()}`}>
-                  {modulo.estado}
+                <span
+                  className={`estado ${modulo.activo ? "activo" : "inactivo"}`}
+                >
+                  {modulo.activo ? "Activo" : "Inactivo"}
                 </span>
               </td>
               <td className="acciones">
