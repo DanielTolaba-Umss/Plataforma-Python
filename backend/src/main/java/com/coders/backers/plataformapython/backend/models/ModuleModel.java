@@ -62,6 +62,4 @@ public class ModuleModel {
     public void setActive(boolean active) {
         this.active = active;
     }
-
-    
 }
