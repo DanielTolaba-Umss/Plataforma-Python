@@ -14,4 +14,6 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
+        working-directory: ./front-end
       - run: npm run lint
+        working-directory: ./front-end
