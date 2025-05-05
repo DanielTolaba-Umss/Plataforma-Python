@@ -81,6 +81,13 @@ Los objetivos principales son:
 
 ---
 
+## Notion
+
+https://www.notion.so/Generaci-n-de-Software-Code-Bakers-1df9f28680c780f1a249cfde0ec02d04?pvs=4
+
+---
+
+
 ## 🧩 Tecnologías
 
 - **Frontend:** React.js
