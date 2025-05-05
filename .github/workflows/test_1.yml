@@ -8,5 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "impresion de prueba"
-        run: echo 'impresion de prueba'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: npm run lint
