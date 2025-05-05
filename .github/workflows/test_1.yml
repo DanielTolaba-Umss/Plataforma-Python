@@ -2,7 +2,7 @@ name: for react test
 
 on:
   push:
-    branches: ["Erick"]
+    branches: ["Semana-1"]
 jobs:
   build:
     runs-on: ubuntu-latest
