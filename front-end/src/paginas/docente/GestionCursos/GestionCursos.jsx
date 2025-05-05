@@ -11,6 +11,11 @@ import {
 const GestionCursos = () => {
   const [selectedModule, setSelectedModule] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [videoTitle, setVideoTitle] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
+  const [errors, setErrors] = useState({ title: '', url: '' });
+  
 
   const handleModuleClick = (module) => {
     setSelectedModule(module);
@@ -19,11 +24,30 @@ const GestionCursos = () => {
 
   const handleBackClick = () => setShowOptions(false);
 
+  const validateInputs = () => {
+    let valid = true;
+    const newErrors = { title: '', url: '' };
+
+    if (!videoTitle.trim()) {
+      newErrors.title = 'El título es obligatorio.';
+      valid = false;
+    }
+
+    const urlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|vimeo\.com|drive\.google\.com|.*\.(mp4|webm|ogg))\/?.+/i;
+    if (!videoUrl.trim()) {
+      newErrors.url = 'La URL es obligatoria.';
+      valid = false;
+    } else if (!urlPattern.test(videoUrl)) {
+      newErrors.url = 'La URL no parece válida. Ej: YouTube, Vimeo o .mp4';
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
   const handleOptionClick = (actionType) => {
     switch (actionType) {
-      case 'actividades':
-        alert("Crear Actividades");
-        break;
       case 'practicas':
         alert("Crear Prácticas");
         break;
@@ -31,13 +55,10 @@ const GestionCursos = () => {
         alert("Crear Exámenes");
         break;
       case 'videos':
-        alert("Subir Videos");
+        setShowVideoModal(true);
         break;
       case 'pdfs':
         alert("Subir PDFs");
-        break;
-      case 'textos':
-        alert("Subir Archivos de Texto");
         break;
       default:
         console.log("Acción no definida");
@@ -45,12 +66,6 @@ const GestionCursos = () => {
   };
 
   const options = [
-    {
-      title: 'Crear Actividades',
-      icon: <CheckSquareIcon className="h-6 w-6 text-primary" />,
-      description: 'Crea nuevas actividades para los estudiantes.',
-      actionType: 'actividades'
-    },
     {
       title: 'Crear Prácticas',
       icon: <CheckSquareIcon className="h-6 w-6 text-success" />,
@@ -74,12 +89,6 @@ const GestionCursos = () => {
       icon: <FileIcon className="h-6 w-6 text-warning" />,
       description: 'Material complementario en formato PDF.',
       actionType: 'pdfs'
-    },
-    {
-      title: 'Subir Archivos de Texto',
-      icon: <FileTextIcon className="h-6 w-6 text-secondary" />,
-      description: 'Instrucciones o guías adicionales.',
-      actionType: 'textos'
     }
   ];
 
@@ -89,7 +98,7 @@ const GestionCursos = () => {
       <header>
         <div className="container py-3 d-flex justify-content-between align-items-center">
           <h1 className="fw-bold text-dark mb-4" style={{ fontSize: '1.875rem' }}>
-            Gestión de Cursos
+            Gestión de Modulos
           </h1>
 
           <div className="admin-profile d-flex align-items-center gap-2">
@@ -117,7 +126,7 @@ const GestionCursos = () => {
                     <div className="card-body d-flex flex-column align-items-center">
                       <Layers3Icon className="h-8 w-8 text-primary mb-3" />
                       <h5 className="card-title">{modulo}</h5>
-                      <p className="card-text">Gestión del módulo {modulo.toLowerCase()}.</p>
+                      <p className="card-text">Gestión del modulo {modulo.toLowerCase()}.</p>
                     </div>
                   </div>
                 </div>
@@ -161,6 +170,64 @@ const GestionCursos = () => {
           </div>
         )}
       </main>
+      {showVideoModal && (
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog">
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Subir Video</h5>
+                <button type="button" className="btn-close" onClick={() => setShowVideoModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label className="form-label">Título del Video</label>
+                  <input
+                    type="text"
+                    className={`form-control ${errors.title ? 'is-invalid' : ''}`}
+                    value={videoTitle}
+                    onChange={(e) => setVideoTitle(e.target.value)}
+                    placeholder="Ej: Introducción a React"
+                  />
+                  {errors.title && <div className="invalid-feedback">{errors.title}</div>}
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">URL del Video</label>
+                  <input
+                    type="url"
+                    className={`form-control ${errors.url ? 'is-invalid' : ''}`}
+                    value={videoUrl}
+                    onChange={(e) => setVideoUrl(e.target.value)}
+                    placeholder="https://..."
+                  />
+                  {errors.url && <div className="invalid-feedback">{errors.url}</div>}
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowVideoModal(false)}>
+                  Cancelar
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    if (validateInputs()) {
+                      console.log("Video guardado:", { videoTitle, videoUrl });
+                      alert(`Video guardado:\nTítulo: ${videoTitle}\nURL: ${videoUrl}`);
+                      setShowVideoModal(false);
+                      setVideoTitle('');
+                      setVideoUrl('');
+                      setErrors({ title: '', url: '' });
+                    }
+                  }}
+                >
+                  Guardar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
