@@ -1,14 +1,14 @@
 /* Base styles */
 .dashboard {
-    flex-grow: 1;
-    padding: 2rem;
-    background-color: #f9fafb;
-    color: #1f2937;
-    height: 100vh;
-    overflow-y: auto;
-    box-sizing: border-box;
-    font-family: sans-serif;
-  }
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #f9fafb;
+  color: #1f2937;
+  height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
   
   .dashboard-title {
     font-size: 1.875rem;
@@ -314,6 +314,7 @@
     width: 100%;
     max-width: 42rem;
     margin: 0 1rem;
+    padding: 1.5rem; 
   }
   
   .modal-header {
