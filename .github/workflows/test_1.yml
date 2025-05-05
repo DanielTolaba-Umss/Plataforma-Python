@@ -5,7 +5,7 @@ on:
     branches: ["Semana-1"]
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
