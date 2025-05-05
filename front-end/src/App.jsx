@@ -5,11 +5,6 @@ import AppEstudiante from "./AppEstudiante";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-<<<<<<< HEAD
-  return (
-    <div className="App">
-      <AppRouter />
-=======
   const [vista, setVista] = useState(null); // 'admin' | 'docente' | 'estudiante' | null
 
   const manejarVista = (tipo) => {
@@ -65,7 +60,6 @@ function App() {
       >
         Entrar como Estudiante
       </button>
->>>>>>> Heynar
     </div>
   );
 }
