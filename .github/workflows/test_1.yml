@@ -14,12 +14,13 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
+      - run: npm run lint
       #   - run: npm test
-      - run: npm run build
+    #   - run: npm run build
 
-      #   - name: "impresion de prueba"
-      #     run: echo 'impresion de prueba'
-      - name: "build"
-        run: npm run build
-      - name: "contenido"
-        run: ls -al
+    #   - name: "impresion de prueba"
+    #     run: echo 'impresion de prueba'
+    #   - name: "build"
+    #     run: npm run build
+    #   - name: "contenido"
+    #     run: ls -al

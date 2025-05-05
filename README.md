@@ -4,8 +4,8 @@
 
 - [Introducción y Metas](#-introducción-y-metas)
 - [Vista de Requerimientos](#-vista-de-requerimientos)
-  - [Requerimientos Funcionales Principales](#requerimientos-funcionales-principales)
-  - [Requerimientos No Funcionales Principales](#requerimientos-no-funcionales-principales)
+- [Requerimientos Funcionales Principales](#requerimientos-funcionales-principales)
+- [Requerimientos No Funcionales Principales](#requerimientos-no-funcionales-principales)
 - [Tecnologías](#-tecnologías)
 - [Instalación](#-instalación)
 
@@ -78,6 +78,12 @@ Los objetivos principales son:
 - Integración con repositorios de OER (MIT OpenCourseWare, OpenStax).
 - Compatibilidad con LMS existentes mediante estándares como **xAPI**, **SCORM** y **LOM**.
 - APIs documentadas para facilitar la integración con sistemas de terceros.
+
+---
+
+## Notion
+
+https://www.notion.so/Generaci-n-de-Software-Code-Bakers-1df9f28680c780f1a249cfde0ec02d04?pvs=4
 
 ---
 
