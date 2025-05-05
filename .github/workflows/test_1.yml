@@ -3,6 +3,7 @@ name: for react test
 on:
   push:
     branches: ["Semana-1"]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,5 +14,4 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
-      - run: cd front-end
       - run: npm run lint
