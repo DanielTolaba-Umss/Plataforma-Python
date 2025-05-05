@@ -10,3 +10,5 @@ jobs:
     steps:
       - name: "impresion de prueba"
         run: echo 'impresion de prueba'
+      - name: "contenido"
+        run: ls -al
