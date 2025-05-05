@@ -9,7 +9,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: "impresion de prueba"
-        run: echo 'impresion de prueba'
+      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm ci
+      #   - run: npm test
+      - run: npm run build
+
+      #   - name: "impresion de prueba"
+      #     run: echo 'impresion de prueba'
+      - name: "build"
+        run: npm run build
       - name: "contenido"
         run: ls -al
