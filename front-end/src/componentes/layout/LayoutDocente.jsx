@@ -21,6 +21,9 @@ const Sidebar = () => {
         <NavLink to="/Gestion de Cursos" className="sidebar-link">
           <BookOpen className="sidebar-icon" /> Módulos
         </NavLink>
+        <NavLink to="/Gestion-Cursos" className="sidebar-link">
+          <BookOpen className="sidebar-icon" /> Gestion Cursos
+        </NavLink>
       </nav>
     </aside>
   );
