@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 const GestionCursos = () => {
+  
   const [selectedModule, setSelectedModule] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -22,7 +23,9 @@ const GestionCursos = () => {
   const [archivo, setArchivo] = useState(null);
   const [errors, setErrors] = useState({ title: '', url: '' });
   const [practicaErrors, setPracticaErrors] = useState({ title: '', desc: '' });
+  const navigate = useNavigate();
 
+  
   const handleModuleClick = (module) => {
     setSelectedModule(module);
     setShowOptions(true);
