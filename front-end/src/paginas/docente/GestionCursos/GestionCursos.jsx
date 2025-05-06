@@ -60,7 +60,7 @@ const GestionCursos = () => {
         setShowVideoModal(true);
         break;
       case "pdfs":
-        alert("Subir PDFs");
+        navigate("/crear-pdf");
         break;
       default:
         console.log("Acción no definida");

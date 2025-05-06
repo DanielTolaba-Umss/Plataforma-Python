@@ -4,6 +4,7 @@ import Dashboard from "../paginas/docente/Dashboard";
 import GestionCursos from "../paginas/docente/GestionCursos/GestionCursos";
 import GestionCurso from "../paginas/docente/GestionCursos/GestionCurso";
 import CrearExamen from "../paginas/docente/GestionCursos/CrearExamen";
+import CrearPdf from "../paginas/docente/GestionCursos/CrearPdf";
 
 export default function RutasDocente() {
   return (
@@ -13,6 +14,7 @@ export default function RutasDocente() {
         <Route path="/Gestion de cursos" element={<GestionCursos />} />
         <Route path="/Gestion-Cursos" element={<GestionCurso />} />
         <Route path="/crear-examen" element={<CrearExamen />} />
+        <Route path="/crear-pdf" element={<CrearPdf />} />
         {/* Aquí puedes añadir más rutas si es necesario */}
       </Routes>
     </>
