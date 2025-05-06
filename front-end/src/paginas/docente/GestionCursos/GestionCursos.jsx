@@ -13,10 +13,15 @@ const GestionCursos = () => {
   const [selectedModule, setSelectedModule] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
-  const [videoTitle, setVideoTitle] = useState("");
-  const [videoUrl, setVideoUrl] = useState("");
-  const [errors, setErrors] = useState({ title: "", url: "" });
-  const navigate = useNavigate();
+  const [showPracticaModal, setShowPracticaModal] = useState(false);
+  const [videoTitle, setVideoTitle] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
+  const [practicaTitle, setPracticaTitle] = useState('');
+  const [practicaDesc, setPracticaDesc] = useState('');
+  const [practicaCode, setPracticaCode] = useState(''); 
+  const [archivo, setArchivo] = useState(null);
+  const [errors, setErrors] = useState({ title: '', url: '' });
+  const [practicaErrors, setPracticaErrors] = useState({ title: '', desc: '' });
 
   const handleModuleClick = (module) => {
     setSelectedModule(module);
@@ -48,10 +53,28 @@ const GestionCursos = () => {
     return valid;
   };
 
+  const validatePractica = () => {
+    let valid = true;
+    const newErrors = { title: '', desc: '' };
+
+    if (!practicaTitle.trim()) {
+      newErrors.title = 'El nombre es obligatorio.';
+      valid = false;
+    }
+
+    if (!practicaDesc.trim()) {
+      newErrors.desc = 'La descripción es obligatoria.';
+      valid = false;
+    }
+
+    setPracticaErrors(newErrors);
+    return valid;
+  };
+
   const handleOptionClick = (actionType) => {
     switch (actionType) {
-      case "practicas":
-        alert("Crear Prácticas");
+      case 'practicas':
+        setShowPracticaModal(true);
         break;
       case "examenes":
         navigate("/crear-examen");
@@ -64,6 +87,19 @@ const GestionCursos = () => {
         break;
       default:
         console.log("Acción no definida");
+    }
+  };
+
+  const handleCrearPractica = () => {
+    if (validatePractica()) {
+      alert('Práctica Creada Exitosamente');
+      setPracticaTitle('');
+      setPracticaDesc('');
+      setPracticaCode(''); 
+      setArchivo(null);
+      setShowPracticaModal(false);
+    } else {
+      console.log("Hay errores en los campos");
     }
   };
 
@@ -105,7 +141,6 @@ const GestionCursos = () => {
           >
             Gestión de Modulos
           </h1>
-
           <div className="admin-profile d-flex align-items-center gap-2">
             <span className="fw-semibold">Docente</span>
             <div
@@ -136,9 +171,7 @@ const GestionCursos = () => {
                     <div className="card-body d-flex flex-column align-items-center">
                       <Layers3Icon className="h-8 w-8 text-primary mb-3" />
                       <h5 className="card-title">{modulo}</h5>
-                      <p className="card-text">
-                        Gestión del modulo {modulo.toLowerCase()}.
-                      </p>
+                      <p className="card-text">Gestión del módulo {modulo.toLowerCase()}.</p>
                     </div>
                   </div>
                 </div>
@@ -182,6 +215,8 @@ const GestionCursos = () => {
           </div>
         )}
       </main>
+
+      {/* Modal para Subir Video */}
       {showVideoModal && (
         <div className="modal fade show d-block" tabIndex="-1" role="dialog">
           <div className="modal-dialog modal-dialog-centered" role="document">
@@ -226,28 +261,84 @@ const GestionCursos = () => {
                 </div>
               </div>
               <div className="modal-footer">
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => setShowVideoModal(false)}
-                >
-                  Cancelar
+                <button className="btn btn-secondary" onClick={() => setShowVideoModal(false)}>
+                  Cerrar
                 </button>
                 <button
                   className="btn btn-primary"
                   onClick={() => {
                     if (validateInputs()) {
-                      console.log("Video guardado:", { videoTitle, videoUrl });
-                      alert(
-                        `Video guardado:\nTítulo: ${videoTitle}\nURL: ${videoUrl}`
-                      );
+                      alert('Video Subido Exitosamente');
+                      setVideoTitle('');
+                      setVideoUrl('');
                       setShowVideoModal(false);
-                      setVideoTitle("");
-                      setVideoUrl("");
-                      setErrors({ title: "", url: "" });
                     }
                   }}
                 >
-                  Guardar
+                  Subir Video
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para Crear Práctica */}
+      {showPracticaModal && (
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog">
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Crear Práctica</h5>
+                <button type="button" className="btn-close" onClick={() => setShowPracticaModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                {/* Nombre de la Práctica */}
+                <div className="mb-3">
+                  <label className="form-label">Nombre de la práctica</label>
+                  <input
+                    type="text"
+                    className={`form-control ${practicaErrors.title ? 'is-invalid' : ''}`}
+                    value={practicaTitle}
+                    onChange={(e) => setPracticaTitle(e.target.value)}
+                    placeholder="Ej: Práctica en Python n.1"
+                  />
+                  
+                  {practicaErrors.title && <div className="invalid-feedback">{practicaErrors.title}</div>}
+                </div>
+
+                {/* Instrucciones */}
+                <div className="mb-3">
+                  <label className="form-label">Instrucciones</label>
+                  <textarea
+                    className={`form-control ${practicaErrors.desc ? 'is-invalid' : ''}`}
+                    value={practicaDesc}
+                    onChange={(e) => setPracticaDesc(e.target.value)}
+                    rows="4"
+                    placeholder="Ej: Crea una variable llamada 'mensaje' y asígnale el texto 'Hola, Python!'"
+                  />
+
+                  {practicaErrors.desc && <div className="invalid-feedback">{practicaErrors.desc}</div>}
+                </div>
+
+                {/* Código de la práctica */}
+                <div className="mb-3">
+                  <label className="form-label">Respuesta esperada</label>
+                  <textarea
+                    className="form-control"
+                    value={practicaCode}
+                    onChange={(e) => setPracticaCode(e.target.value)}
+                    rows="6"
+                    placeholder="mensaje = 'Hola Python'"
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowPracticaModal(false)}>
+                  Cerrar
+                </button>
+                <button className="btn btn-primary" onClick={handleCrearPractica}>
+                  Crear Práctica
                 </button>
               </div>
             </div>
