@@ -17,7 +17,7 @@ const GestionCursos = () => {
   const [videoUrl, setVideoUrl] = useState('');
   const [practicaTitle, setPracticaTitle] = useState('');
   const [practicaDesc, setPracticaDesc] = useState('');
-  const [practicaCode, setPracticaCode] = useState(''); // Nuevo campo para código
+  const [practicaCode, setPracticaCode] = useState(''); 
   const [archivo, setArchivo] = useState(null);
   const [errors, setErrors] = useState({ title: '', url: '' });
   const [practicaErrors, setPracticaErrors] = useState({ title: '', desc: '' });
@@ -93,7 +93,7 @@ const GestionCursos = () => {
       alert('Práctica Creada Exitosamente');
       setPracticaTitle('');
       setPracticaDesc('');
-      setPracticaCode(''); // Limpiar el código después de crear la práctica
+      setPracticaCode(''); 
       setArchivo(null);
       setShowPracticaModal(false);
     } else {
@@ -275,14 +275,15 @@ const GestionCursos = () => {
               <div className="modal-body">
                 {/* Nombre de la Práctica */}
                 <div className="mb-3">
-                  <label className="form-label">Nombre de la Práctica</label>
+                  <label className="form-label">Nombre de la práctica</label>
                   <input
                     type="text"
                     className={`form-control ${practicaErrors.title ? 'is-invalid' : ''}`}
                     value={practicaTitle}
                     onChange={(e) => setPracticaTitle(e.target.value)}
-                    placeholder="Ej: Práctica en Python"
+                    placeholder="Ej: Práctica en Python n.1"
                   />
+                  
                   {practicaErrors.title && <div className="invalid-feedback">{practicaErrors.title}</div>}
                 </div>
 
@@ -296,6 +297,7 @@ const GestionCursos = () => {
                     rows="4"
                     placeholder="Ej: Crea una variable llamada 'mensaje' y asígnale el texto 'Hola, Python!'"
                   />
+
                   {practicaErrors.desc && <div className="invalid-feedback">{practicaErrors.desc}</div>}
                 </div>
 
