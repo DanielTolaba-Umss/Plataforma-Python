@@ -9,28 +9,24 @@ const initialModules = [
     titulo: "Python Básico",
     descripcion: "Introducción al lenguaje Python",
     orden: 1,
-    activo: true,
   },
   {
     id: 2,
     titulo: "Python Intermedio",
     descripcion: "Estructuras y funciones intermedias",
     orden: 2,
-    activo: true,
   },
   {
     id: 3,
     titulo: "Django Framework",
     descripcion: "Desarrollo web con Django",
     orden: 3,
-    activo: true,
   },
   {
     id: 4,
     titulo: "Data Science con Python",
     descripcion: "Análisis de datos con Python",
     orden: 4,
-    activo: false,
   },
 ];
 
@@ -45,7 +41,6 @@ const ModuleList = () => {
     titulo: "",
     descripcion: "",
     orden: "",
-    activo: true,
   });
 
   const toggleForm = () => {
@@ -56,7 +51,6 @@ const ModuleList = () => {
       titulo: "",
       descripcion: "",
       orden: "",
-      activo: true,
     });
   };
 
@@ -107,10 +101,9 @@ const ModuleList = () => {
   const resetForm = () => {
     setNewModule({
       id: null,
-      nombre: "",
-      estudiantes: "",
-      docentes: "",
-      estado: "Activo",
+      titulo: "",
+      descripcion: "",
+      orden: "",
     });
     setShowForm(false);
     setEditMode(false);
@@ -148,17 +141,6 @@ const ModuleList = () => {
             value={newModule.orden}
             onChange={handleChange}
           />
-          <label>
-            <input
-              type="checkbox"
-              name="activo"
-              checked={newModule.activo}
-              onChange={(e) =>
-                setNewModule({ ...newModule, activo: e.target.checked })
-              }
-            />
-            Activo
-          </label>
           {editMode ? (
             <button className="btn-crear" onClick={handleUpdate}>
               Guardar Cambios
@@ -183,7 +165,6 @@ const ModuleList = () => {
             <th>Título</th>
             <th>Descripción</th>
             <th>Orden</th>
-            <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -194,13 +175,6 @@ const ModuleList = () => {
               <td>{modulo.titulo}</td>
               <td>{modulo.descripcion}</td>
               <td>{modulo.orden}</td>
-              <td>
-                <span
-                  className={`estado ${modulo.activo ? "activo" : "inactivo"}`}
-                >
-                  {modulo.activo ? "Activo" : "Inactivo"}
-                </span>
-              </td>
               <td className="acciones">
                 <Pencil
                   size={18}

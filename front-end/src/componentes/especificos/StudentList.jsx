@@ -8,29 +8,21 @@ const initialStudents = [
     id: 1,
     nombre: "Ana García",
     email: "ana@ejemplo.com",
-    modulos: ["Python Básico"],
-    estado: "Activo",
   },
   {
     id: 2,
     nombre: "Pedro Martínez",
     email: "pedro@ejemplo.com",
-    modulos: ["Python Básico", "Python Intermedio"],
-    estado: "Activo",
   },
   {
     id: 3,
     nombre: "Laura Sánchez",
     email: "laura@ejemplo.com",
-    modulos: ["Django Framework"],
-    estado: "Activo",
   },
   {
     id: 4,
     nombre: "Miguel Torres",
     email: "miguel@ejemplo.com",
-    modulos: ["Python Básico"],
-    estado: "Inactivo",
   },
 ];
 
@@ -50,8 +42,6 @@ const StudentList = () => {
     ciudad: "",
     pais: "",
     password_hash: "",
-    modulos: "",
-    estado: "Activo",
   });
 
   const toggleForm = () => {
@@ -66,8 +56,6 @@ const StudentList = () => {
       ciudad: "",
       pais: "",
       password_hash: "",
-      modulos: "",
-      estado: "Activo",
     });
   };
 
@@ -79,7 +67,6 @@ const StudentList = () => {
     if (
       !newStudent.nombre ||
       !newStudent.email ||
-      !newStudent.modulos ||
       !newStudent.apellidos ||
       !newStudent.password_hash
     ) {
@@ -96,8 +83,6 @@ const StudentList = () => {
       ciudad: newStudent.ciudad,
       pais: newStudent.pais,
       password_hash: newStudent.password_hash,
-      modulos: newStudent.modulos.split(",").map((m) => m.trim()),
-      estado: newStudent.estado,
     };
 
     setStudents((prev) => [...prev, nuevoEstudiante]);
@@ -116,18 +101,11 @@ const StudentList = () => {
       ciudad: estudiante.ciudad || "",
       pais: estudiante.pais || "",
       password_hash: estudiante.password_hash || "",
-      modulos: estudiante.modulos?.join(", ") || "",
-      estado: estudiante.estado,
     });
   };
 
   const handleUpdate = () => {
-    if (
-      !newStudent.nombre ||
-      !newStudent.email ||
-      !newStudent.modulos ||
-      !newStudent.apellidos
-    ) {
+    if (!newStudent.nombre || !newStudent.email || !newStudent.apellidos) {
       alert("Todos los campos obligatorios deben estar llenos.");
       return;
     }
@@ -141,8 +119,6 @@ const StudentList = () => {
       ciudad: newStudent.ciudad,
       pais: newStudent.pais,
       password_hash: newStudent.password_hash,
-      modulos: newStudent.modulos.split(",").map((m) => m.trim()),
-      estado: newStudent.estado,
     };
 
     setStudents((prev) =>
@@ -223,20 +199,6 @@ const StudentList = () => {
             value={newStudent.password_hash}
             onChange={handleChange}
           />
-          <input
-            name="modulos"
-            placeholder="Módulos (coma)"
-            value={newStudent.modulos}
-            onChange={handleChange}
-          />
-          <select
-            name="estado"
-            value={newStudent.estado}
-            onChange={handleChange}
-          >
-            <option value="Activo">Activo</option>
-            <option value="Inactivo">Inactivo</option>
-          </select>
           <button
             onClick={editMode ? handleUpdate : handleCreate}
             className="btn-crear"
@@ -261,8 +223,6 @@ const StudentList = () => {
             <th>Ciudad</th>
             <th>País</th>
             <th>Contraseña</th>
-            <th>Módulos</th>
-            <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -277,18 +237,6 @@ const StudentList = () => {
               <td>{e.ciudad}</td>
               <td>{e.pais}</td>
               <td>{"*".repeat(8)}</td>
-              <td>
-                {e.modulos.map((m, i) => (
-                  <span key={i} className="etiqueta-modulo">
-                    {m}
-                  </span>
-                ))}
-              </td>
-              <td>
-                <span className={`estado ${e.estado.toLowerCase()}`}>
-                  {e.estado}
-                </span>
-              </td>
               <td className="acciones">
                 <Pencil
                   size={18}
