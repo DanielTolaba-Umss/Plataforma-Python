@@ -1,6 +1,6 @@
 // src/componentes/layouts/Sidebar.jsx
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "../../style/LayoutDocente.css";
 import {
   LayoutDashboard,
