@@ -10,14 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.7.0",
     "front-end": "file:",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "lucide-react": "^0.507.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.5.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.4.1",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",

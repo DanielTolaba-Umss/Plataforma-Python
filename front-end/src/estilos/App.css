@@ -1,0 +1,14 @@
+/* Estilos básicos para la aplicación */
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  .contenido-principal {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  /* Si necesitas estilos específicos para el layout de estudiante, puedes añadirlos aquí */

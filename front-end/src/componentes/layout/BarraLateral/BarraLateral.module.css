@@ -1,0 +1,53 @@
+/* Contenedor principal */
+.sidebarContainer {
+    width: 16rem;
+    background-color: white;
+    border-right: 1px solid #e5e7eb;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+  }
+  
+  /* Logo y título */
+  .logoContainer {
+    padding: 1.5rem;
+  }
+  
+  .logoText {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0d9488; /* Color teal-600 */
+  }
+  
+  /* Navegación */
+  .navContainer {
+    margin-top: 1.5rem;
+  }
+  
+  /* Enlaces de navegación */
+  .navLink {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    color: #374151; /* Color gray-700 */
+    text-decoration: none;
+    transition: background-color 0.2s;
+  }
+  
+  .navLink:hover {
+    background-color: #f3f4f6; /* Color gray-100 */
+  }
+  
+  /* Enlace activo */
+  .activeLink {
+    background-color: #f3f4f6; /* Color gray-100 */
+    border-left: 4px solid #0d9488; /* Color teal-500 */
+  }
+  
+  /* Iconos */
+  .navIcon {
+    height: 1.25rem;
+    width: 1.25rem;
+    margin-right: 0.75rem;
+  }

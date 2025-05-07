@@ -1,0 +1,65 @@
+:root {
+    --color-principal: #4a6bd8;
+    --color-secundario: #34a0a4;
+    --color-texto: #333333;
+    --color-fondo: #f5f7fa;
+    --color-barra-lateral: #ffffff;
+    --color-destacado: #ff9900;
+    --color-error: #d32f2f;
+    --color-exito: #2e7d32;
+    --sombra-suave: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+  }
+  
+  a {
+    text-decoration: none;
+    color: var(--color-principal);
+  }
+  
+  ul {
+    list-style: none;
+  }
+  
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+  }
+  
+  /* Estilos para el contenido de ejemplo */
+  .contenido-estudiante {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: var(--sombra-suave);
+    margin: 20px;
+  }
+  
+  .contenido-estudiante h2 {
+    color: var(--color-principal);
+    margin-bottom: 16px;
+  }
+  
+  .contenido-estudiante ul {
+    margin-top: 16px;
+    padding-left: 20px;
+    list-style-type: disc;
+  }
+  
+  .contenido-estudiante li {
+    margin-bottom: 8px;
+  }
