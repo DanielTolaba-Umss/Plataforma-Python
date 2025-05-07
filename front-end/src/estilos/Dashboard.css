@@ -1,0 +1,160 @@
+.dashboard-container {
+  padding: 2rem;
+  background-color: #f9fafb;
+  width: 100%;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.admin-avatar {
+  width: 32px;
+  height: 32px;
+  background-color: #10b981;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.icon-container {
+  font-size: 1.8rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #e0f2fe;
+}
+
+.card.modulo .icon-container {
+  background-color: #dbeafe;
+}
+
+.card.docente .icon-container {
+  background-color: #d1fae5;
+}
+
+.card.estudiante .icon-container {
+  background-color: #ede9fe;
+}
+
+.card.curso .icon-container {
+  background-color: #fef3c7;
+}
+
+.card-title {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.card-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dashboard-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 2rem;
+  gap: 1.5rem;
+}
+
+.recent-activity,
+.popular-modules {
+  background-color: white;
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.recent-activity h3,
+.popular-modules h3 {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+  padding-bottom: 0.75rem;
+}
+
+.activity-item p {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.tag {
+  background-color: #e0f2fe;
+  color: #3b82f6;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.module-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.rank {
+  background-color: #ccfbf1;
+  color: #064e3b;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.name {
+  flex: 1;
+  margin-left: 1rem;
+  color: #111827;
+}
+
+.count {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
