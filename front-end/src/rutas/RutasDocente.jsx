@@ -11,11 +11,10 @@ export default function RutasDocente() {
     <>
       <Routes>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/Gestion de cursos" element={<GestionCursos />} />
-        <Route path="/Gestion-Cursos" element={<GestionCurso />} />
+        <Route path="/gestion-cursos" element={<GestionCursos />} />
+        <Route path="/gestion-curso" element={<GestionCurso />} />
         <Route path="/crear-examen" element={<CrearExamen />} />
         <Route path="/crear-pdf" element={<CrearPdf />} />
-        {/* Aquí puedes añadir más rutas si es necesario */}
       </Routes>
     </>
   );
