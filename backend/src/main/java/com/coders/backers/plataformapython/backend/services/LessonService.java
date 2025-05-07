@@ -2,6 +2,7 @@ package com.coders.backers.plataformapython.backend.services;
 
 import com.coders.backers.plataformapython.backend.dto.lesson.LessonDTO;
 import com.coders.backers.plataformapython.backend.models.LessonModel;
+import com.coders.backers.plataformapython.backend.models.ModuleEntity;
 import com.coders.backers.plataformapython.backend.models.ModuleModel;
 import com.coders.backers.plataformapython.backend.repository.LessonRepository;
 import com.coders.backers.plataformapython.backend.repository.ModuleRepository;
@@ -23,7 +24,7 @@ public class LessonService {
     }
 
     public LessonDTO create(LessonDTO dto) {
-        ModuleModel modulo = moduleRepository.findById(dto.getModuloId())
+        ModuleEntity modulo = moduleRepository.findById(dto.getModuloId())
                 .orElseThrow(() -> new EntityNotFoundException("Módulo no encontrado"));
 
         LessonModel lesson = new LessonModel();

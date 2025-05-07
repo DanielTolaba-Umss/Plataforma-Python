@@ -26,6 +26,4 @@ public interface ModuleService {
     
     // Búsqueda
     List<ModuleDto> searchModulesByTitle(String title);
-
-
 } 
