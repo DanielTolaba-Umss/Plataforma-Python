@@ -2,11 +2,20 @@ name: for react test
 
 on:
   push:
-    branches: ["Erick"]
+    branches: ["Semana-1"]
+  pull_request:
+    branches: ["Semana-1"]
+
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "impresion de prueba"
-        run: echo 'impresion de prueba'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm ci
+        working-directory: ./front-end
+      - run: npm run lint
+        working-directory: ./front-end

@@ -1,0 +1,164 @@
+.dashboard-container {
+  padding: 20px;
+  background-color: #f9fafb;
+  width: 100%;
+}
+
+.welcome-text {
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.dashboard-stats {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.green {
+  background-color: #14b8a6;
+}
+.light-green {
+  background-color: #34d399;
+}
+.blue {
+  background-color: #60a5fa;
+}
+.purple {
+  background-color: #c084fc;
+}
+
+.course-progress {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.progress-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.filled {
+  height: 100%;
+  background: #0f766e;
+}
+
+.percentage {
+  width: 40px;
+  text-align: right;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.dashboard-activity {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.activity-card {
+  background: white;
+  flex: 1;
+  min-width: 320px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.activity-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.activity-card li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.activity-card li span {
+  color: #9ca3af;
+  margin-left: auto;
+}
+
+.icon {
+  stroke-width: 1.8;
+}
+
+.icon.done {
+  color: #10b981;
+}
+.icon.progress {
+  color: #60a5fa;
+}
+.icon.badge {
+  color: #a78bfa;
+}
+
+.lesson {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.lesson-title {
+  font-weight: 500;
+  margin: 0;
+}
+
+.lesson-sub {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.btn {
+  padding: 5px 12px;
+  border: none;
+  background-color: #14b8a6;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn.green {
+  background-color: #14b8a6;
+}
