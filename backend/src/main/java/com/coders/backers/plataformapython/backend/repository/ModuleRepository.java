@@ -12,6 +12,8 @@ public interface ModuleRepository  extends JpaRepository<ModuleModel, Long> {
     List<ModuleModel> findByTitle(String title);
     List<ModuleModel> findByTitleContainingIgnoreCase(String title);
     List<ModuleModel> findByOrdenGreaterThan(int orden);
+    List<ModuleModel> findByTitleIn(List<String> titles);
+
 
     boolean existsByTitle(String title);
 }

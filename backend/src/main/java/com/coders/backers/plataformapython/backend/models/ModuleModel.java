@@ -1,7 +1,5 @@
 package com.coders.backers.plataformapython.backend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +14,10 @@ public class ModuleModel {
     private String description;
     private int orden;
     private boolean active;
+
+    @ManyToOne
+    @JoinColumn(name = "curso_id") // este será el nombre de la columna en la tabla `module`
+    private CourseModel curso;
 
     public ModuleModel() {}
 
