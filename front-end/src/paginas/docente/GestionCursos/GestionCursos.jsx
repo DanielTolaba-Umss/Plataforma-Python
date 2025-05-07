@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   GraduationCapIcon,
@@ -8,8 +8,13 @@ import {
   CheckSquareIcon,
   Layers3Icon,
 } from "lucide-react";
+import { useCursos } from "../../../hooks/useCursos";
+import { useLoadingError } from "../../../hooks/useLoadingError";
+import { cursosAPI } from "../../../api";
 
 const GestionCursos = () => {
+  const { cursos, obtenerCursos, obtenerCursosPorModulo } = useCursos();
+  const { loading, error, withLoading, handleError } = useLoadingError();
   const [selectedModule, setSelectedModule] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -24,9 +29,18 @@ const GestionCursos = () => {
   const [practicaErrors, setPracticaErrors] = useState({ title: "", desc: "" });
   const navigate = useNavigate();
 
-  const handleModuleClick = (module) => {
+  useEffect(() => {
+    withLoading(obtenerCursos);
+  }, []);
+
+  const handleModuleClick = async (module) => {
     setSelectedModule(module);
     setShowOptions(true);
+    try {
+      await withLoading(() => obtenerCursosPorModulo(module.toLowerCase()));
+    } catch (err) {
+      handleError(err);
+    }
   };
 
   const handleBackClick = () => setShowOptions(false);
@@ -91,16 +105,43 @@ const GestionCursos = () => {
     }
   };
 
-  const handleCrearPractica = () => {
-    if (validatePractica()) {
-      alert("Práctica Creada Exitosamente");
-      setPracticaTitle("");
-      setPracticaDesc("");
-      setPracticaCode("");
-      setArchivo(null);
-      setShowPracticaModal(false);
-    } else {
-      console.log("Hay errores en los campos");
+  const handleCrearVideo = async () => {
+    if (!validateInputs()) return;
+
+    try {
+      await withLoading(async () => {
+        await cursosAPI.crearVideo({
+          titulo: videoTitle,
+          url: videoUrl,
+          modulo: selectedModule.toLowerCase(),
+        });
+        setVideoTitle("");
+        setVideoUrl("");
+        setShowVideoModal(false);
+      });
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
+  const handleCrearPractica = async () => {
+    if (!validatePractica()) return;
+
+    try {
+      await withLoading(async () => {
+        await cursosAPI.crearPractica({
+          titulo: practicaTitle,
+          descripcion: practicaDesc,
+          codigoEsperado: practicaCode,
+          modulo: selectedModule.toLowerCase(),
+        });
+        setPracticaTitle("");
+        setPracticaDesc("");
+        setPracticaCode("");
+        setShowPracticaModal(false);
+      });
+    } catch (err) {
+      handleError(err);
     }
   };
 
@@ -130,6 +171,32 @@ const GestionCursos = () => {
       actionType: "pdfs",
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="alert alert-danger m-4" role="alert">
+        <h4 className="alert-heading">Error</h4>
+        <p>{error}</p>
+        <hr />
+        <button
+          className="btn btn-outline-danger"
+          onClick={() => window.location.reload()}
+        >
+          Reintentar
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-vh-100 bg-light w-100">
@@ -270,17 +337,7 @@ const GestionCursos = () => {
                 >
                   Cerrar
                 </button>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => {
-                    if (validateInputs()) {
-                      alert("Video Subido Exitosamente");
-                      setVideoTitle("");
-                      setVideoUrl("");
-                      setShowVideoModal(false);
-                    }
-                  }}
-                >
+                <button className="btn btn-primary" onClick={handleCrearVideo}>
                   Subir Video
                 </button>
               </div>

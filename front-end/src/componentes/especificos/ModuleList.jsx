@@ -1,90 +1,130 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../estilos/ModuleList.css";
 import { Pencil, Trash } from "lucide-react";
-import DeleteModal from "../comunes/DeleteModal"; // Ajusta la ruta si está en otra carpeta
-
-const initialModules = [
-  {
-    id: 1,
-    titulo: "Python Básico",
-    descripcion: "Introducción al lenguaje Python",
-    orden: 1,
-  },
-  {
-    id: 2,
-    titulo: "Python Intermedio",
-    descripcion: "Estructuras y funciones intermedias",
-    orden: 2,
-  },
-  {
-    id: 3,
-    titulo: "Django Framework",
-    descripcion: "Desarrollo web con Django",
-    orden: 3,
-  },
-  {
-    id: 4,
-    titulo: "Data Science con Python",
-    descripcion: "Análisis de datos con Python",
-    orden: 4,
-  },
-];
+import DeleteModal from "../comunes/DeleteModal";
+import { modulosAPI } from "../../api";
 
 const ModuleList = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [moduleToDelete, setModuleToDelete] = useState(null);
-  const [modules, setModules] = useState(initialModules);
+  const [modules, setModules] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [newModule, setNewModule] = useState({
-    id: null,
-    titulo: "",
-    descripcion: "",
+    title: "",
+    description: "",
     orden: "",
+    active: true
   });
+
+  // Cargar módulos al montar el componente
+  useEffect(() => {
+    fetchModules();
+  }, []);
+
+  // Función para obtener los módulos
+  const fetchModules = async () => {
+    try {
+      setLoading(true);
+      const response = await modulosAPI.obtenerTodos();
+      setModules(response.data);
+      setError(null);
+    } catch (err) {
+      setError(err.message || 'Error al cargar los módulos');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para buscar módulos
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) {
+      fetchModules();
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      const response = await modulosAPI.buscarPorTitulo(searchTerm);
+      setModules(response.data);
+      setError(null);
+    } catch (err) {
+      setError(err.message || 'Error al buscar módulos');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const toggleForm = () => {
     setShowForm(!showForm);
     setEditMode(false);
     setNewModule({
-      id: null,
-      titulo: "",
-      descripcion: "",
+      title: "",
+      description: "",
       orden: "",
+      active: true
     });
   };
 
   const handleChange = (e) => {
-    setNewModule({ ...newModule, [e.target.name]: e.target.value });
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setNewModule({ ...newModule, [e.target.name]: value });
   };
 
-  const handleCreate = () => {
-    if (!newModule.titulo || !newModule.descripcion || !newModule.orden) {
+  const handleCreate = async () => {
+    if (!newModule.title || !newModule.description || !newModule.orden) {
       alert("Todos los campos son obligatorios");
       return;
     }
 
-    const nuevo = {
-      ...newModule,
-      id: Date.now(),
-      orden: parseInt(newModule.orden),
-    };
-
-    setModules((prev) => [...prev, nuevo]);
-    resetForm();
+    try {
+      setLoading(true);
+      await modulosAPI.crear({
+        title: newModule.title,
+        description: newModule.description,
+        orden: parseInt(newModule.orden),
+        active: newModule.active
+      });
+      await fetchModules();
+      resetForm();
+    } catch (err) {
+      setError(err.message || 'Error al crear el módulo');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEdit = (modulo) => {
     setEditMode(true);
     setShowForm(true);
-    setNewModule(modulo);
+    setNewModule({
+      id: modulo.id,
+      title: modulo.title,
+      description: modulo.description,
+      orden: modulo.orden,
+      active: modulo.active
+    });
   };
 
-  const handleUpdate = () => {
-    setModules((prev) =>
-      prev.map((mod) => (mod.id === newModule.id ? newModule : mod))
-    );
-    resetForm();
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
+      await modulosAPI.actualizar(newModule.id, {
+        title: newModule.title,
+        description: newModule.description,
+        orden: parseInt(newModule.orden),
+        active: newModule.active
+      });
+      await fetchModules();
+      resetForm();
+    } catch (err) {
+      setError(err.message || 'Error al actualizar el módulo');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteClick = (id) => {
@@ -92,22 +132,39 @@ const ModuleList = () => {
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    setModules((prev) => prev.filter((mod) => mod.id !== moduleToDelete));
-    setShowDeleteModal(false);
-    setModuleToDelete(null);
+  const confirmDelete = async () => {
+    try {
+      setLoading(true);
+      await modulosAPI.eliminar(moduleToDelete);
+      await fetchModules();
+      setShowDeleteModal(false);
+      setModuleToDelete(null);
+    } catch (err) {
+      setError(err.message || 'Error al eliminar el módulo');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const resetForm = () => {
     setNewModule({
       id: null,
-      titulo: "",
-      descripcion: "",
+      title: "",
+      description: "",
       orden: "",
+      active: true
     });
     setShowForm(false);
     setEditMode(false);
   };
+
+  if (loading) {
+    return <div className="loading">Cargando...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
   return (
     <div className="modulo-container">
@@ -122,16 +179,16 @@ const ModuleList = () => {
         <div className="formulario-modulo">
           <input
             type="text"
-            name="titulo"
+            name="title"
             placeholder="Título del módulo"
-            value={newModule.titulo}
+            value={newModule.title}
             onChange={handleChange}
           />
           <input
             type="text"
-            name="descripcion"
+            name="description"
             placeholder="Descripción"
-            value={newModule.descripcion}
+            value={newModule.description}
             onChange={handleChange}
           />
           <input
@@ -141,6 +198,15 @@ const ModuleList = () => {
             value={newModule.orden}
             onChange={handleChange}
           />
+          <label>
+            <input
+              type="checkbox"
+              name="active"
+              checked={newModule.active}
+              onChange={handleChange}
+            />
+            Activo
+          </label>
           {editMode ? (
             <button className="btn-crear" onClick={handleUpdate}>
               Guardar Cambios
@@ -153,11 +219,16 @@ const ModuleList = () => {
         </div>
       )}
 
-      <input
-        type="text"
-        placeholder="🔍 Buscar módulos..."
-        className="input-busqueda"
-      />
+      <div className="busqueda-contenedor">
+        <input
+          type="text"
+          placeholder="🔍 Buscar módulos..."
+          className="input-busqueda"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyUp={(e) => e.key === 'Enter' && handleSearch()}
+        />
+      </div>
 
       <table className="tabla-modulos">
         <thead>
@@ -165,6 +236,7 @@ const ModuleList = () => {
             <th>Título</th>
             <th>Descripción</th>
             <th>Orden</th>
+            <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -172,9 +244,14 @@ const ModuleList = () => {
         <tbody>
           {modules.map((modulo) => (
             <tr key={modulo.id}>
-              <td>{modulo.titulo}</td>
-              <td>{modulo.descripcion}</td>
+              <td>{modulo.title}</td>
+              <td>{modulo.description}</td>
               <td>{modulo.orden}</td>
+              <td>
+                <span className={`estado ${modulo.active ? 'activo' : 'inactivo'}`}>
+                  {modulo.active ? 'Activo' : 'Inactivo'}
+                </span>
+              </td>
               <td className="acciones">
                 <Pencil
                   size={18}
@@ -191,10 +268,13 @@ const ModuleList = () => {
           ))}
         </tbody>
       </table>
+
       <DeleteModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onConfirm={confirmDelete}
+        itemName={modules.find(m => m.id === moduleToDelete)?.title}
+        itemType="módulo"
       />
     </div>
   );
