@@ -1,54 +1,31 @@
 package com.coders.backers.plataformapython.backend.services;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
+import com.coders.backers.plataformapython.backend.dto.module.CreateModuleDto;
+import com.coders.backers.plataformapython.backend.dto.module.ModuleDto;
+import com.coders.backers.plataformapython.backend.dto.module.UpdateModuleDto;
 
-import com.coders.backers.plataformapython.backend.repository.ModuleRepository;
+public interface ModuleService {
 
-import jakarta.persistence.EntityNotFoundException;
-
-import com.coders.backers.plataformapython.backend.dto.module.ResponseModuleDto;
-import com.coders.backers.plataformapython.backend.dto.module.StoreModuleDto;
-import com.coders.backers.plataformapython.backend.models.ModuleModel;
-
-
-@Service
-public class ModuleService {
-
-    private final ModuleRepository moduleRepository;
-
-    public ModuleService(ModuleRepository moduleRepository) {
-        this.moduleRepository = moduleRepository;
-    }
-
-    public ModuleModel createModule(StoreModuleDto storeModuleDto) {
-
-        if (moduleRepository.existsByTitle(storeModuleDto.getTitle())) {
-            throw new IllegalArgumentException("A module with this title already exists.");
-        }
-
-        ModuleModel module = new ModuleModel();
-        module.setTitle(storeModuleDto.getTitle());
-        module.setDescription(storeModuleDto.getDescription());
-        module.setOrden(storeModuleDto.getOrden());
-        module.setActive(true);
-
-        return moduleRepository.save(module);
-    }
-
-
-    public List<ResponseModuleDto> getAllModules() {
-        return moduleRepository.findAll().stream()
-                .map(ResponseModuleDto::new)
-                .collect(Collectors.toList());
-    }
-
-    public ResponseModuleDto getModuleById(Long id) {
-        ModuleModel moduleModel = moduleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No se encontro el modulo con id: " + id));
-        return new ResponseModuleDto(moduleModel);
-    }
+    // Create
+    ModuleDto createModule(CreateModuleDto createModuleDto);
     
-}
+    // Read
+    ModuleDto getModuleById(Long id);
+    List<ModuleDto> getAllModules();
+    List<ModuleDto> getActiveModules();
+    
+    // Update
+    ModuleDto updateModule(Long id, UpdateModuleDto updateModuleDto);
+    ModuleDto activateModule(Long id);
+    ModuleDto deactivateModule(Long id);
+    
+    // Delete
+    void deleteModule(Long id);
+    
+    // Búsqueda
+    List<ModuleDto> searchModulesByTitle(String title);
+
+
+} 
