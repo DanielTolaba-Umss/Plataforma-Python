@@ -85,7 +85,14 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<TeacherDto> searchTeachersBySpecialty(String specialty) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'searchTeachersBySpecialty'");
+        List<TeacherEntity> teachers = teacherRepository.findBySpecialty(specialty);
+        return teachers.stream().map(teacher -> {
+            TeacherDto teacherDto = TeacherMapper.mapToDto(teacher);
+            Set<ModuleDto> moduleDtos = teacher.getModules().stream()
+                .map(module -> ModuleMapper.mapToModelDto(module))
+                .collect(Collectors.toSet());
+                teacherDto.setModules(moduleDtos);
+                return teacherDto;
+        }).collect(Collectors.toList());
     }
 }
