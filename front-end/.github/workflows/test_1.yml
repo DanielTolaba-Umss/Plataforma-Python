@@ -1,0 +1,12 @@
+# name: for react test
+
+# on:
+#   push:
+#     branches: ["Erick"]
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: "impresion de prueba"
+#         run: echo 'impresion de prueba'
