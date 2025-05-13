@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import "./CrearExamen.css";
+import "./CrearPractica.css";
 
 const CrearPractica = () => {
   const navigate = useNavigate();
