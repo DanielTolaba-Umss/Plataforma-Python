@@ -2,7 +2,7 @@ import React from "react";
 import { X } from "lucide-react";
 import styles from "/src/paginas/docente/estilos/FormularioCrearCurso.module.css";
 
-const FormularioCrearCurso = ({ onClose, onSubmit }) => {
+const FormularioCrearLeccion = ({ onClose, onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -19,7 +19,7 @@ const FormularioCrearCurso = ({ onClose, onSubmit }) => {
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
-          <h3 className={styles.modalTitle}>Crear Nuevo Curso</h3>
+          <h3 className={styles.modalTitle}>Crear Nueva Leccion</h3>
           <button onClick={onClose} className={styles.closeButton}>
             <X className={styles.closeIcon} />
           </button>
@@ -28,7 +28,7 @@ const FormularioCrearCurso = ({ onClose, onSubmit }) => {
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <label htmlFor="title" className={styles.label}>
-              Título del Curso
+              Título de la lección
             </label>
             <input
               type="text"
@@ -36,7 +36,7 @@ const FormularioCrearCurso = ({ onClose, onSubmit }) => {
               name="title"
               required
               className={styles.input}
-              placeholder="Ej: Fundamentos de Python"
+              placeholder="Ej: Estructuras de control"
             />
           </div>
 
@@ -50,27 +50,12 @@ const FormularioCrearCurso = ({ onClose, onSubmit }) => {
               rows={3}
               required
               className={styles.textarea}
-              placeholder="Breve descripción del curso..."
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="lessons" className={styles.label}>
-              Número de Lecciones
-            </label>
-            <input
-              type="number"
-              id="lessons"
-              name="lessons"
-              min="1"
-              required
-              className={styles.input}
-              placeholder="Ej: 10"
+              placeholder="Breve descripción de la lección..."
             />
           </div>
 
           <button type="submit" className={styles.submitButton}>
-            Crear Curso
+            Crear lección
           </button>
         </form>
       </div>
@@ -78,4 +63,4 @@ const FormularioCrearCurso = ({ onClose, onSubmit }) => {
   );
 };
 
-export default FormularioCrearCurso;
+export default FormularioCrearLeccion;

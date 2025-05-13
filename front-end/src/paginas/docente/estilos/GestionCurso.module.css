@@ -1,29 +1,30 @@
 .container {
-  background-color: #f9fafb;
-  min-height: 100vh;
+  background-color: #E5E5E5; /* Equivalente a bg-light */
+  min-height: 100vh;         /* Equivalente a min-vh-100 */
+  width: 100%;               /* Equivalente a w-100 */
 }
 
+
 .header {
-  background-color: white;
   padding: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
 }
 
 .title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #111827;
+  color: #FFD438;
 }
 
 .mainContent {
   padding: 1.5rem;
+  flex: 1;
 }
 
 .subtitle {
   font-size: 1.25rem;
   font-weight: 500;
   margin-bottom: 1.5rem;
-  color: #374151;
+  color: #300898;
 }
 
 .modulesGrid {
@@ -44,11 +45,14 @@
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: box-shadow 0.2s;
+  transition: transform 0.2s,box-shadow 0.2s;
+  border: 1px solid #E5E5E5;
 }
 
 .moduleCard:hover {
+  transform: translateY(-4px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-color: #FFD438; 
 }
 
 .moduleIconContainer {
@@ -59,11 +63,13 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
+  background-color: #306998;
 }
 
 .moduleIcon {
   width: 1.5rem;
   height: 1.5rem;
+  color: #FFD438;
 }
 
 .blueIcon {
@@ -82,11 +88,11 @@
   font-size: 1.125rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
-  color: #111827;
+  color: #300898;;
 }
 
 .moduleDescription {
-  color: #6b7280;
+  color: #666;
   font-size: 0.875rem;
 }
 
@@ -157,7 +163,7 @@
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
-  background-color: #0d9488;
+  background-color: #306998;
   color: white;
   padding: 1rem;
   border-radius: 9999px;
@@ -168,7 +174,7 @@
 }
 
 .addButton:hover {
-  background-color: #0f766e;
+  background-color: #300898;
 }
 
 .addIcon {
@@ -184,7 +190,7 @@
 }
 
 .inlineCreateButton {
-  background-color: #0f766e;
+  background-color: #306998;;
   color: white;
   border: none;
   padding: 10px 16px;
@@ -198,5 +204,315 @@
 }
 
 .inlineCreateButton:hover {
-  background-color: #0b4f49;
+  background-color: #300898;
+}
+
+.resourcesButton {
+  margin-top: 10px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.resourcesButton:hover {
+  background-color: #0056b3;
+}
+
+
+.backButton {
+  background-color: #0e2ed1; /* Azul moderno */
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+  align-self: flex-start; /* Alinea a la izquierda del contenedor si es flex */
+}
+
+.backButton:hover {
+  background-color: #057eef; /* Azul más oscuro al hacer hover */
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.closeButton {
+  float: right;
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+
+/* Estilos para los botones de acción */
+.actionsContainer {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.actionButton {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.editButton {
+  background-color: #306998;
+  color: white;
+}
+
+.editButton:hover {
+  background-color: #300898;
+}
+
+.deleteButton {
+  background-color: #FFD438;
+  color: #300898;
+}
+
+.deleteButton:hover {
+  background-color: #e6c231;
+}
+
+/* Estilos para los modales */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-top: 4px solid #FFD438;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modalButton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancelButton {
+  background-color: #e2e8f0;
+}
+
+.confirmButton {
+  background-color: #f56565;
+  color: white;
+}
+
+.confirmButton:hover {
+  background-color: #e53e3e;
+}
+
+/* Notificaciones */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 4px;
+  color: white;
+  z-index: 1001;
+  animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+}
+
+.notification.success {
+  background-color: #48bb78;
+}
+
+.notification.error {
+  background-color: #f56565;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Estilos para el modal de recursos */
+.resourcesList {
+  margin: 20px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.resourceItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.resourceItem svg {
+  color: #4299e1;
+}
+
+/* Estilos para las opciones */
+.optionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.optionCard {
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.optionCard:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e0;
+  transform: translateY(-2px);
+}
+
+.optionCard h4 {
+  margin: 8px 0 4px;
+  font-size: 16px;
+}
+
+.optionCard p {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.optionIconContainer {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.optionIcon {
+  color: #4299e1;
+}
+
+/* Estilos para los formularios en modales */
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #300898;
+  font-weight: 500;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.formGroup textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: #FFD438; /* Borde amarillo al enfocar */
+}
+
+/* Notificaciones */
+.notification {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  color: white;
+  z-index: 1001;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+}
+
+.notification.success {
+  background-color: #306998; /* Azul Python */
+}
+
+.notification.error {
+  background-color: #FFD438; /* Amarillo Python */
+  color: #300898; /* Texto morado oscuro */
 }

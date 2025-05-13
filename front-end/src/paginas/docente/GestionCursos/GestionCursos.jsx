@@ -89,7 +89,7 @@ const GestionCursos = () => {
   const handleOptionClick = (actionType) => {
     switch (actionType) {
       case "practicas":
-        setShowPracticaModal(true);
+        navigate("/crear-practica");
         break;
       case "examenes":
         navigate("/crear-examen");
@@ -207,7 +207,7 @@ const GestionCursos = () => {
             className="fw-bold text-dark mb-4"
             style={{ fontSize: "1.875rem" }}
           >
-            Gestión de Modulos
+            Niveles
           </h1>
           <div className="admin-profile d-flex align-items-center gap-2">
             <span className="fw-semibold">Docente</span>
@@ -226,10 +226,10 @@ const GestionCursos = () => {
         {!showOptions ? (
           <>
             <h2 className="fs-5 fw-semibold mb-4">
-              Selecciona un módulo para gestionar
+              Selecciona un nivel
             </h2>
             <div className="row g-4">
-              {["Básico", "Intermedio", "Avanzado"].map((modulo, idx) => (
+              {["Nivel Básico", "Nivel Intermedio", "Nivel Avanzado"].map((modulo, idx) => (
                 <div className="col-md-4" key={idx}>
                   <div
                     className="card text-center shadow-sm h-100"
@@ -344,92 +344,7 @@ const GestionCursos = () => {
             </div>
           </div>
         </div>
-      )}
-
-      {/* Modal para Crear Práctica */}
-      {showPracticaModal && (
-        <div className="modal fade show d-block" tabIndex="-1" role="dialog">
-          <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Crear Práctica</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setShowPracticaModal(false)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                {/* Nombre de la Práctica */}
-                <div className="mb-3">
-                  <label className="form-label">Nombre de la práctica</label>
-                  <input
-                    type="text"
-                    className={`form-control ${
-                      practicaErrors.title ? "is-invalid" : ""
-                    }`}
-                    value={practicaTitle}
-                    onChange={(e) => setPracticaTitle(e.target.value)}
-                    placeholder="Ej: Práctica en Python n.1"
-                  />
-
-                  {practicaErrors.title && (
-                    <div className="invalid-feedback">
-                      {practicaErrors.title}
-                    </div>
-                  )}
-                </div>
-
-                {/* Instrucciones */}
-                <div className="mb-3">
-                  <label className="form-label">Instrucciones</label>
-                  <textarea
-                    className={`form-control ${
-                      practicaErrors.desc ? "is-invalid" : ""
-                    }`}
-                    value={practicaDesc}
-                    onChange={(e) => setPracticaDesc(e.target.value)}
-                    rows="4"
-                    placeholder="Ej: Crea una variable llamada 'mensaje' y asígnale el texto 'Hola, Python!'"
-                  />
-
-                  {practicaErrors.desc && (
-                    <div className="invalid-feedback">
-                      {practicaErrors.desc}
-                    </div>
-                  )}
-                </div>
-
-                {/* Código de la práctica */}
-                <div className="mb-3">
-                  <label className="form-label">Respuesta esperada</label>
-                  <textarea
-                    className="form-control"
-                    value={practicaCode}
-                    onChange={(e) => setPracticaCode(e.target.value)}
-                    rows="6"
-                    placeholder="mensaje = 'Hola Python'"
-                  />
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => setShowPracticaModal(false)}
-                >
-                  Cerrar
-                </button>
-                <button
-                  className="btn btn-primary"
-                  onClick={handleCrearPractica}
-                >
-                  Crear Práctica
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      )}      
     </div>
   );
 };

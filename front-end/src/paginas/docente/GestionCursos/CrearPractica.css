@@ -1,0 +1,63 @@
+.code-response {
+    font-family: 'Courier New', monospace;
+    background-color: #f8f9fa;
+    border-left: 3px solid var(--primary);
+    padding: 10px;
+    white-space: pre;
+  }
+
+.placeholder-text {
+    color: #999;
+    font-style: italic;
+  }
+  
+  .code-response::placeholder {
+    font-family: monospace;
+    color: #aaa;
+  }
+.placeholder-text {
+    color: transparent;
+    position: relative;
+  }
+  
+  .placeholder-example {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.375rem 0.75rem;
+    color: #6c757d;
+    pointer-events: none;
+    width: 100%;
+    line-height: 1.5;
+  }
+  
+  .textarea-wrapper {
+    position: relative;
+  }
+  
+  .textarea-wrapper textarea {
+    background-color: transparent;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .textarea-wrapper .placeholder-example {
+    white-space: pre-wrap;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .code-placeholder {
+    font-family: monospace;
+    background-color: #f8f9fa;
+    border-left: 3px solid #6c757d;
+    padding-left: 10px;
+  }
+    .form-group {
+    position: relative;
+  }
+
+  input::placeholder,
+textarea::placeholder {
+  color: #888;
+  font-style: italic;
+}

@@ -22,10 +22,7 @@ const Sidebar = () => {
           Cursos
         </NavLink>
         <NavLink to="/perfil" className="sidebar-link">
-          <GraduationCap className="sidebar-icon" /> Perfil Estudiante
-        </NavLink>
-        <NavLink to="/configuracion" className="sidebar-link">
-          <Settings className="sidebar-icon" /> Configuración
+          <GraduationCap className="sidebar-icon" /> Perfil
         </NavLink>
       </nav>
     </aside>

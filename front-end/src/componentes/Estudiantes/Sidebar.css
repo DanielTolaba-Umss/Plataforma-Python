@@ -3,8 +3,8 @@
 .sidebar {
   width: 240px;
   height: 100vh;
-  background-color: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  background-color: #300898; /* Color principal oscuro */
+  border-right: 1px solid #48888E; /* Borde con color secundario */
   display: flex;
   flex-direction: column;
   padding: 1rem;
@@ -13,7 +13,7 @@
 .sidebar-header {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #0f766e;
+  color: #FFD438; /* Amarillo dorado para el título */
   margin-bottom: 2rem;
 }
 
@@ -29,24 +29,98 @@
   gap: 0.75rem;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  color: #1f2937;
+  color: #FFFFFF; /* Texto blanco para contraste */
   text-decoration: none;
   font-weight: 500;
   transition: background 0.2s, color 0.2s;
 }
 
 .sidebar-link:hover {
-  background-color: #f0fdf4;
-  color: #0f766e;
+  background-color: #FFD438; /* Amarillo dorado al hover */
+  color: #300898; /* Texto morado oscuro al hover */
 }
 
 .sidebar-link.active {
-  background-color: #ecfdf5;
-  color: #0f766e;
+  background-color: #303dcc; /* Color secundario para activo */
+  color: #FFFFFF; /* Texto blanco */
   font-weight: 700;
 }
 
 .sidebar-icon {
   width: 18px;
   height: 18px;
+  color: #FFD438; /* Amarillo dorado para los íconos */
+}
+
+/* Estilos adicionales para otros elementos */
+
+/* Botones */
+.button {
+  background-color: #FFD438;
+  color: #300898;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button:hover {
+  background-color: #48888E;
+  color: #FFFFFF;
+}
+
+.button-secondary {
+  background-color: #48888E;
+  color: #FFFFFF;
+}
+
+.button-secondary:hover {
+  background-color: #300898;
+}
+
+/* Cards */
+.card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  color: #300898;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.card-body {
+  color: #1f2937;
+}
+
+/* Textos */
+.text-primary {
+  color: #300898;
+}
+
+.text-secondary {
+  color: #48888E;
+}
+
+.text-accent {
+  color: #FFD438;
+}
+
+/* Fondo */
+.bg-primary {
+  background-color: #300898;
+}
+
+.bg-secondary {
+  background-color: #48888E;
+}
+
+.bg-accent {
+  background-color: #FFD438;
 }
