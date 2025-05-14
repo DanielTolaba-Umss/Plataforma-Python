@@ -4,20 +4,22 @@ import java.util.List;
 
 import com.coders.backers.plataformapython.backend.dto.teacher.CreateTeacherDto;
 import com.coders.backers.plataformapython.backend.dto.teacher.TeacherDto;
+import com.coders.backers.plataformapython.backend.dto.teacher.UpdateTeacherDto;
 
 public interface TeacherService {
     // Create
     TeacherDto createTeacher(CreateTeacherDto createTeacherDto);
     
     //Update
-    //TeacherDto updateTeacher(Long id, CreateTeacherDto createTeacherDto);
-    //TeacherDto deactivateTeacher(Long id);
-    //TeacherDto activateTeacher(Long id);
+    TeacherDto updateTeacher(Long id, UpdateTeacherDto updateTeacherDto);
+    TeacherDto deactivateTeacher(Long id);
+    TeacherDto activateTeacher(Long id);
     
     // Read
     List<TeacherDto> getAllTeachers();
     List<TeacherDto> getAllActiveTeachers();
-    //TeacherDto getTeacherById(Long id);
+    List<TeacherDto> getAllInactiveTeachers();
+    TeacherDto getTeacherById(Long id);
     //TeacherDto getTeacherByEmail(String email);
     //TeacherDto getTeacherBySpecialty(String specialty);
     
