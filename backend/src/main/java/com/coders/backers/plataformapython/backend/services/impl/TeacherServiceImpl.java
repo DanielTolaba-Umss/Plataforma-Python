@@ -14,7 +14,7 @@ import com.coders.backers.plataformapython.backend.dto.teacher.TeacherDto;
 import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
 import com.coders.backers.plataformapython.backend.mapper.TeacherMapper;
 import com.coders.backers.plataformapython.backend.models.userModel.TeacherEntity;
-import com.coders.backers.plataformapython.backend.repository.CourseRepository;
+
 import com.coders.backers.plataformapython.backend.repository.TeacherRepository;
 
 
@@ -24,7 +24,7 @@ import com.coders.backers.plataformapython.backend.repository.TeacherRepository;
 public class TeacherServiceImpl implements TeacherService {
   
     private final TeacherRepository teacherRepository;
-    private final CourseRepository moduleRepository;
+    
 
     @Override
     public TeacherDto createTeacher(CreateTeacherDto createTeacherDto) {

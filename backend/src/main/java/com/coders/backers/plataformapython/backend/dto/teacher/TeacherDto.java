@@ -1,11 +1,8 @@
 package com.coders.backers.plataformapython.backend.dto.teacher;
 
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 
-import com.coders.backers.plataformapython.backend.dto.module.ModuleDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +28,7 @@ public class TeacherDto {
     private Date createdAt;
     private Date updatedAt;
     private boolean active;
-    private Set<ModuleDto> modules = new HashSet<>();
+    
     
     public TeacherDto(Long id, String name, String lastName, String email, String phone, 
                       String specialty, String role, boolean active) {

@@ -12,7 +12,7 @@ public interface CourseRepository extends JpaRepository<CourseEntity, Long> {
     List<CourseEntity> findByActive(boolean active);
     List<CourseEntity> findByTitle(String title);
     List<CourseEntity> findByTitleContainingIgnoreCase(String title);
-    List<CourseEnCourseRepositorynGreaterThan(int orden);
+    List<CourseEntity> findByOrdenGreaterThan(int orden);
     List<CourseEntity> findByLevel(String level);
 
     boolean existsByTitle(String title);

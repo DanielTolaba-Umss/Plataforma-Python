@@ -1,13 +1,10 @@
 package com.coders.backers.plataformapython.backend.mapper;
-import com.coders.backers.plataformapython.backend.dto.module.ModuleDto;
+
 import com.coders.backers.plataformapython.backend.dto.teacher.CreateTeacherDto;
 import com.coders.backers.plataformapython.backend.dto.teacher.TeacherDto;
-import com.coders.backers.plataformapython.backend.models.ModuleEntity;
-import com.coders.backers.plataformapython.backend.models.userModel.TeacherEntity;
-import com.coders.backers.plataformapython.backend.models.userModel.UserEntity;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.coders.backers.plataformapython.backend.models.userModel.TeacherEntity;
+
 
 import com.coders.backers.plataformapython.backend.enums.Role;
 
