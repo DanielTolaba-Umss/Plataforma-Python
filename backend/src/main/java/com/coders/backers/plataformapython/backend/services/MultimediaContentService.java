@@ -1,6 +1,6 @@
-package com.coders.backers.plataformapython.backend.service;
+package com.coders.backers.plataformapython.backend.services;
 
-import com.coders.backers.plataformapython.backend.dto.MultimediaContentDTO;
+import com.coders.backers.plataformapython.backend.dto.multimedia.MultimediaContentDTO;
 
 import java.util.List;
 

@@ -1,13 +1,13 @@
-package com.coders.backers.plataformapython.backend.service.impl;
+package com.coders.backers.plataformapython.backend.services.impl;
 
-import com.coders.backers.plataformapython.backend.dto.MultimediaContentDTO;
+import com.coders.backers.plataformapython.backend.dto.multimedia.MultimediaContentDTO;
 import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
 import com.coders.backers.plataformapython.backend.mapper.MultimediaContentMapper;
 import com.coders.backers.plataformapython.backend.models.LessonModel;
 import com.coders.backers.plataformapython.backend.models.MultimediaContentModel;
 import com.coders.backers.plataformapython.backend.repository.LessonRepository;
 import com.coders.backers.plataformapython.backend.repository.MultimediaContentRepository;
-import com.coders.backers.plataformapython.backend.service.MultimediaContentService;
+import com.coders.backers.plataformapython.backend.services.MultimediaContentService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -50,8 +50,8 @@ public class TeacherServiceImpl implements TeacherService {
     public void deleteTeacher(Long id) {
         TeacherEntity teacher = teacherRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
-        teacher.setActive(false); 
-        teacherRepository.save(teacher);
+        
+        teacherRepository.delete(teacher);
     }
 
     @Override
