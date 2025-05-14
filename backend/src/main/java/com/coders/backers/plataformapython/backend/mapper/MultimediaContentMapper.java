@@ -1,6 +1,6 @@
 package com.coders.backers.plataformapython.backend.mapper;
 
-import com.coders.backers.plataformapython.backend.dto.MultimediaContentDTO;
+import com.coders.backers.plataformapython.backend.dto.multimedia.MultimediaContentDTO;
 import com.coders.backers.plataformapython.backend.models.LessonModel;
 import com.coders.backers.plataformapython.backend.models.MultimediaContentModel;
 

@@ -1,4 +1,4 @@
-package com.coders.backers.plataformapython.backend.dto;
+package com.coders.backers.plataformapython.backend.dto.multimedia;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
