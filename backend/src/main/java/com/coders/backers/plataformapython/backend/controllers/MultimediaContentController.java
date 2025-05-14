@@ -1,7 +1,7 @@
 package com.coders.backers.plataformapython.backend.controllers;
 
-import com.coders.backers.plataformapython.backend.dto.MultimediaContentDTO;
-import com.coders.backers.plataformapython.backend.service.MultimediaContentService;
+import com.coders.backers.plataformapython.backend.dto.multimedia.MultimediaContentDTO;
+import com.coders.backers.plataformapython.backend.services.MultimediaContentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

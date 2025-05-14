@@ -1,13 +1,13 @@
-package com.coders.backers.plataformapython.backend.service.impl;
+package com.coders.backers.plataformapython.backend.services.impl;
 
-import com.coders.backers.plataformapython.backend.dto.MultimediaContentDTO;
+import com.coders.backers.plataformapython.backend.dto.multimedia.MultimediaContentDTO;
 import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
 import com.coders.backers.plataformapython.backend.mapper.MultimediaContentMapper;
-import com.coders.backers.plataformapython.backend.models.LessonModel;
+import com.coders.backers.plataformapython.backend.models.LessonEntity;
 import com.coders.backers.plataformapython.backend.models.MultimediaContentModel;
 import com.coders.backers.plataformapython.backend.repository.LessonRepository;
 import com.coders.backers.plataformapython.backend.repository.MultimediaContentRepository;
-import com.coders.backers.plataformapython.backend.service.MultimediaContentService;
+import com.coders.backers.plataformapython.backend.services.MultimediaContentService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class MultimediaContentServiceImpl implements MultimediaContentService {
 
     @Override
     public MultimediaContentDTO create(MultimediaContentDTO dto) {
-        LessonModel leccion = leccionRepository.findById(dto.getLeccionId())
+        LessonEntity leccion = leccionRepository.findById(dto.getLeccionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Lección no encontrada con id: " + dto.getLeccionId()));
         MultimediaContentModel model = MultimediaContentMapper.toModel(dto, leccion);
         return MultimediaContentMapper.toDTO(contentRepository.save(model));
@@ -51,7 +51,7 @@ public class MultimediaContentServiceImpl implements MultimediaContentService {
     public MultimediaContentDTO update(Long id, MultimediaContentDTO dto) {
         MultimediaContentModel existing = contentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Contenido no encontrado con id: " + id));
-        LessonModel leccion = leccionRepository.findById(dto.getLeccionId())
+        LessonEntity leccion = leccionRepository.findById(dto.getLeccionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Lección no encontrada con id: " + dto.getLeccionId()));
         MultimediaContentModel updated = MultimediaContentMapper.toModel(dto, leccion);
         updated.setId(existing.getId());
