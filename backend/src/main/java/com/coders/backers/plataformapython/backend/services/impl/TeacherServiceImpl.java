@@ -114,4 +114,11 @@ public class TeacherServiceImpl implements TeacherService {
                 return teacherDto;
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public TeacherDto getTeacherById(Long id) {
+        TeacherEntity teacher = teacherRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
+        return TeacherMapper.mapToDto(teacher);
+    }
 }
