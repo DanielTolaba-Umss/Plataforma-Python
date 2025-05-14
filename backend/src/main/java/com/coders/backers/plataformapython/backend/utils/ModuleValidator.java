@@ -3,7 +3,6 @@ package com.coders.backers.plataformapython.backend.utils;
 import com.coders.backers.plataformapython.backend.models.ModuleEntity;
 
 public class ModuleValidator {
-
     public void validate(ModuleEntity module){
         if (module.getTitle() == null || module.getTitle().isEmpty()) {
             throw new IllegalArgumentException("Module title cannot be null or empty");
@@ -15,5 +14,4 @@ public class ModuleValidator {
             throw new IllegalArgumentException("Module order cannot be negative");
         }
     }
-    
 }
