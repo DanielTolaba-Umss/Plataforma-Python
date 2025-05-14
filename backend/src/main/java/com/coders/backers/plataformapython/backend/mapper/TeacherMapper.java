@@ -14,7 +14,7 @@ import com.coders.backers.plataformapython.backend.enums.Role;
 
 public class TeacherMapper {
     
-
+ 
     public static TeacherEntity mapFromCreateDto(CreateTeacherDto dto, Set<ModuleEntity> modules) {
         TeacherEntity entity = new TeacherEntity();
         entity.setName(dto.getName());

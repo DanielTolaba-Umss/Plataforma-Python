@@ -21,7 +21,7 @@ import com.coders.backers.plataformapython.backend.mapper.ModuleMapper;
 import com.coders.backers.plataformapython.backend.mapper.TeacherMapper;
 import com.coders.backers.plataformapython.backend.models.ModuleEntity;
 import com.coders.backers.plataformapython.backend.models.userModel.TeacherEntity;
-import com.coders.backers.plataformapython.backend.repository.ModuleRepository;
+import com.coders.backers.plataformapython.backend.repository.CourseRepository;
 import com.coders.backers.plataformapython.backend.repository.TeacherRepository;
 
 
@@ -29,9 +29,9 @@ import com.coders.backers.plataformapython.backend.repository.TeacherRepository;
 @AllArgsConstructor
 @Slf4j
 public class TeacherServiceImpl implements TeacherService {
-    
+  
     private final TeacherRepository teacherRepository;
-    private final ModuleRepository moduleRepository;
+    private final CourseRepository moduleRepository;
 
     @Override
     public TeacherDto createTeacher(CreateTeacherDto createTeacherDto) {

@@ -20,37 +20,49 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "module")
-public class ModuleEntity {
+@Table(name = "curso")
+public class CourseEntity {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "curso_id")
     private Long id;
 
+    @Column(name = "titulo")
     private String title;
+    
+    @Column(name = "descripcion")
     private String description;
+    
+    @Column(name = "nivel")
+    private String level;
+    
+    @Column(name = "orden")
     private int orden;
 
-    @Column(name = "created_at")
+    @Column(name = "fecha_creacion")
     private Date createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "fecha_actualizacion")
     private Date updatedAt;
 
+    @Column(name = "activo")
     private boolean active;
 
-
-    public ModuleEntity(String title, String description, int orden) {
+    // Constructor para crear un nuevo curso
+    public CourseEntity(String title, String description, String level, int orden) {
         this.title = title;
         this.description = description;
+        this.level = level;
         this.orden = orden;
     }
 
-    public ModuleEntity(Long id, String title, String description, int orden, Date createdAt, Date updatedAt,
-    boolean active) {
+    // Constructor completo para fines de mapeo
+    public CourseEntity(Long id, String title, String description, String level, int orden, 
+                        Date createdAt, Date updatedAt, boolean active) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.level = level;
         this.orden = orden;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -71,10 +83,9 @@ public class ModuleEntity {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "teacher_module",
-        joinColumns = @JoinColumn(name = "module_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
+        name = "teacher_course",
+        joinColumns = @JoinColumn(name = "curso_id"),
+        inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
     private Set<TeacherEntity> teachers = new HashSet<>();
-
 }
