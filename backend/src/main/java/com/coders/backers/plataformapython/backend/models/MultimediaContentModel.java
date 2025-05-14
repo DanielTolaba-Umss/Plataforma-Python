@@ -25,7 +25,7 @@ public class MultimediaContentModel {
 
     @ManyToOne
     @JoinColumn(name = "leccion_id")
-    private LessonModel leccion; 
+    private LessonEntity leccion; 
 
 
     public MultimediaContentModel() {
@@ -33,7 +33,7 @@ public class MultimediaContentModel {
 
 
     public MultimediaContentModel(Long id, String tipo, String titulo, String descripcion, String url,
-                                  byte[] archivo, double duracion, int orden, boolean activo, LessonModel leccion) {
+                                  byte[] archivo, double duracion, int orden, boolean activo, LessonEntity leccion) {
         this.id = id;
         this.tipo = tipo;
         this.titulo = titulo;
@@ -120,11 +120,11 @@ public class MultimediaContentModel {
         this.activo = activo;
     }
 
-    public LessonModel getLeccion() {
+    public LessonEntity getLeccion() {
         return leccion;
     }
 
-    public void setLesson(LessonModel leccion) {
+    public void setLesson(LessonEntity leccion) {
         this.leccion = leccion;
     }
 }

@@ -24,7 +24,7 @@ import com.coders.backers.plataformapython.backend.repository.TeacherRepository;
 @AllArgsConstructor
 @Slf4j
 public class TeacherServiceImpl implements TeacherService {
-    
+  
     private final TeacherRepository teacherRepository;
 
     @Override
