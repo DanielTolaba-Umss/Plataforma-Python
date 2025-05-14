@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreatePracticeModuleDto {
+public class UpdatePracticeDto {
     private String instrucciones;
     private String codigoInicial;
     private String solucionReferencia;

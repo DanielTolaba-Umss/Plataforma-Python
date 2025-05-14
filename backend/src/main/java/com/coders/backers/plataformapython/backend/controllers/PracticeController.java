@@ -10,27 +10,34 @@ import com.coders.backers.plataformapython.backend.dto.practice.*;
 import com.coders.backers.plataformapython.backend.services.PracticeService;
 
 @RestController
-@RequestMapping("/api/practice-modules")
+@RequestMapping("/api/practice")
 @RequiredArgsConstructor
 public class PracticeController {
 
-    private final PracticeService practiceModuleService;
+    private final PracticeService practiceService;
 
     @PostMapping
-    public ResponseEntity<PracticeModuleDto> createPracticeModule(@RequestBody CreatePracticeModuleDto dto) {
-        PracticeModuleDto createdModule = practiceModuleService.createPracticeModule(dto);
+    public ResponseEntity<PracticeDto> createPracticeModule(@RequestBody CreatePracticeDto dto) {
+        PracticeDto createdModule = practiceService.createPractice(dto);
         return ResponseEntity.status(201).body(createdModule);
     }
 
     @GetMapping
-    public ResponseEntity<List<PracticeModuleDto>> getAllPracticeModules() {
-        List<PracticeModuleDto> modules = practiceModuleService.getAllPracticeModules();
+    public ResponseEntity<List<PracticeDto>> getAllPracticeModules() {
+        List<PracticeDto> modules = practiceService.getAllPractice();
         return ResponseEntity.ok(modules);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePracticeModule(@PathVariable Long id) {
-        practiceModuleService.deletePracticeModule(id);
+        practiceService.deletePractice(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PracticeDto> updatePracticeModule(@PathVariable Long id, @RequestBody UpdatePracticeDto dto) {
+        PracticeDto updated = practiceService.updatePractice(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
 }

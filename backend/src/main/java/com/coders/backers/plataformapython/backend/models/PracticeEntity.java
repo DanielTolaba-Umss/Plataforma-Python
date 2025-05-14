@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "practice")
-public class PracticeModule {
+public class PracticeEntity {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     @Column(name = "id")
@@ -19,11 +19,11 @@ public class PracticeModule {
 
     @OneToOne
     @JoinColumn(name = "leccion_id") 
-    private LessonModel lesson;
+    private LessonEntity lesson;
 
-    public PracticeModule() {}
+    public PracticeEntity() {}
 
-    public PracticeModule(Long id, String instrucciones, String codigoInicial, String solucionReferencia, String casosPrueba, String restricciones, Integer intentosMax) {
+    public PracticeEntity(Long id, String instrucciones, String codigoInicial, String solucionReferencia, String casosPrueba, String restricciones, Integer intentosMax) {
         this.id = id;
         this.instrucciones = instrucciones;
         this.codigoInicial = codigoInicial;
@@ -89,11 +89,11 @@ public class PracticeModule {
         this.intentosMax = intentosMax;
     }
 
-    public LessonModel getLesson() {
+    public LessonEntity getLesson() {
         return lesson;
     }
 
-    public void setLesson(LessonModel lesson) {
+    public void setLesson(LessonEntity lesson) {
         this.lesson = lesson;
     }
 }
