@@ -8,6 +8,7 @@
   - [Requerimientos No Funcionales Principales](#requerimientos-no-funcionales-principales)
 - [Tecnologías](#-tecnologías)
 - [Instalación](#-instalación)
+- [Configuración del Entorno de Desarrollo](#-configuración-del-entorno-de-desarrollo)
 
 ---
 
@@ -81,6 +82,12 @@ Los objetivos principales son:
 
 ---
 
+## Notion
+
+https://www.notion.so/Generaci-n-de-Software-Code-Bakers-1df9f28680c780f1a249cfde0ec02d04?pvs=4
+
+---
+
 ## 🧩 Tecnologías
 
 - **Frontend:** React.js
@@ -130,3 +137,54 @@ docker-compose up --build
 ```
 
 Esto levantará tanto el frontend como el backend usando contenedores.
+
+---
+
+## 🛠️ Configuración del Entorno de Desarrollo
+
+### Backend (Spring Boot)
+
+1. Asegúrate de tener Java 17 o superior instalado
+2. Navega al directorio del backend:
+```bash
+cd backend
+```
+3. Ejecuta el servidor de desarrollo:
+```bash
+./mvnw spring-boot:run
+```
+El backend estará disponible en http://localhost:8080
+
+### Frontend (React)
+
+1. Asegúrate de tener Node.js 18 o superior instalado
+2. Navega al directorio del frontend:
+```bash
+cd front-end
+```
+3. Instala las dependencias:
+```bash
+npm install
+```
+4. Ejecuta el servidor de desarrollo:
+```bash
+npm run dev
+```
+El frontend estará disponible en http://localhost:5173
+
+### Verificación de la Integración
+
+Para verificar que la integración entre frontend y backend funciona correctamente:
+
+1. Asegúrate de que tanto el backend como el frontend estén ejecutándose
+2. Abre el navegador y accede a http://localhost:5173
+3. Intenta iniciar sesión o registrar un nuevo usuario
+4. Navega a la sección de Gestión de Cursos
+5. Intenta crear un nuevo curso o práctica
+
+Si encuentras algún error, verifica:
+- Que los servicios de backend y frontend estén ejecutándose
+- Los logs del backend en la terminal correspondiente
+- La consola del navegador para errores de frontend
+- La configuración CORS en el backend
+- La configuración de las URLs en el frontend (environment.js)

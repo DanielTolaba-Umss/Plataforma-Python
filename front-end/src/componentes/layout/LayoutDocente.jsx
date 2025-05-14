@@ -18,11 +18,11 @@ const Sidebar = () => {
         <NavLink to="/" className="sidebar-link">
           <LayoutDashboard className="sidebar-icon" /> Dashboard
         </NavLink>
-        <NavLink to="/Gestion de Cursos" className="sidebar-link">
+        <NavLink to="/gestion-cursos" className="sidebar-link">
           <BookOpen className="sidebar-icon" /> Módulos
         </NavLink>
-        <NavLink to="/Gestion-Cursos" className="sidebar-link">
-          <BookOpen className="sidebar-icon" /> Gestion Cursos
+        <NavLink to="/gestion-curso" className="sidebar-link">
+          <BookOpen className="sidebar-icon" /> Gestión Cursos
         </NavLink>
       </nav>
     </aside>

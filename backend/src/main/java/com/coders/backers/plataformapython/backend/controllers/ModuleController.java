@@ -27,15 +27,13 @@ public class ModuleController {
 
     private  ModuleService moduleService;
 
-    // Build the controller methods for CRUD operations
-    // Create
     @PostMapping
     public ResponseEntity<ModuleDto> createModule(@RequestBody CreateModuleDto createModuleDto) {
         ModuleDto savedModule = moduleService.createModule(createModuleDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedModule);
     }
 
-    // Read
+
     @GetMapping("/{id}")
     public ResponseEntity<ModuleDto> getModuleById(@PathVariable Long id) {
         ModuleDto moduleDto = moduleService.getModuleById(id);
@@ -60,7 +58,6 @@ public class ModuleController {
         return ResponseEntity.ok(modules);
     }
     
-    // Update
     @PutMapping("/{id}")
     public ResponseEntity<ModuleDto> updateModule(
             @PathVariable Long id, 
@@ -81,7 +78,7 @@ public class ModuleController {
         return ResponseEntity.ok(deactivatedModule);
     }
     
-    // Delete
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteModule(@PathVariable Long id) {
         moduleService.deleteModule(id);

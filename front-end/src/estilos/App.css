@@ -40,3 +40,32 @@
 .read-the-docs {
   color: #888;
 }
+
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  display: flex;
+  transition: all 0.3s ease;
+}
+
+.contenedorPrincipal {
+  flex: 1;
+  display: flex;
+  width: 100%;
+}
+
+.sidebar {
+  width: 250px;
+  min-width: 250px;
+  transition: width 0.3s ease;
+}
+
+button {
+  transition: all 0.3s ease;
+}
