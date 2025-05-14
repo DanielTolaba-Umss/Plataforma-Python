@@ -23,5 +23,4 @@ public class CreateTeacherDto {
     private String specialty;
     
     private List<Long> moduleIds;
-    
 }
