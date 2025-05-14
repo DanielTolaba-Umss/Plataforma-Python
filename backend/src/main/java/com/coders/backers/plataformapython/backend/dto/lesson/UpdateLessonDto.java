@@ -1,4 +1,5 @@
-package com.coders.backers.plataformapython.backend.dto.module;
+package com.coders.backers.plataformapython.backend.dto.lesson;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,8 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateModuleDto {
+public class UpdateLessonDto {
     private String title;
     private String description;
-    private int orden; 
+    private Long courseId;
+    private Long quizId;
+    private Long practiceId;
 }

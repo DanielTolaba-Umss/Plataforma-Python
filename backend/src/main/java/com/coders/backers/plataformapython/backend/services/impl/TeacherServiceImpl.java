@@ -14,7 +14,7 @@ import com.coders.backers.plataformapython.backend.dto.teacher.TeacherDto;
 import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
 import com.coders.backers.plataformapython.backend.mapper.TeacherMapper;
 import com.coders.backers.plataformapython.backend.models.userModel.TeacherEntity;
-import com.coders.backers.plataformapython.backend.repository.ModuleRepository;
+
 import com.coders.backers.plataformapython.backend.repository.TeacherRepository;
 
 
@@ -22,9 +22,9 @@ import com.coders.backers.plataformapython.backend.repository.TeacherRepository;
 @AllArgsConstructor
 @Slf4j
 public class TeacherServiceImpl implements TeacherService {
-    
+  
     private final TeacherRepository teacherRepository;
-    private final ModuleRepository moduleRepository;
+    
 
     @Override
     public TeacherDto createTeacher(CreateTeacherDto createTeacherDto) {
