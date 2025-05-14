@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.coders.backers.plataformapython.backend.dto.module.ModuleDto;
 import com.coders.backers.plataformapython.backend.dto.teacher.CreateTeacherDto;
 import com.coders.backers.plataformapython.backend.dto.teacher.TeacherDto;
 import com.coders.backers.plataformapython.backend.services.TeacherService;
