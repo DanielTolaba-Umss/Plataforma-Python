@@ -3,7 +3,7 @@
 .sidebar {
   width: 240px;
   height: 100vh;
-  background-color: #300898; /* Color principal oscuro */
+  background-color: #0c0461fd; /* Color principal oscuro */
   border-right: 1px solid #48888E; /* Borde con color secundario */
   display: flex;
   flex-direction: column;
