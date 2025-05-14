@@ -516,3 +516,51 @@
   background-color: #FFD438; /* Amarillo Python */
   color: #300898; /* Texto morado oscuro */
 }
+/* Contenedor flotante para ambos botones */
+.floatingButtonsContainer {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+
+/* Estilo base para ambos botones flotantes */
+.floatingButton {
+  padding: 0.75rem 1.25rem;
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+/* Botón "Crear lección" (estilo existente modificado) */
+.addLessonButton {
+  background-color: #306998;
+  color: white;
+}
+
+.addLessonButton:hover {
+  background-color: #300898;
+}
+
+/* Botón Crear quizzes */
+.quizzesButton {
+  background-color: #306998;
+  color: white;
+}
+
+.quizzesButton:hover {
+  background-color: #5a6268;
+}
+
+.floatingButtonIcon {
+  width: 1.2rem;
+  height: 1.2rem;
+}

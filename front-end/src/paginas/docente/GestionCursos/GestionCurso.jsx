@@ -21,6 +21,7 @@ const GestionCurso = () => {
   const [practicaTitle, setPracticaTitle] = useState("");
   const [practicaDesc, setPracticaDesc] = useState("");
   const [practicaCode, setPracticaCode] = useState("");
+  const [showExamenesQuizzesModal, setShowExamenesQuizzesModal] = useState(false);
   const navigate = useNavigate();
   
   // Mock data for courses
@@ -380,16 +381,24 @@ const GestionCurso = () => {
                 </div>
               ))}
             </div>
-
             {!showCourseForm && (
-              <button
-                onClick={() => setShowCourseForm(true)}
-                className={styles.addButton}
-              >
-                <PlusCircle className={styles.addIcon} />
-                Crear lección
-              </button>
-            )}
+            <div className={styles.floatingButtonsContainer}>
+            <button
+                    onClick={() => setShowExamenesQuizzesModal(true)}
+                      className={`${styles.floatingButton} ${styles.quizzesButton}`}
+                  >
+                   <FileText className={styles.floatingButtonIcon} />
+                    Exámenes y Quizzes
+                  </button>
+                <button
+                  onClick={() => setShowCourseForm(true)}
+                    className={`${styles.floatingButton} ${styles.addLessonButton}`}
+               >
+                <PlusCircle className={styles.floatingButtonIcon} />
+                 Crear lección
+             </button>
+        </div>
+      )}
           </div>
         )}
       </main>
@@ -519,7 +528,50 @@ const GestionCurso = () => {
           </div>
         </div>
       )}
-    </div>
+      
+        {showExamenesQuizzesModal && (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <button 
+            className={styles.closeButton} 
+            onClick={() => setShowExamenesQuizzesModal(false)}
+          >
+            ×
+          </button>
+          <h2>Exámenes y Quizzes</h2>
+          
+          <div className={styles.optionsGrid}>
+            <div 
+              className={styles.optionCard}
+              onClick={() => {
+                navigate("/crear-examen");
+                setShowExamenesQuizzesModal(false);
+              }}
+            >
+              <div className={styles.optionIconContainer}>
+                <FileText size={20} className={styles.optionIcon} />
+              </div>
+              <h4>Crear Examen</h4>
+              <p>Evaluación formal con preguntas de desarrollo, opción múltiple, etc.</p>
+            </div>
+            <div 
+              className={styles.optionCard}
+              onClick={() => {
+                navigate("/crear-quiz");
+                setShowExamenesQuizzesModal(false);
+              }}
+            >
+              <div className={styles.optionIconContainer}>
+                <CheckSquare size={20} className={styles.optionIcon} />
+              </div>
+              <h4>Crear Quiz</h4>
+              <p>Evaluación rápida con preguntas cortas o selección múltiple.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </div> 
   );
 };
 
