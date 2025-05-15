@@ -1,49 +1,30 @@
 package com.coders.backers.plataformapython.backend.services;
 
-
-import com.coders.backers.plataformapython.backend.dto.course.CourseDTO;
-import com.coders.backers.plataformapython.backend.models.CourseModel;
-import com.coders.backers.plataformapython.backend.repository.CourseRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-public class CourseService {
+import com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto;
+import com.coders.backers.plataformapython.backend.dto.course.CourseDto;
+import com.coders.backers.plataformapython.backend.dto.course.UpdateCourseDto;
 
-    private final CourseRepository courseRepository;
+public interface CourseService {
 
-    public CourseService(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
-    }
-
-    public List<CourseDTO> getAll() {
-        return courseRepository.findAll().stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
-    }
-
-    public CourseDTO getById(Long id) {
-        CourseModel course = courseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
-        return mapToDTO(course);
-    }
-
-    public CourseModel create(CourseDTO dto) {
-        CourseModel course = new CourseModel();
-        course.setTitulo(dto.getTitulo());
-        course.setDescripcion(dto.getDescripcion());
-        course.setActivo(dto.isActivo());
-        return courseRepository.save(course);
-    }
-
-    private CourseDTO mapToDTO(CourseModel model) {
-        CourseDTO dto = new CourseDTO();
-        dto.setId(model.getId());
-        dto.setTitulo(model.getTitulo());
-        dto.setDescripcion(model.getDescripcion());
-        dto.setActivo(model.isActivo());
-        return dto;
-    }
+    // Create
+    CourseDto createCourse(CreateCourseDto createCourseDto);
+    
+    // Read
+    CourseDto getCourseById(Long id);
+    List<CourseDto> getAllCourses();
+    List<CourseDto> getActiveCourses();
+    List<CourseDto> getCoursesByLevel(String level);
+    
+    // Update
+    CourseDto updateCourse(Long id, UpdateCourseDto updateCourseDto);
+    CourseDto activateCourse(Long id);
+    CourseDto deactivateCourse(Long id);
+    
+    // Delete
+    void deleteCourse(Long id);
+    
+    // Búsqueda
+    List<CourseDto> searchCoursesByTitle(String title);
 }
