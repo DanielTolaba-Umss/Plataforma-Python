@@ -17,10 +17,11 @@ public class LessonDto {
     private Long id;
     private String title;
     private String description;
-    private boolean active;
+    private boolean active; 
     private Date createdAt;
     private Date updatedAt;
     private CourseDto course;
     private Long quizId;
     private Long practiceId;
 }
+
