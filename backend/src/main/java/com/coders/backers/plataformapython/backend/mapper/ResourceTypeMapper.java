@@ -1,7 +1,7 @@
 package com.coders.backers.plataformapython.backend.mapper;
 
+import com.coders.backers.plataformapython.backend.dto.resourceType.ResourceTypeDto;
 import com.coders.backers.plataformapython.backend.models.ResourceTypeModel;
-import com.coders.backers.plataformapython.backend.dto.ResourceTypeDto;
 
 public class ResourceTypeMapper {
 

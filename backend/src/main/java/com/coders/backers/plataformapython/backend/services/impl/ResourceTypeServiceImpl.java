@@ -1,10 +1,10 @@
 package com.coders.backers.plataformapython.backend.services.impl;
 
-import com.coders.backers.plataformapython.backend.dto.ResourceTypeDto;
 import com.coders.backers.plataformapython.backend.models.ResourceTypeModel;
 import com.coders.backers.plataformapython.backend.mapper.ResourceTypeMapper;
 import com.coders.backers.plataformapython.backend.repository.ResourceTypeRepository;
 import com.coders.backers.plataformapython.backend.services.ResourceTypeService;
+import com.coders.backers.plataformapython.backend.dto.resourceType.ResourceTypeDto;
 import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
