@@ -4,6 +4,7 @@ import Dashboard from "../paginas/docente/Dashboard";
 import GestionCurso from "../paginas/docente/GestionCursos/GestionCurso";
 import CrearExamen from "../paginas/docente/GestionCursos/CrearExamen";
 import CrearPdf from "../paginas/docente/GestionCursos/CrearPdf";
+import GestionLecciones from "../paginas/docente/GestionCursos/GestionLecciones";
 
 export default function RutasDocente() {
   return (
@@ -11,6 +12,7 @@ export default function RutasDocente() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/gestion-curso" element={<GestionCurso />} />
+        <Route path="/gestion-curso/lecciones/:nivel" element={<GestionLecciones />} />
         <Route path="/crear-examen" element={<CrearExamen />} />
         <Route path="/crear-pdf" element={<CrearPdf />} />
       </Routes>
