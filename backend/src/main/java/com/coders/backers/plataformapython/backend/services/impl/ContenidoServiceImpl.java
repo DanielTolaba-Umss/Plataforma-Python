@@ -41,9 +41,6 @@ public class ContenidoServiceImpl implements ContenidoService {
     public ContenidoDto create(ContenidoDto dto) {
         LessonEntity leccion = leccionRepository.findById(dto.getLeccionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Lección no encontrada"));
-        
-                System.out.println("-------------------------------------------------------------LECCION ID:" + dto.getLeccionId());
-                System.out.println("-------------------------------------------------------------leccion:" + leccion.getId()+" "+leccion.getTitle());
         ContenidoModel model = ContenidoMapper.toModel(dto, leccion);
         model.setCreationDate(LocalDateTime.now());
         model.setUpdateDate(LocalDateTime.now());
