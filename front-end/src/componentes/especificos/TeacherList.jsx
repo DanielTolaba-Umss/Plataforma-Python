@@ -1,79 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../estilos/TeacherList.css";
 import DeleteModal from "../comunes/DeleteModal";
-import { Pencil, Trash } from "lucide-react";
-
-const initialTeachers = [
-  {
-    id: 1,
-    nombre: "Carlos Rodríguez",
-    email: "carlos@pythonedu.com",
-    estado: "Activo",
-  },
-  {
-    id: 2,
-    nombre: "María González",
-    email: "maria@pythonedu.com",
-    estado: "Activo",
-  },
-  {
-    id: 3,
-    nombre: "Javier López",
-    email: "javier@pythonedu.com",
-    estado: "Inactivo",
-  },
-];
+import { Edit, Trash2 } from "lucide-react";
+import { teachersAPI } from "../../api/docentesService";
 
 const TeacherList = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [teacherToDelete, setTeacherToDelete] = useState(null);
 
-  const [teachers, setTeachers] = useState(initialTeachers);
+  const [teachers, setTeachers] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [newTeacher, setNewTeacher] = useState({
-    id: null,
-    nombres: "",
-    apellidos: "",
+    name: "",
+    lastName: "",
     email: "",
-    telefono: "",
-    password_hash: "",
-    // activo: true,
+    phone: "",
+    password: "",
+    specialty: "",
+    active: true, // por defecto activo
   });
 
   const toggleForm = () => {
     setShowForm(!showForm);
     setEditMode(false);
     setNewTeacher({
-      id: null,
-      nombres: "",
-      apellidos: "",
+      name: "",
+      lastName: "",
       email: "",
-      telefono: "",
-      password_hash: "",
-      // activo: true,
+      phone: "",
+      password: "",
+      specialty: "",
     });
   };
+
+  // Dentro del componente
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      try {
+        const response = await teachersAPI.obtenerTodosDocente();
+        setTeachers(response.data);
+      } catch (error) {
+        console.error("Error al obtener docentes:", error);
+      }
+    };
+
+    fetchTeachers();
+  }, []);
 
   const handleChange = (e) => {
     setNewTeacher({ ...newTeacher, [e.target.name]: e.target.value });
   };
 
-  const handleCreate = () => {
-    const { nombres, apellidos, email, telefono, password_hash } = newTeacher;
+  const handleCreate = async () => {
+    const { name, lastName, email, phone, password } = newTeacher;
 
-    if (!nombres || !apellidos || !email || !telefono || !password_hash) {
+    if (!name || !lastName || !email || !phone || !password) {
       alert("Todos los campos son obligatorios");
       return;
     }
 
-    const nuevoDocente = {
-      ...newTeacher,
-      id: Date.now(),
-    };
+    try {
+      const response = await teachersAPI.crearDocente(newTeacher);
+      const docenteCreado = response.data;
 
-    setTeachers((prev) => [...prev, nuevoDocente]);
-    toggleForm();
+      setTeachers((prev) => [...prev, docenteCreado]);
+      toggleForm();
+    } catch (error) {
+      console.error("Error al crear docente:", error);
+      alert("Hubo un error al crear el docente.");
+    }
   };
 
   const handleEdit = (docente) => {
@@ -81,26 +77,39 @@ const TeacherList = () => {
     setShowForm(true);
     setNewTeacher({
       ...docente,
-      password_hash: "", // no precargar la contraseña
+      password: "", // no precargar la contraseña
     });
   };
 
-  const handleUpdate = () => {
-    const { nombres, apellidos, email, telefono, password_hash } = newTeacher;
+  const handleUpdate = async () => {
+    const { id, name, lastName, email, phone, password, specialty, active } =
+      newTeacher;
 
-    if (!nombres || !apellidos || !email || !telefono || !password_hash) {
+    if (!name || !lastName || !email || !phone || !password) {
       alert("Todos los campos son obligatorios");
       return;
     }
 
     const actualizado = {
-      ...newTeacher,
+      name,
+      lastName,
+      email,
+      phone,
+      password,
+      specialty,
+      active, // <--- aquí está la clave
     };
 
-    setTeachers((prev) =>
-      prev.map((doc) => (doc.id === actualizado.id ? actualizado : doc))
-    );
-    toggleForm();
+    try {
+      await teachersAPI.actualizarDocente(id, actualizado);
+      setTeachers((prev) =>
+        prev.map((doc) => (doc.id === id ? { ...newTeacher } : doc))
+      );
+      toggleForm();
+    } catch (error) {
+      console.error("Error al actualizar docente:", error);
+      alert("No se pudo actualizar el docente.");
+    }
   };
 
   const confirmDelete = (docente) => {
@@ -108,11 +117,19 @@ const TeacherList = () => {
     setShowDeleteModal(true);
   };
 
-  const handleDelete = () => {
-    setTeachers((prev) =>
-      prev.filter((docente) => docente.id !== teacherToDelete.id)
-    );
-    setShowDeleteModal(false);
+  const handleDelete = async () => {
+    try {
+      await teachersAPI.eliminarDocente(teacherToDelete.id);
+
+      setTeachers((prev) =>
+        prev.filter((docente) => docente.id !== teacherToDelete.id)
+      );
+
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error("Error al eliminar docente:", error);
+      alert("No se pudo eliminar el docente.");
+    }
   };
 
   return (
@@ -125,66 +142,113 @@ const TeacherList = () => {
       </div>
 
       {showForm && (
-        <div className="formulario-docente-inline">
-          <input
-            type="text"
-            name="nombres"
-            placeholder="Nombres"
-            value={newTeacher.nombres}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="apellidos"
-            placeholder="Apellidos"
-            value={newTeacher.apellidos}
-            onChange={handleChange}
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Correo electrónico"
-            value={newTeacher.email}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="telefono"
-            placeholder="Teléfono"
-            value={newTeacher.telefono}
-            onChange={handleChange}
-          />
-          <input
-            type="password"
-            name="password_hash"
-            placeholder="Contraseña"
-            value={newTeacher.password_hash}
-            onChange={handleChange}
-          />
-          {/* <select
-            name="activo"
-            value={newTeacher.activo ? "Activo" : "Inactivo"}
-            onChange={(e) =>
-              setNewTeacher({
-                ...newTeacher,
-                activo: e.target.value === "Activo",
-              })
-            }
-          >
-            <option value="Activo">Activo</option>
-            <option value="Inactivo">Inactivo</option>
-          </select> */}
+        <form className="formulario-docente">
+          <div className="form-grid">
+            <div className="form-group">
+              <label htmlFor="name">Nombres</label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                value={newTeacher.name}
+                onChange={handleChange}
+              />
+            </div>
 
-          {editMode ? (
-            <button className="btn-crear" onClick={handleUpdate}>
-              Guardar Cambios
-            </button>
-          ) : (
-            <button className="btn-crear" onClick={handleCreate}>
-              Crear Docente
-            </button>
-          )}
-        </div>
+            <div className="form-group">
+              <label htmlFor="lastName">Apellidos</label>
+              <input
+                type="text"
+                name="lastName"
+                id="lastName"
+                value={newTeacher.lastName}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email">Correo electrónico</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={newTeacher.email}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="phone">Teléfono</label>
+              <input
+                type="text"
+                name="phone"
+                id="phone"
+                value={newTeacher.phone}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Contraseña</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                value={newTeacher.password}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="specialty">Especialidad</label>
+              <input
+                type="text"
+                name="specialty"
+                id="specialty"
+                value={newTeacher.specialty}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="botones-formulario">
+            {editMode ? (
+              <>
+                <button
+                  type="button"
+                  className="btn-crear"
+                  onClick={handleUpdate}
+                >
+                  Guardar Cambios
+                </button>
+                <button
+                  type="button"
+                  className="btn-cancelar"
+                  onClick={toggleForm}
+                >
+                  Cancelar
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className="btn-crear"
+                  onClick={handleCreate}
+                >
+                  Crear Docente
+                </button>
+                <button
+                  type="button"
+                  className="btn-cancelar"
+                  onClick={toggleForm}
+                >
+                  Cancelar
+                </button>
+              </>
+            )}
+          </div>
+        </form>
       )}
 
       <input
@@ -199,37 +263,33 @@ const TeacherList = () => {
             <th>Nombre</th>
             <th>Email</th>
             <th>Teléfono</th>
-            {/* <th>Estado</th> */}
-            <th>Acciones</th>
             <th>Contraseña</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {teachers.map((docente) => (
             <tr key={docente.id}>
               <td>
-                {docente.nombres} {docente.apellidos}
+                {docente.name} {docente.lastName}
               </td>
               <td>{docente.email}</td>
-              <td>{docente.telefono}</td>
-              {/* <td>
-                <span className={`estado ${docente.estado.toLowerCase()}`}>
-                  {docente.estado}
-                </span>
-              </td> */}
+              <td>{docente.phone}</td>
+              <td>********</td>
               <td className="acciones">
-                <Pencil
-                  size={18}
+                <button
                   className="accion editar"
                   onClick={() => handleEdit(docente)}
-                />
-                <Trash
-                  size={18}
+                >
+                  <Edit size={18} />
+                </button>
+                <button
                   className="accion eliminar"
                   onClick={() => confirmDelete(docente)}
-                />
+                >
+                  <Trash2 size={18} />
+                </button>
               </td>
-              <td>********</td>
             </tr>
           ))}
         </tbody>
@@ -240,7 +300,9 @@ const TeacherList = () => {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           onConfirm={handleDelete}
-          itemName={teacherToDelete?.nombre}
+          itemName={`${teacherToDelete?.name ?? ""} ${
+            teacherToDelete?.lastName ?? ""
+          }`}
           itemType="docente"
         />
       )}
