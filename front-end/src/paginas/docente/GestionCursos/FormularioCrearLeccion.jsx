@@ -1,39 +1,73 @@
-import React from "react";
+import React, { useState } from "react";
 import { X } from "lucide-react";
+// import { useParams } from "react-router-dom";
 import styles from "/src/paginas/docente/estilos/FormularioCrearCurso.module.css";
 
 const FormularioCrearLeccion = ({ onClose, onSubmit }) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  //   const courseId  = useParams();
+
+  // ✅ Obtener el ID del nivel guardado
+  const nivelId = localStorage.getItem("nivelId");
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const newCourse = {
-      id: Date.now(),
-      title: formData.get("title"),
-      description: formData.get("description"),
-      lessons: parseInt(formData.get("lessons")),
+
+    if (!nivelId || isNaN(parseInt(nivelId))) {
+      alert(
+        "Error: ID del curso no válido. Intenta ingresar desde la pantalla anterior."
+      );
+      return;
+    }
+
+    const leccionData = {
+      title,
+      description,
+      courseId: parseInt(nivelId), // ✅ Este es el campo que espera el backend
+      quizId: null,
+      practiceId: null,
     };
-    onSubmit(newCourse);
+
+    onSubmit(leccionData);
+    onClose();
   };
+  //   const handleSubmit = (e) => {
+  //     e.preventDefault();
+  //     const leccionData = {
+  //       title,
+  //       description,
+  //       curso_Id: parseInt(courseId),
+  //       quizId: null,
+  //       practiceId: null,
+  //     };
+  //     onSubmit(leccionData);
+  //     onClose();
+  //   };
 
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
-          <h3 className={styles.modalTitle}>Crear Nueva Leccion</h3>
-          <button onClick={onClose} className={styles.closeButton}>
+          <h3 className={styles.modalTitle}>Crear Nueva Lección</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className={styles.closeButton}
+          >
             <X className={styles.closeIcon} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
-            <label htmlFor="title" className={styles.label}>
+            <label htmlFor="titulo" className={styles.label}>
               Título de la lección
             </label>
             <input
               type="text"
-              id="title"
-              name="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               required
               className={styles.input}
               placeholder="Ej: Estructuras de control"
@@ -45,10 +79,10 @@ const FormularioCrearLeccion = ({ onClose, onSubmit }) => {
               Descripción
             </label>
             <textarea
-              id="description"
-              name="description"
-              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               required
+              rows={3}
               className={styles.textarea}
               placeholder="Breve descripción de la lección..."
             />

@@ -12,7 +12,7 @@ export default function RutasDocente() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/gestion-curso" element={<GestionCurso />} />
-        <Route path="/gestion-curso/lecciones/:nivel" element={<GestionLecciones />} />
+        <Route path="/gestion-curso/lecciones/:courseId" element={<GestionLecciones />} />
         <Route path="/crear-examen" element={<CrearExamen />} />
         <Route path="/crear-pdf" element={<CrearPdf />} />
       </Routes>

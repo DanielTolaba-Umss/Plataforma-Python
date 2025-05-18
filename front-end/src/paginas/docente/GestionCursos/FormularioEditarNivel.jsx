@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 
-const FormularioEditarLeccion = ({ leccion, onClose, onSubmit }) => {
-  const [title, setTitle] = useState(leccion.title);
-  const [description, setDescription] = useState(leccion.description);
+const FormularioEditarNivel = ({ nivel, onClose, onSubmit }) => {
+  const [nombre, setNombre] = useState(nivel.nombre);
+  const [descripcion, setDescripcion] = useState(nivel.descripcion);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({
-      id: leccion.id,
-      title,
-      description,
+      id: nivel.id,
+      nombre,
+      descripcion,
     });
   };
 
-  // Estilos en línea
   const styles = {
     modalOverlay: {
       position: 'fixed',
@@ -35,7 +34,6 @@ const FormularioEditarLeccion = ({ leccion, onClose, onSubmit }) => {
       maxWidth: '500px',
       position: 'relative',
       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-      borderTop: '4px solid #ffd438',
     },
     closeButton: {
       position: 'absolute',
@@ -110,16 +108,14 @@ const FormularioEditarLeccion = ({ leccion, onClose, onSubmit }) => {
   return (
     <div style={styles.modalOverlay}>
       <div style={styles.modalContent}>
-        <h2 style={{ marginBottom: '20px', color: '#2d3748' }}>Editar Lección</h2>
+        <h2 style={{ marginBottom: '20px', color: '#2d3748' }}>Editar Nivel</h2>
         <form onSubmit={handleSubmit}>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Título:</label>
+            <label style={styles.label}>Nombre:</label>
             <input
               type="text"
-              id="title"
-              name = "title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
               required
               style={styles.input}
             />
@@ -127,10 +123,8 @@ const FormularioEditarLeccion = ({ leccion, onClose, onSubmit }) => {
           <div style={styles.formGroup}>
             <label style={styles.label}>Descripción:</label>
             <textarea
-              id = "description"
-              value={description}
-              row={3}
-              onChange={(e) => setDescription(e.target.value)}
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
               required
               style={styles.textarea}
             />
@@ -160,4 +154,4 @@ const FormularioEditarLeccion = ({ leccion, onClose, onSubmit }) => {
   );
 };
 
-export default FormularioEditarLeccion;
+export default FormularioEditarNivel;

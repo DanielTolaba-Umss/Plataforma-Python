@@ -24,7 +24,7 @@ function App() {
     top: '20px',
     left: '20px',
     padding: '8px 15px',
-    backgroundColor: '#0f766e',
+    backgroundColor: '#303dcc',
     color: 'white',
     border: 'none',
     borderRadius: '5px',
@@ -38,7 +38,7 @@ function App() {
   const estiloBoton = {
     padding: "15px 30px",
     fontSize: "16px",
-    backgroundColor: "#0f766e",
+    backgroundColor: "#303dcc",
     color: "white",
     border: "none",
     borderRadius: "8px",
@@ -78,7 +78,7 @@ function App() {
       alignItems: "center",
       backgroundColor: "#f3f4f6"
     }}>
-      <h1 style={{ marginBottom: "30px", color: "#0f766e" }}>Bienvenido a Python EDU</h1>
+      <h1 style={{ marginBottom: "30px", color: "" }}>Bienvenido a Python EDU</h1>
       <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", justifyContent: "center" }}>
         <button
           onClick={() => manejarVista("admin")}
@@ -99,8 +99,8 @@ function App() {
         <button
           onClick={() => manejarVista("estudiante")}
           style={estiloBoton}
-          onMouseOver={(e) => e.target.style.backgroundColor = '#0a5a52'}
-          onMouseOut={(e) => e.target.style.backgroundColor = '#0f766e'}
+          onMouseOver={(e) => e.target.style.backgroundColor = '#301dcb'}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#303dcc'}
         >
           Entrar como Estudiante
         </button>

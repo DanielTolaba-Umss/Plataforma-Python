@@ -83,9 +83,6 @@
   transition: background-color 0.2s ease;
 }
 
-.resourcesButton:hover {
-  background-color: #0056b3;
-}
 
 .editButton {
   background-color: #306998;
@@ -105,7 +102,7 @@
   background-color: #e6c231;
 }
 
-.addButton {
+.floatingButton {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
@@ -119,15 +116,10 @@
   transition: background-color 0.2s;
 }
 
-.addButton:hover {
+.floatingButton:hover {
   background-color: #300898;
 }
 
-.addIcon {
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 0.5rem;
-}
 
 /* MODALES */
 .modalOverlay {
@@ -183,12 +175,12 @@
 }
 
 .confirmButton {
-  background-color: #f56565;
+  background-color: rgb(66, 153, 225);
   color: white;
 }
 
 .confirmButton:hover {
-  background-color: #e53e3e;
+  background-color: rgb(66, 153, 225);
 }
 
 /* NOTIFICACIONES */
