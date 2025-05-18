@@ -1,6 +1,6 @@
 // src/componentes/layouts/Sidebar.jsx
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "/src/estilos/Sidebar.css";
 import {
   LayoutDashboard,

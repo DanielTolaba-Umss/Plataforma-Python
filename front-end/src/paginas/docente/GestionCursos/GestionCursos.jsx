@@ -218,7 +218,7 @@ const GestionCursos = () => {
             className="fw-bold text-dark mb-4"
             style={{ fontSize: "1.875rem" }}
           >
-            Gestión de Modulos
+            Niveles
           </h1>
           <div className="admin-profile d-flex align-items-center gap-2">
             <span className="fw-semibold">Docente</span>
@@ -237,10 +237,10 @@ const GestionCursos = () => {
         {!showOptions ? (
           <>
             <h2 className="fs-5 fw-semibold mb-4">
-              Selecciona un módulo para gestionar
+              Selecciona un nivel
             </h2>
             <div className="row g-4">
-              {["Básico", "Intermedio", "Avanzado"].map((modulo, idx) => (
+              {["Nivel Básico", "Nivel Intermedio", "Nivel Avanzado"].map((modulo, idx) => (
                 <div className="col-md-4" key={idx}>
                   <div
                     className="card text-center shadow-sm h-100"
@@ -421,6 +421,22 @@ const GestionCursos = () => {
                     rows="6"
                     placeholder="mensaje = 'Hola Python'"
                   />
+                </div>
+                {/* Subir archivo adjunto */}
+                <div className="mb-3">
+                  <label className="form-label">
+                    Archivo adjunto (opcional)
+                  </label>
+                  <input
+                    type="file"
+                    className="form-control"
+                    onChange={(e) => setArchivo(e.target.files[0])}
+                  />
+                  {archivo && (
+                    <div className="mt-2 text-muted">
+                      Archivo seleccionado: <strong>{archivo.name}</strong>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="modal-footer">
