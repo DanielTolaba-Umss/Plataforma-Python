@@ -110,11 +110,22 @@ const GestionCursos = () => {
 
     try {
       await withLoading(async () => {
-        await cursosAPI.crearVideo({
-          titulo: videoTitle,
+        let module = 1;
+
+        if (selectedModule == "Intermedio") {
+          module = 2;
+        }
+        if (selectedModule == "Avanzado") {
+          module = 3;
+        }
+
+        const resource = {
+          title: videoTitle,
           url: videoUrl,
-          modulo: selectedModule.toLowerCase(),
-        });
+          typeId: 3,
+          contentId: module,
+        };
+        await cursosAPI.crearVideo(resource);
         setVideoTitle("");
         setVideoUrl("");
         setShowVideoModal(false);
@@ -207,7 +218,7 @@ const GestionCursos = () => {
             className="fw-bold text-dark mb-4"
             style={{ fontSize: "1.875rem" }}
           >
-            Niveles
+            Gestión de Modulos
           </h1>
           <div className="admin-profile d-flex align-items-center gap-2">
             <span className="fw-semibold">Docente</span>
@@ -226,10 +237,10 @@ const GestionCursos = () => {
         {!showOptions ? (
           <>
             <h2 className="fs-5 fw-semibold mb-4">
-              Selecciona un nivel
+              Selecciona un módulo para gestionar
             </h2>
             <div className="row g-4">
-              {["Nivel Básico", "Nivel Intermedio", "Nivel Avanzado"].map((modulo, idx) => (
+              {["Básico", "Intermedio", "Avanzado"].map((modulo, idx) => (
                 <div className="col-md-4" key={idx}>
                   <div
                     className="card text-center shadow-sm h-100"

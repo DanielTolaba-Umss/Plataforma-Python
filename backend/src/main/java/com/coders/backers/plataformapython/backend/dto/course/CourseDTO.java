@@ -1,14 +1,23 @@
 package com.coders.backers.plataformapython.backend.dto.course;
 
+import java.sql.Date;
 
-import lombok.Data;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-public class CourseDTO {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class CourseDto {
     private Long id;
-    private String titulo;
-    private String descripcion;
-    private boolean activo;
-    private List<Long> modulos; // IDs de módulos relacionados
+    private String title;
+    private String description;
+    private String level;
+    private int orden;
+    private Date createdAt;
+    private Date updatedAt;
+    private boolean active;
 }

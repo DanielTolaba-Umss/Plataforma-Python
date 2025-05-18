@@ -3,6 +3,7 @@ import "/src/paginas/estudiante/estilos/Dashboard.css";
 import {
   BookOpen,
   CheckCircle,
+  Clock,
   Award,
   LineChart,
   User,
@@ -22,8 +23,8 @@ const Dashboard = () => {
             <BookOpen size={24} />
           </div>
           <div>
-            <h3>Básico</h3>
-            <p>Nivel Actual</p>
+            <h3>3</h3>
+            <p>Cursos Activos</p>
           </div>
         </div>
         <div className="stat-card">
@@ -32,7 +33,16 @@ const Dashboard = () => {
           </div>
           <div>
             <h3>2</h3>
-            <p>Lecciones Completadas</p>
+            <p>Cursos Completados</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon blue">
+            <Clock size={24} />
+          </div>
+          <div>
+            <h3>48</h3>
+            <p>Horas de Estudio</p>
           </div>
         </div>
         <div className="stat-card">
@@ -47,23 +57,23 @@ const Dashboard = () => {
       </div>
 
       <div className="course-progress">
-        <h3>Progreso de lecciones</h3>
+        <h3>Progreso del Curso</h3>
         <div className="progress-item">
-          <span>Variables</span>
+          <span>Introducción a Python</span>
           <div className="progress-bar">
             <div className="filled" style={{ width: "75%" }}></div>
           </div>
           <span className="percentage">75%</span>
         </div>
         <div className="progress-item">
-          <span>Tipos de datos</span>
+          <span>Python Intermedio</span>
           <div className="progress-bar">
             <div className="filled" style={{ width: "45%" }}></div>
           </div>
           <span className="percentage">45%</span>
         </div>
         <div className="progress-item">
-          <span>Operadores</span>
+          <span>Django Framework</span>
           <div className="progress-bar">
             <div className="filled" style={{ width: "20%" }}></div>
           </div>
@@ -77,15 +87,15 @@ const Dashboard = () => {
           <ul>
             <li>
               <CheckCircle size={16} className="icon done" /> Completaste la
-              lección "Variables" <span>Hace 2 días</span>
+              lección "Funciones en Python" <span>Hace 2 días</span>
             </li>
             <li>
               <LineChart size={16} className="icon progress" /> Progreso en
-              "Tipos de datos" <span>Hace 4 días</span>
+              "Manejo de Errores" <span>Hace 4 días</span>
             </li>
             <li>
               <User size={16} className="icon badge" /> Obtuviste el certificado
-              "Nivel Básico" <span>Hace 1 semana</span>
+              "Python Básico" <span>Hace 1 semana</span>
             </li>
           </ul>
         </div>
@@ -93,15 +103,15 @@ const Dashboard = () => {
           <h4>Próximas Lecciones</h4>
           <div className="lesson">
             <div>
-              <p className="lesson-title">Estructuras de control</p>
-              <p className="lesson-sub">Python Básico</p>
+              <p className="lesson-title">Decoradores en Python</p>
+              <p className="lesson-sub">Python Intermedio</p>
             </div>
             <button className="btn green">Continuar</button>
           </div>
           <div className="lesson">
             <div>
-              <p className="lesson-title">Programación orientada a objetos (POO)</p>
-              <p className="lesson-sub">Python Intermedio</p>
+              <p className="lesson-title">Introducción a Django</p>
+              <p className="lesson-sub">Django Framework</p>
             </div>
             <button className="btn">Comenzar</button>
           </div>
