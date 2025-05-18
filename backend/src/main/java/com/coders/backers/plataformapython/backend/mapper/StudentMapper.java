@@ -1,7 +1,7 @@
 package com.coders.backers.plataformapython.backend.mapper;
 
 import com.coders.backers.plataformapython.backend.dto.student.CreateStudentDto;
-import com.coders.backers.plataformapython.backend.dto.student.StudentDTO;
+import com.coders.backers.plataformapython.backend.dto.student.StudentDto;
 import com.coders.backers.plataformapython.backend.dto.student.UpdateStudentDto;
 import com.coders.backers.plataformapython.backend.models.userModel.StudentEntity;
 import com.coders.backers.plataformapython.backend.enums.Role;
