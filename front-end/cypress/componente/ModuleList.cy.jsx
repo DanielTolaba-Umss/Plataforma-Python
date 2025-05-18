@@ -1,5 +1,3 @@
-/* global cy, describe, it, beforeEach */
-
 import React from "react";
 import ModuleList from "../../src/componentes/especificos/ModuleList"; // Ajusta si es necesario
 

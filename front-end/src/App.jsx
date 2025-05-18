@@ -11,28 +11,28 @@ function App() {
 
   const manejarVista = (tipo) => {
     setVista(tipo);
-    navigate("/");
+    navigate('/');
   };
 
   const volver = () => {
     setVista(null);
-    navigate("/");
+    navigate('/');
   };
 
   const estiloBotonVolver = {
-    position: "fixed",
-    top: "20px",
-    left: "20px",
-    padding: "8px 15px",
-    backgroundColor: "#0f766e",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
+    position: 'fixed',
+    top: '20px',
+    left: '20px',
+    padding: '8px 15px',
+    backgroundColor: '#0f766e',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
     zIndex: 1000,
-    display: "flex",
-    alignItems: "center",
-    gap: "5px",
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px'
   };
 
   const estiloBoton = {
@@ -44,30 +44,22 @@ function App() {
     borderRadius: "8px",
     cursor: "pointer",
     transition: "all 0.3s ease",
-    margin: "10px",
+    margin: "10px"
   };
 
   // Si hay una vista seleccionada, mostrar la aplicación correspondiente
   if (vista) {
     return (
       <div className="app-container">
-        <button onClick={volver} style={estiloBotonVolver}>
-          ← Volver al inicio
-        </button>
+        <button onClick={volver} style={estiloBotonVolver}>← Volver al inicio</button>
         <div className="app-content">
           <Routes>
-            <Route
-              path="/*"
-              element={
-                vista === "admin" ? (
-                  <AppAdmin />
-                ) : vista === "docente" ? (
-                  <AppDocente />
-                ) : vista === "estudiante" ? (
-                  <AppEstudiante />
-                ) : null
-              }
-            />
+            <Route path="/*" element={
+              vista === "admin" ? <AppAdmin /> :
+              vista === "docente" ? <AppDocente /> :
+              vista === "estudiante" ? <AppEstudiante /> :
+              null
+            } />
           </Routes>
         </div>
       </div>
@@ -76,41 +68,39 @@ function App() {
 
   // Pantalla de selección de rol
   return (
-    <div
-      style={{
-        padding: "20px",
-        textAlign: "center",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#f3f4f6",
-      }}
-    >
-      <h1>Bienvenido a Python EDU</h1>
-      <div>
+    <div style={{ 
+      padding: "20px", 
+      textAlign: "center",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#f3f4f6"
+    }}>
+      <h1 style={{ marginBottom: "30px", color: "#0f766e" }}>Bienvenido a Python EDU</h1>
+      <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", justifyContent: "center" }}>
         <button
           onClick={() => manejarVista("admin")}
           style={estiloBoton}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#0a5a52")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#0f766e")}
+          onMouseOver={(e) => e.target.style.backgroundColor = '#0a5a52'}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#0f766e'}
         >
           Entrar como Admin
         </button>
         <button
           onClick={() => manejarVista("docente")}
           style={estiloBoton}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#0a5a52")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#0f766e")}
+          onMouseOver={(e) => e.target.style.backgroundColor = '#0a5a52'}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#0f766e'}
         >
           Entrar como Docente
         </button>
         <button
           onClick={() => manejarVista("estudiante")}
           style={estiloBoton}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#0a5a52")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#0f766e")}
+          onMouseOver={(e) => e.target.style.backgroundColor = '#0a5a52'}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#0f766e'}
         >
           Entrar como Estudiante
         </button>

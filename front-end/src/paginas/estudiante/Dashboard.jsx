@@ -1,43 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "/src/paginas/estudiante/estilos/Dashboard.css";
 import {
   BookOpen,
   CheckCircle,
+  Clock,
   Award,
   LineChart,
   User,
 } from "lucide-react";
 
 const Dashboard = () => {
-  // Estados simulados desde backend
-  const [actividadReciente, setActividadReciente] = useState([]);
-  const [proximasLecciones, setProximasLecciones] = useState([]);
-
-  useEffect(() => {
-    // Simulación de respuesta desde backend
-    const datosSimulados = {
-      actividadReciente: [
-        { tipo: "completado", descripcion: "Variables", fecha: "Hace 2 días" },
-        { tipo: "progreso", descripcion: "Tipos de datos", fecha: "Hace 4 días" },
-        { tipo: "certificado", descripcion: "Nivel Básico", fecha: "Hace 1 semana" },
-      ],
-      proximasLecciones: [
-        { titulo: "Estructuras de control", subtitulo: "Python Básico", estado: "Continuar" },
-        { titulo: "Programación orientada a objetos (POO)", subtitulo: "Python Intermedio", estado: "Comenzar" },
-        { titulo: "Generadores e Iteradores", subtitulo: "Python Intermedio", estado: "Comenzar" },
-      ]
-    };
-
-    setTimeout(() => {
-      setActividadReciente(datosSimulados.actividadReciente);
-      setProximasLecciones(datosSimulados.proximasLecciones);
-    }, 500); // simula retraso de red
-  }, []);
-
   return (
     <div className="dashboard-container">
       <h2>Mi Progreso</h2>
-      <p className="welcome-text">¡Bienvenido de vuelta, Ana! Continúa aprendiendo.</p>
+      <p className="welcome-text">
+        ¡Bienvenido de vuelta, Ana! Continúa aprendiendo.
+      </p>
 
       <div className="dashboard-stats">
         <div className="stat-card">
@@ -45,8 +23,8 @@ const Dashboard = () => {
             <BookOpen size={24} />
           </div>
           <div>
-            <h3>Básico</h3>
-            <p>Nivel Actual</p>
+            <h3>3</h3>
+            <p>Cursos Activos</p>
           </div>
         </div>
         <div className="stat-card">
@@ -55,7 +33,16 @@ const Dashboard = () => {
           </div>
           <div>
             <h3>2</h3>
-            <p>Lecciones Completadas</p>
+            <p>Cursos Completados</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon blue">
+            <Clock size={24} />
+          </div>
+          <div>
+            <h3>48</h3>
+            <p>Horas de Estudio</p>
           </div>
         </div>
         <div className="stat-card">
@@ -70,23 +57,23 @@ const Dashboard = () => {
       </div>
 
       <div className="course-progress">
-        <h3>Progreso de lecciones</h3>
+        <h3>Progreso del Curso</h3>
         <div className="progress-item">
-          <span>Variables</span>
+          <span>Introducción a Python</span>
           <div className="progress-bar">
             <div className="filled" style={{ width: "75%" }}></div>
           </div>
           <span className="percentage">75%</span>
         </div>
         <div className="progress-item">
-          <span>Tipos de datos</span>
+          <span>Python Intermedio</span>
           <div className="progress-bar">
             <div className="filled" style={{ width: "45%" }}></div>
           </div>
           <span className="percentage">45%</span>
         </div>
         <div className="progress-item">
-          <span>Operadores</span>
+          <span>Django Framework</span>
           <div className="progress-bar">
             <div className="filled" style={{ width: "20%" }}></div>
           </div>
@@ -98,33 +85,43 @@ const Dashboard = () => {
         <div className="activity-card">
           <h4>Actividad Reciente</h4>
           <ul>
-            {actividadReciente.map((item, index) => (
-              <li key={index}>
-                {item.tipo === "completado" && <CheckCircle size={16} className="icon done" />}
-                {item.tipo === "progreso" && <LineChart size={16} className="icon progress" />}
-                {item.tipo === "certificado" && <User size={16} className="icon badge" />}
-                {item.tipo === "completado" && <> Completaste la lección "{item.descripcion}" </>}
-                {item.tipo === "progreso" && <> Progreso en "{item.descripcion}" </>}
-                {item.tipo === "certificado" && <> Obtuviste el certificado "{item.descripcion}" </>}
-                <span>{item.fecha}</span>
-              </li>
-            ))}
+            <li>
+              <CheckCircle size={16} className="icon done" /> Completaste la
+              lección "Funciones en Python" <span>Hace 2 días</span>
+            </li>
+            <li>
+              <LineChart size={16} className="icon progress" /> Progreso en
+              "Manejo de Errores" <span>Hace 4 días</span>
+            </li>
+            <li>
+              <User size={16} className="icon badge" /> Obtuviste el certificado
+              "Python Básico" <span>Hace 1 semana</span>
+            </li>
           </ul>
         </div>
-
         <div className="activity-card">
           <h4>Próximas Lecciones</h4>
-          {proximasLecciones.map((leccion, index) => (
-            <div className="lesson" key={index}>
-              <div>
-                <p className="lesson-title">{leccion.titulo}</p>
-                <p className="lesson-sub">{leccion.subtitulo}</p>
-              </div>
-              <button className={`btn ${leccion.estado === "Continuar" ? "green" : ""}`}>
-                {leccion.estado}
-              </button>
+          <div className="lesson">
+            <div>
+              <p className="lesson-title">Decoradores en Python</p>
+              <p className="lesson-sub">Python Intermedio</p>
             </div>
-          ))}
+            <button className="btn green">Continuar</button>
+          </div>
+          <div className="lesson">
+            <div>
+              <p className="lesson-title">Introducción a Django</p>
+              <p className="lesson-sub">Django Framework</p>
+            </div>
+            <button className="btn">Comenzar</button>
+          </div>
+          <div className="lesson">
+            <div>
+              <p className="lesson-title">Generadores e Iteradores</p>
+              <p className="lesson-sub">Python Intermedio</p>
+            </div>
+            <button className="btn">Comenzar</button>
+          </div>
         </div>
       </div>
     </div>

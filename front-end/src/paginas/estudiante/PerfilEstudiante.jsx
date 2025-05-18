@@ -1,8 +1,5 @@
+import React from "react";
 import "/src/paginas/estudiante/estilos/PerfilEstudiante.css";
-import ConfiguracionEstudiante from './ConfiguracionEstudiante.jsx';
-import React, { useState } from "react";
-import { X } from 'lucide-react';
-
 import {
   Mail,
   Phone,
@@ -11,31 +8,13 @@ import {
   Award,
   Clock,
   BookOpen,
-  CheckCircle,
 } from "lucide-react";
 
 const PerfilEstudiante = () => {
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const abrirModal = () => setMostrarModal(true);
-  const cerrarModal = () => setMostrarModal(false);
   return (
     <div className="perfil-container">
       <h2>Perfil de Estudiante</h2>
-      <button className="editar-btn" onClick={abrirModal}>
-        Editar Perfil
-      </button>
-      {/* MODAL */}
-      {mostrarModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <button className="modal-close" onClick={cerrarModal}>
-              <X size={20} />
-            </button>
-            <ConfiguracionEstudiante />
-          </div>
-        </div>
-      )}
-
+      <button className="editar-btn">Editar Perfil</button>
 
       <div className="perfil-grid">
         <div className="perfil-left">
@@ -68,15 +47,15 @@ const PerfilEstudiante = () => {
                 <div className="icon bg-light-green">
                   <BookOpen size={24} />
                 </div>
-                <p className="stat-num">Básico</p>
-                <p className="stat-label">Nivel Actual</p>
+                <p className="stat-num">5</p>
+                <p className="stat-label">Cursos Totales</p>
               </div>
               <div className="stat-item">
                 <div className="icon bg-blue">
-                <CheckCircle size={24} />
+                  <Clock size={24} />
                 </div>
-                <p className="stat-num">2</p>
-                <p className="stat-label">Lecciones Completadas</p>
+                <p className="stat-num">48</p>
+                <p className="stat-label">Horas de Estudio</p>
               </div>
               <div className="stat-item">
                 <div className="icon bg-purple">
@@ -93,11 +72,11 @@ const PerfilEstudiante = () => {
             <div className="curso-item">
               <div>
                 <p>
-                  <strong>Python Básico</strong>
+                  <strong>Introducción a Python</strong>
                 </p>
-                <p>Progreso: 100%</p>
+                <p>Progreso: 75%</p>
                 <div className="progress-bar">
-                  <div className="progress" style={{ width: "100%" }}></div>
+                  <div className="progress" style={{ width: "75%" }}></div>
                 </div>
               </div>
               <button className="btn">Continuar</button>
@@ -117,7 +96,7 @@ const PerfilEstudiante = () => {
             <div className="curso-item">
               <div>
                 <p>
-                  <strong>Python Avanzado</strong>
+                  <strong>Django Framework</strong>
                 </p>
                 <p>Progreso: 20%</p>
                 <div className="progress-bar">
