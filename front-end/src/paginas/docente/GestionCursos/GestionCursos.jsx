@@ -110,11 +110,22 @@ const GestionCursos = () => {
 
     try {
       await withLoading(async () => {
-        await cursosAPI.crearVideo({
-          titulo: videoTitle,
+        let module = 1;
+
+        if (selectedModule == "Intermedio") {
+          module = 2;
+        }
+        if (selectedModule == "Avanzado") {
+          module = 3;
+        }
+
+        const resource = {
+          title: videoTitle,
           url: videoUrl,
-          modulo: selectedModule.toLowerCase(),
-        });
+          typeId: 3,
+          contentId: module,
+        };
+        await cursosAPI.crearVideo(resource);
         setVideoTitle("");
         setVideoUrl("");
         setShowVideoModal(false);
