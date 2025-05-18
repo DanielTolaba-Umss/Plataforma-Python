@@ -20,8 +20,8 @@ public class StudentMapper {
         return entity;
     }
 
-    public static StudentDTO mapToDto(StudentEntity entity) {
-        StudentDTO dto = new StudentDTO();
+    public static StudentDto mapToDto(StudentEntity entity) {
+        StudentDto dto = new StudentDto();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setLastName(entity.getLastName());
