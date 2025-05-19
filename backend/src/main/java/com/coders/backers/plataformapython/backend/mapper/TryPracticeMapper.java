@@ -8,7 +8,6 @@ public class TryPracticeMapper {
     public static TryPracticeEntity mapFromCreateDto(CreateTryPracticeDto dto) {
         return new TryPracticeEntity(
             null,
-            dto.getEstudianteProgresoId(),
             dto.getPracticeId(),
             dto.getCodigoEnviado(),
             dto.getResultadosPruebas(),
@@ -21,7 +20,6 @@ public class TryPracticeMapper {
     public static TryPracticeDto mapToDto(TryPracticeEntity entity) {
         return new TryPracticeDto(
             entity.getId(),
-            entity.getEstudianteProgresoId(),
             entity.getPracticeId(),
             entity.getCodigoEnviado(),
             entity.getResultadosPruebas(),

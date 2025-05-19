@@ -57,12 +57,6 @@ public class TryPracticeServiceImpl implements TryPracticeService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<TryPracticeDto> getByEstudianteProgresoId(Long estudianteProgresoId) {
-        return tryPracticeRepository.findByEstudianteProgresoId(estudianteProgresoId).stream()
-                .map(TryPracticeMapper::mapToDto)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public List<TryPracticeDto> getByPracticeId(Long practiceId) {

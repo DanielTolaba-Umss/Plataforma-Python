@@ -10,7 +10,6 @@ import java.sql.Date;
 @AllArgsConstructor
 public class TryPracticeDto {
     private Long id;
-    private Long estudianteProgresoId;
     private Long practiceId;
     private String codigoEnviado;
     private String resultadosPruebas;

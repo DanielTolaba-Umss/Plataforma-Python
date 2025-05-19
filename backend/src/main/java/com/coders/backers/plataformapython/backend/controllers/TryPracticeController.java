@@ -35,11 +35,6 @@ public class TryPracticeController {
         return ResponseEntity.ok(tryPracticeService.getTryPracticeById(id));
     }
 
-    @GetMapping("/by-estudiante/{progresoId}")
-    public ResponseEntity<List<TryPracticeDto>> getByEstudianteProgreso(@PathVariable Long progresoId) {
-        return ResponseEntity.ok(tryPracticeService.getByEstudianteProgresoId(progresoId));
-    }
-
     @GetMapping("/by-practice/{practiceId}")
     public ResponseEntity<List<TryPracticeDto>> getByPractice(@PathVariable Long practiceId) {
         return ResponseEntity.ok(tryPracticeService.getByPracticeId(practiceId));

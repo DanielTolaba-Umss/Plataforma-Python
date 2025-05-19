@@ -10,6 +10,5 @@ public interface TryPracticeService {
     void deleteTryPractice(Long id);
     TryPracticeDto getTryPracticeById(Long id);
     List<TryPracticeDto> getAllTryPractices();
-    List<TryPracticeDto> getByEstudianteProgresoId(Long estudianteProgresoId);
     List<TryPracticeDto> getByPracticeId(Long practiceId);
 }

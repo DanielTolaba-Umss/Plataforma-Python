@@ -18,9 +18,6 @@ public class TryPracticeEntity {
     @Column(name = "intento_id")
     private Long id;
 
-    @Column(name = "estudiante_progreso_id", nullable = false)
-    private Long estudianteProgresoId;
-
     @Column(name = "practice_id", nullable = false)
     private Long practiceId;
 
