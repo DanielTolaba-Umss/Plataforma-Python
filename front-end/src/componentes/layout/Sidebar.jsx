@@ -10,17 +10,15 @@ import {
   Settings,
 } from "lucide-react";
 
+//quite los iconos llamados dashboard y modulos de la sidebar de admin estaban aqui abajo
 const Sidebar = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">Python EDU</div>
       <nav className="sidebar-nav">
-        <NavLink to="/" className="sidebar-link">
-          <LayoutDashboard className="sidebar-icon" /> Dashboard
-        </NavLink>
-        <NavLink to="/Lista-Modulos" className="sidebar-link">
-          <BookOpen className="sidebar-icon" /> Módulos
-        </NavLink>
+        
+
+
         <NavLink to="/Lista-Profesores" className="sidebar-link">
           <Users className="sidebar-icon" /> Docentes
         </NavLink>
