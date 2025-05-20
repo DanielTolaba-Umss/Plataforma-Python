@@ -41,7 +41,6 @@ public class StudentMapper {
 
     public static StudentEntity mapFromUpdateDto(UpdateStudentDto dto) {
         StudentEntity entity = new StudentEntity();
-        entity.setId(dto.getId());
         entity.setName(dto.getNombres());
         entity.setLastName(dto.getApellidos());
         entity.setEmail(dto.getEmail());

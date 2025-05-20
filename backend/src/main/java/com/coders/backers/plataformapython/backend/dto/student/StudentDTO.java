@@ -18,8 +18,6 @@ public class StudentDto {
     private String apellidos;
     private String email;
     private String telefono;
-    private String ciudad;
-    private String pais;
     private boolean activo;
     private LocalDate fechaInicio;
     private List<Long> cursos; // Lista de IDs de cursos
@@ -27,14 +25,12 @@ public class StudentDto {
 
     // Constructor sin password para respuestas
     public StudentDto(Long id, String nombres, String apellidos, String email, String telefono,
-                    String ciudad, String pais, boolean activo, LocalDate fechaInicio, List<Long> cursos) {
+                     boolean activo, LocalDate fechaInicio, List<Long> cursos) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.email = email;
         this.telefono = telefono;
-        this.ciudad = ciudad;
-        this.pais = pais;
         this.activo = activo;
         this.fechaInicio = fechaInicio;
         this.cursos = cursos;

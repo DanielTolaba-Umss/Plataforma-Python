@@ -10,13 +10,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateStudentDto {
-    private Long id;
     private String nombres;
     private String apellidos;
     private String email;
     private String telefono;
-    private String ciudad;
-    private String pais;
     private boolean activo;
     private String password;
     private List<Long> cursos;
