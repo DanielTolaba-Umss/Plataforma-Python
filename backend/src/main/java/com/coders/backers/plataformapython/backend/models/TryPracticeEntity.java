@@ -18,8 +18,9 @@ public class TryPracticeEntity {
     @Column(name = "intento_id")
     private Long id;
 
-    @Column(name = "practice_id", nullable = false)
-    private Long practiceId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "practica_id", referencedColumnName = "id")
+    private PracticeEntity practice;
 
     @Column(name = "codigoenviado", columnDefinition = "TEXT")
     private String codigoEnviado;

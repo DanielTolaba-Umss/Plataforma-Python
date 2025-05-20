@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface TryPracticeRepository extends JpaRepository<TryPracticeEntity, Long> {
-    List<TryPracticeEntity> findByPracticeId(Long practiceId);
+    List<TryPracticeEntity> findByPractice_Id(Long practiceId);
 }
+
