@@ -5,6 +5,7 @@ import java.util.List;
 import com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.CourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.UpdateCourseDto;
+import com.coders.backers.plataformapython.backend.dto.lesson.LessonDto;
 
 public interface CourseService {
 
@@ -27,4 +28,7 @@ public interface CourseService {
     
     // Búsqueda
     List<CourseDto> searchCoursesByTitle(String title);
+    
+    // Consultas específicas
+    List<LessonDto> getLessonsByCourseDifficulty(String level, Boolean active);
 }

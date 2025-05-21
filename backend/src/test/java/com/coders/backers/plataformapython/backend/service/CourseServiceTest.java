@@ -16,14 +16,23 @@ import org.mockito.MockitoAnnotations;
 import com.coders.backers.plataformapython.backend.dto.course.CourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.UpdateCourseDto;
+import com.coders.backers.plataformapython.backend.dto.lesson.LessonDto;
+import com.coders.backers.plataformapython.backend.repository.LessonRepository;
 import com.coders.backers.plataformapython.backend.models.CourseEntity;
+import com.coders.backers.plataformapython.backend.models.LessonEntity;
 import com.coders.backers.plataformapython.backend.repository.CourseRepository;
+import com.coders.backers.plataformapython.backend.repository.LessonRepository;
 import com.coders.backers.plataformapython.backend.services.impl.CourseServiceImpl;
 
 public class CourseServiceTest {
 
     @Mock
-    private CourseRepository courseRepository;    @InjectMocks
+    private CourseRepository courseRepository;
+    
+    @Mock
+    private LessonRepository lessonRepository;
+    
+    @InjectMocks
     private CourseServiceImpl courseService;
 
     @BeforeEach
@@ -138,5 +147,37 @@ public class CourseServiceTest {
 
         // Assert
         verify(courseRepository).delete(course);
+    }
+
+    @Test
+    void getLessonsByCourseDifficulty_ShouldReturnLessonsFilteredByLevel() {
+        // Arrange
+        String level = "INTERMEDIATE";
+        CourseEntity course1 = new CourseEntity();
+        course1.setId(1L);
+        course1.setLevel(level);
+        
+        LessonEntity lesson1 = new LessonEntity();
+        lesson1.setId(1L);
+        lesson1.setTitle("Lección Intermedia 1");
+        lesson1.setCourse(course1);
+        
+        LessonEntity lesson2 = new LessonEntity();
+        lesson2.setId(2L);
+        lesson2.setTitle("Lección Intermedia 2");
+        lesson2.setCourse(course1);
+        
+        when(courseRepository.findByLevel(level)).thenReturn(Arrays.asList(course1));
+        when(lessonRepository.findByCourseId(course1.getId())).thenReturn(Arrays.asList(lesson1, lesson2));
+        
+        // Act
+        List<LessonDto> result = courseService.getLessonsByCourseDifficulty(level, null);
+        
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("Lección Intermedia 1", result.get(0).getTitle());
+        verify(courseRepository).findByLevel(level);
+        verify(lessonRepository).findByCourseId(course1.getId());
     }
 }

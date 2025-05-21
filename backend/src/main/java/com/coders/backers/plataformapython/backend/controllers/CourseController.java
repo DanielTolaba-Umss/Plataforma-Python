@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.CourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.UpdateCourseDto;
+import com.coders.backers.plataformapython.backend.dto.lesson.LessonDto;
 import com.coders.backers.plataformapython.backend.services.CourseService;
 
 @AllArgsConstructor
@@ -88,5 +89,13 @@ public class CourseController {
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
         return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/level/{level}/lessons")
+    public ResponseEntity<List<LessonDto>> getLessonsByCourseDifficulty(
+            @PathVariable String level,
+            @RequestParam(value = "active", required = false) Boolean active) {
+        List<LessonDto> lessons = courseService.getLessonsByCourseDifficulty(level, active);
+        return ResponseEntity.ok(lessons);
     }
 }
