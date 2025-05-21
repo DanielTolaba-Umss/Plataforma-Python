@@ -11,8 +11,6 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<StudentEntity, Long> {
     Optional<StudentEntity> findByEmail(String email);
     List<StudentEntity> findByActiveTrue();
-    List<StudentEntity> findByCity(String city);
-    List<StudentEntity> findByCountry(String country);
     List<StudentEntity> findByCurrentLevel(String currentLevel);
     List<StudentEntity> findByNameContainingIgnoreCase(String name);
     List<StudentEntity> findByLastNameContainingIgnoreCase(String lastName);

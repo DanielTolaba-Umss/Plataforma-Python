@@ -4,12 +4,16 @@ import com.coders.backers.plataformapython.backend.dto.student.CreateStudentDto;
 import com.coders.backers.plataformapython.backend.dto.student.StudentDto;
 import com.coders.backers.plataformapython.backend.dto.student.UpdateStudentDto;
 import com.coders.backers.plataformapython.backend.services.StudentService;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/students")
 @CrossOrigin(origins = "*")

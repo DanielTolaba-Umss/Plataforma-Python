@@ -7,6 +7,10 @@ import com.coders.backers.plataformapython.backend.mapper.StudentMapper;
 import com.coders.backers.plataformapython.backend.models.userModel.StudentEntity;
 import com.coders.backers.plataformapython.backend.repository.StudentRepository;
 import com.coders.backers.plataformapython.backend.services.StudentService;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
+@Slf4j
 public class StudentServiceImpl implements StudentService {
 
     @Autowired

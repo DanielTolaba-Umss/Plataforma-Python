@@ -117,23 +117,24 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<LessonDto> getLessonsByCourseDifficulty(String level, Boolean active) {
-        // Primero obtenemos los cursos del nivel especificado
         List<CourseEntity> courses = courseRepository.findByLevel(level);
+        if (courses.isEmpty()) {
+            throw new ResourceNotFoundException("No se encontraron cursos con nivel: " + level);
+        }
         
-        // Obtenemos todas las lecciones de esos cursos
-        List<LessonDto> allLessons = courses.stream()
-            .flatMap(course -> {
-                List<LessonEntity> lessons;
-                if (active != null) {
-                    lessons = lessonRepository.findByCourseIdAndActive(course.getId(), active);
-                } else {
-                    lessons = lessonRepository.findByCourseId(course.getId());
-                }
-                return lessons.stream();
-            })
+        List<Long> courseIds = courses.stream()
+            .map(CourseEntity::getId)
+            .collect(Collectors.toList());
+            
+        List<LessonEntity> lessons;
+        if (active != null) {
+            lessons = lessonRepository.findByCourseIdInAndActive(courseIds, active);
+        } else {
+            lessons = lessonRepository.findByCourseIdIn(courseIds);
+        }
+        
+        return lessons.stream()
             .map(LessonMapper::mapToModelDto)
             .collect(Collectors.toList());
-        
-        return allLessons;
     }
 }

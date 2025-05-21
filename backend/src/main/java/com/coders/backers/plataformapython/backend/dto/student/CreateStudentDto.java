@@ -15,7 +15,6 @@ public class CreateStudentDto {
     private String email;
     private String telefono;
     private String ciudad;
-    private String pais;
     private String password;
     private List<Long> cursos;
 }

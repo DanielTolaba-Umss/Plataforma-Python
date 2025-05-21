@@ -62,6 +62,14 @@ public class CourseController {
         
         return ResponseEntity.ok(courses);
     }
+
+    @GetMapping("/level/{level}/lessons")
+    public ResponseEntity<List<LessonDto>> getLessonsByCourseDifficulty(
+            @PathVariable String level,
+            @RequestParam(value = "active", required = false) Boolean active) {
+        List<LessonDto> lessons = courseService.getLessonsByCourseDifficulty(level, active);
+        return ResponseEntity.ok(lessons);
+    }
     
     // Update
     @PutMapping("/{id}")

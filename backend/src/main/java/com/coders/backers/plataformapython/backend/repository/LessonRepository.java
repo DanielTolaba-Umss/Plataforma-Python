@@ -14,6 +14,8 @@ public interface LessonRepository extends JpaRepository<LessonEntity, Long> {
     List<LessonEntity> findByTitleContainingIgnoreCase(String title);
     List<LessonEntity> findByCourseId(Long courseId);
     List<LessonEntity> findByCourseIdAndActive(Long courseId, boolean active);
+    List<LessonEntity> findByCourseIdIn(List<Long> courseIds);
+    List<LessonEntity> findByCourseIdInAndActive(List<Long> courseIds, boolean active);
     
     boolean existsByTitleAndCourseId(String title, Long courseId);
 }

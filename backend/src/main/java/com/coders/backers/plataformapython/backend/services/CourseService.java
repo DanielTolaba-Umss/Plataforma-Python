@@ -17,6 +17,7 @@ public interface CourseService {
     List<CourseDto> getAllCourses();
     List<CourseDto> getActiveCourses();
     List<CourseDto> getCoursesByLevel(String level);
+    List<LessonDto> getLessonsByCourseDifficulty(String level, Boolean active);
     
     // Update
     CourseDto updateCourse(Long id, UpdateCourseDto updateCourseDto);
