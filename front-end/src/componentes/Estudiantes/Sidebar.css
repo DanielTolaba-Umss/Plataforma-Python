@@ -125,3 +125,19 @@
 .bg-accent {
   background-color: #FFD438;
 }
+
+.submenu {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.sidebar-sublink {
+  padding: 5px 0;
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.sidebar-sublink:hover {
+  color: white;
+}
