@@ -1,0 +1,186 @@
+.contenedor-docentes {
+  background: #e5e5e5;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.encabezado-docentes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.encabezado-docentes h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.btn-nuevo-docente {
+  background-color: #306998;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-nuevo-docente:hover {
+  background-color: #300898;
+}
+
+.input-busqueda-docente {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+}
+
+.tabla-docentes {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tabla-docentes th,
+.tabla-docentes td {
+  padding: 0.9rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.acciones-docente {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.boton-editar-docente,
+.boton-eliminar-docente {
+  border: none;
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.boton-editar-docente {
+  background-color: #306998;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.boton-editar-docente:hover {
+  background-color: #300898;
+}
+
+.boton-eliminar-docente {
+  background-color: #ffd438;
+  color: #300898;
+  transition: background-color 0.2s;
+}
+
+.boton-eliminar-docente:hover {
+  background-color: #e6c231;
+}
+
+.formulario-docente {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.grid-formulario {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .grid-formulario {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-formulario {
+    grid-template-columns: 1fr;
+  }
+}
+
+.grupo-formulario {
+  display: flex;
+  flex-direction: column;
+}
+
+.grupo-formulario label {
+  margin-bottom: 5px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #300898;
+}
+
+.grupo-formulario input {
+  width: 100%;
+  padding: 0.6rem;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.grupo-formulario input:focus {
+  outline: none;
+  border-color: #ffd438;
+}
+
+.botones-formulario-docente {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.btn-crear-docente,
+.btn-guardar-cambios {
+  background-color: #306998;
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-crear-docente:hover,
+.btn-guardar-cambios:hover {
+  background-color: #300898;
+}
+
+.btn-cancelar-formulario {
+  background-color: #ffd438;
+  color: #300898;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancelar-formulario:hover {
+  background-color: #e6c231;
+}
