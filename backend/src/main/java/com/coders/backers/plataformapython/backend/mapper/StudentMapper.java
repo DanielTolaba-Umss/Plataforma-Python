@@ -23,7 +23,7 @@ public class StudentMapper {
         entity.setEnrollmentDate(Date.valueOf(LocalDate.now()));
         return entity;
     }
-
+    
     public static StudentDto mapToDto(StudentEntity entity) {
         StudentDto dto = new StudentDto();
         dto.setId(entity.getId());
@@ -41,6 +41,7 @@ public class StudentMapper {
 
     public static StudentEntity mapFromUpdateDto(UpdateStudentDto dto) {
         StudentEntity entity = new StudentEntity();
+        //entity.setId(dto.getId());
         entity.setName(dto.getNombres());
         entity.setLastName(dto.getApellidos());
         entity.setEmail(dto.getEmail());

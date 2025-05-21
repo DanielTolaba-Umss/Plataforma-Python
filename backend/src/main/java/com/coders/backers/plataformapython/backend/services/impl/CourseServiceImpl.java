@@ -8,10 +8,14 @@ import org.springframework.stereotype.Service;
 import com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.CourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.UpdateCourseDto;
+import com.coders.backers.plataformapython.backend.dto.lesson.LessonDto;
 import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
 import com.coders.backers.plataformapython.backend.mapper.CourseMapper;
+import com.coders.backers.plataformapython.backend.mapper.LessonMapper;
 import com.coders.backers.plataformapython.backend.models.CourseEntity;
+import com.coders.backers.plataformapython.backend.models.LessonEntity;
 import com.coders.backers.plataformapython.backend.repository.CourseRepository;
+import com.coders.backers.plataformapython.backend.repository.LessonRepository;
 import com.coders.backers.plataformapython.backend.services.CourseService;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +25,7 @@ import lombok.AllArgsConstructor;
 public class CourseServiceImpl implements CourseService {
 
     private CourseRepository courseRepository;
+    private LessonRepository lessonRepository;
 
     @Override
     public CourseDto createCourse(CreateCourseDto createCourseDto) {
@@ -107,6 +112,29 @@ public class CourseServiceImpl implements CourseService {
         List<CourseEntity> courses = courseRepository.findByTitleContainingIgnoreCase(title);
         return courses.stream()
             .map(CourseMapper::mapToModelDto)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<LessonDto> getLessonsByCourseDifficulty(String level, Boolean active) {
+        List<CourseEntity> courses = courseRepository.findByLevel(level);
+        if (courses.isEmpty()) {
+            throw new ResourceNotFoundException("No se encontraron cursos con nivel: " + level);
+        }
+        
+        List<Long> courseIds = courses.stream()
+            .map(CourseEntity::getId)
+            .collect(Collectors.toList());
+            
+        List<LessonEntity> lessons;
+        if (active != null) {
+            lessons = lessonRepository.findByCourseIdInAndActive(courseIds, active);
+        } else {
+            lessons = lessonRepository.findByCourseIdIn(courseIds);
+        }
+        
+        return lessons.stream()
+            .map(LessonMapper::mapToModelDto)
             .collect(Collectors.toList());
     }
 }
