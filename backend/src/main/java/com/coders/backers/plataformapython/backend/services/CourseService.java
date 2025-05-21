@@ -30,6 +30,5 @@ public interface CourseService {
     // Búsqueda
     List<CourseDto> searchCoursesByTitle(String title);
     
-    // Consultas específicas
-    List<LessonDto> getLessonsByCourseDifficulty(String level, Boolean active);
+
 }
