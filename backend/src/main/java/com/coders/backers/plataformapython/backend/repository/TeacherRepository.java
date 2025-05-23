@@ -11,6 +11,7 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, Long> {
     List<TeacherEntity> findByActive(boolean active);
     List<TeacherEntity> findByName(String name);
     List<TeacherEntity> findBySpecialty(String specialty);
+    List<TeacherEntity> findByEmail(String email);
 
     boolean existsByEmail(String email);
 }
