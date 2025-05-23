@@ -236,16 +236,16 @@ const GestionCurso = () => {
             ></textarea>
             <div className={styles.modalButtons}>
               <button
-                className={styles.modalCancel}
-                onClick={() => setMostrarModal(false)}
-              >
-                Cancelar
-              </button>
-              <button
                 className={styles.modalConfirm}
                 onClick={handleCreateNivel}
               >
                 Crear
+              </button>
+              <button
+                className={styles.modalCancel}
+                onClick={() => setMostrarModal(false)}
+              >
+                Cancelar
               </button>
             </div>
           </div>
@@ -275,16 +275,16 @@ const GestionCurso = () => {
             ></textarea>
             <div className={styles.modalButtons}>
               <button
-                className={styles.modalCancel}
-                onClick={() => setShowEditForm(false)}
-              >
-                Cancelar
-              </button>
-              <button
                 className={styles.modalConfirm}
                 onClick={handleGuardarEdicionNivel}
               >
                 Guardar
+              </button>
+              <button
+                className={styles.modalCancel}
+                onClick={() => setShowEditForm(false)}
+              >
+                Cancelar
               </button>
             </div>
           </div>
@@ -298,16 +298,16 @@ const GestionCurso = () => {
             <p>¿Estás seguro que deseas eliminar este nivel?</p>
             <div className={styles.modalButtons}>
               <button
-                className={styles.modalCancel}
-                onClick={() => setShowDeleteModal(false)}
-              >
-                Cancelar
-              </button>
-              <button
                 className={styles.modalConfirm}
                 onClick={handleDeleteNivel}
               >
                 Eliminar
+              </button>
+              <button
+                className={styles.modalCancel}
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancelar
               </button>
             </div>
           </div>
