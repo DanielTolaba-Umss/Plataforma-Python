@@ -1,7 +1,5 @@
 package com.coders.backers.plataformapython.backend.dto.student;
 
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentDTO {
+public class StudentDto {
     private Long id;
     private String nombres;
     private String apellidos;
@@ -23,11 +21,11 @@ public class StudentDTO {
     private boolean activo;
     private LocalDate fechaInicio;
     private List<Long> cursos; // Lista de IDs de cursos
-    private String password;   // para creación, no se devuelve en respuestas
+    private String password; // para creación, no se devuelve en respuestas
 
     // Constructor sin password para respuestas
-    public StudentDTO(Long id, String nombres, String apellidos, String email, String telefono,
-                      String ciudad, String pais, boolean activo, LocalDate fechaInicio, List<Long> cursos) {
+    public StudentDto(Long id, String nombres, String apellidos, String email, String telefono,
+            String ciudad, String pais, boolean activo, LocalDate fechaInicio, List<Long> cursos) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;

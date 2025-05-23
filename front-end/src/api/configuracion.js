@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { environment } from '../environment/environment';
 
+export const API_URL = environment.apiUrl;
+
 const api = axios.create({
-    baseURL: environment.apiUrl,
+    baseURL: API_URL,
     timeout: environment.timeoutMs,
     headers: {
         'Content-Type': 'application/json'

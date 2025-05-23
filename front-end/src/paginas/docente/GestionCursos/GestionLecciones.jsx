@@ -1,15 +1,7 @@
 // Archivo: GestionLecciones.jsx
 import React, { useState, useEffect } from "react";
-import {useNavigate } from "react-router-dom";
-import {
-  Edit,
-  Trash2,
-  Plus,
-  Video,
-  CheckSquare,
-  FileText,
-  File,
-} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Edit, Trash2, Plus } from "lucide-react";
 import styles from "/src/paginas/docente/estilos/GestionLecciones.module.css";
 import FormularioCrearLeccion from "./FormularioCrearLeccion";
 import FormularioEditarLeccion from "./FormularioEditarLeccion";
@@ -20,8 +12,6 @@ const GestionLecciones = () => {
   const navigate = useNavigate();
 
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [selectedLeccion, setSelectedLeccion] = useState(null);
-  const [showModal, setShowModal] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [leccionToEdit, setLeccionToEdit] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -31,36 +21,7 @@ const GestionLecciones = () => {
     message: "",
     type: "",
   });
-  const [showVideoModal, setShowVideoModal] = useState(false);
-  const [showPracticaModal, setShowPracticaModal] = useState(false);
-  const [videoTitle, setVideoTitle] = useState("");
-  const [videoUrl, setVideoUrl] = useState("");
-  const [practicaTitle, setPracticaTitle] = useState("");
-  const [practicaDesc, setPracticaDesc] = useState("");
-  const [practicaCode, setPracticaCode] = useState("");
-  
-  const options = [
-    {
-      title: "Agregar Video",
-      description: "Sube un video para esta lección",
-      icon: <Video size={32} />,
-      actionType: "video",
-    },
-    {
-      title: "Agregar Práctica",
-      description: "Crea una práctica para la lección",
-      icon: <CheckSquare size={32} />,
-      actionType: "practica",
-    },
-  ];
 
-  const handleOptionClick = (type) => {
-    if (type === "video") {
-      setShowVideoModal(true);
-    } else if (type === "practica") {
-      setShowPracticaModal(true);
-    }
-  };
   const nivelId = localStorage.getItem("nivelId");
   useEffect(() => {
     const fetchLecciones = async () => {
@@ -69,15 +30,14 @@ const GestionLecciones = () => {
         if (response.status !== 200)
           throw new Error("Error en la respuesta del servidor");
 
-        const leccionesFiltradas = response.data.filter(
-          (leccion) =>({
-            id: leccion.id,
-            nombre: leccion.titulo || "Sin titulo",
-            descripcion:leccion.description || "Sin description",
-            color: styles.blueIcon,
-            slug:(leccion.title || "").toLowerCase().replace(/\s+/g, "-"),
-          }));
-        
+        const leccionesFiltradas = response.data.filter((leccion) => ({
+          id: leccion.id,
+          nombre: leccion.titulo || "Sin titulo",
+          descripcion: leccion.description || "Sin description",
+          color: styles.blueIcon,
+          slug: (leccion.title || "").toLowerCase().replace(/\s+/g, "-"),
+        }));
+
         setLecciones(leccionesFiltradas);
       } catch (error) {
         onsole.error("Error al cargar lecciones:", error);
@@ -126,9 +86,12 @@ const GestionLecciones = () => {
         title: leccionData.title,
         description: leccionData.description,
       };
-  
-      const response = await leccionesAPI.actualizar(leccionData.id, datosActualizados);
-  
+
+      const response = await leccionesAPI.actualizar(
+        leccionData.id,
+        datosActualizados
+      );
+
       // Actualiza el estado de las lecciones con los nuevos datos
       setLecciones((prev) =>
         prev.map((l) =>
@@ -142,7 +105,7 @@ const GestionLecciones = () => {
             : l
         )
       );
-  
+
       setShowEditForm(false);
       setLeccionToEdit(null);
       showNotification("Lección actualizada con éxito", "success");
@@ -154,7 +117,6 @@ const GestionLecciones = () => {
       );
     }
   };
-  
 
   const handleDeleteLeccion = async () => {
     try {
@@ -200,8 +162,7 @@ const GestionLecciones = () => {
               <button
                 className={styles.resourcesButton}
                 onClick={() => {
-                  setSelectedLeccion(leccion);
-                  setShowModal(true);
+                  navigate(`/gestion-curso/lecciones/${leccion.id}/recursos`);
                 }}
               >
                 Recursos
@@ -252,150 +213,6 @@ const GestionLecciones = () => {
         />
       )}
 
-      {showModal && selectedLeccion && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <button
-              className={styles.closeButton}
-              onClick={() => setShowModal(false)}
-            >
-              ×
-            </button>
-            <h2>{selectedLeccion.title} - Recursos</h2>
-            <div className={styles.resourcesList}>
-              {selectedLeccion.resources &&
-              selectedLeccion.resources.length > 0 ? (
-                <ul>
-                  {selectedLeccion.resources.map((res) => (
-                    <li key={res.id} className={styles.resourceItem}>
-                      {res.type === "video" && <Video size={16} />}{" "}
-                      {res.type === "practica" && <CheckSquare size={16} />}{" "}
-                      {res.title}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No hay recursos agregados aún.</p>
-              )}
-            </div>
-            <div className={styles.optionsGrid}>
-              {options.map((option) => (
-                <div
-                  key={option.title}
-                  className={styles.optionCard}
-                  onClick={() => handleOptionClick(option.actionType)}
-                >
-                  <div className={styles.optionIconContainer}>
-                    {option.icon}
-                  </div>
-                  <h4>{option.title}</h4>
-                  <p>{option.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showVideoModal && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <button
-              className={styles.closeButton}
-              onClick={() => setShowVideoModal(false)}
-            >
-              ×
-            </button>
-            <h2>Subir Video</h2>
-            <div className={styles.formGroup}>
-              <label>Título del Video</label>
-              <input
-                type="text"
-                value={videoTitle}
-                onChange={(e) => setVideoTitle(e.target.value)}
-                placeholder="Ej: Introducción a Python"
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label>URL del Video</label>
-              <input
-                type="url"
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="https://..."
-              />
-            </div>
-            <div className={styles.modalActions}>
-              <button
-                className={`${styles.modalButton} ${styles.cancelButton}`}
-                onClick={() => setShowVideoModal(false)}
-              >
-                Cancelar
-              </button>
-              <button
-                className={`${styles.modalButton} ${styles.confirmButton}`}
-                onClick={handleCrearVideo}
-              >
-                Subir Video
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showPracticaModal && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <button
-              className={styles.closeButton}
-              onClick={() => setShowPracticaModal(false)}
-            >
-              ×
-            </button>
-            <h2>Crear Práctica</h2>
-            <div className={styles.formGroup}>
-              <label>Nombre de la práctica</label>
-              <input
-                type="text"
-                value={practicaTitle}
-                onChange={(e) => setPracticaTitle(e.target.value)}
-                placeholder="Ej: Práctica en Python n.1"
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label>Instrucciones</label>
-              <textarea
-                value={practicaDesc}
-                onChange={(e) => setPracticaDesc(e.target.value)}
-                placeholder="Ej: Crea una variable llamada 'mensaje'..."
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label>Respuesta esperada (opcional)</label>
-              <textarea
-                value={practicaCode}
-                onChange={(e) => setPracticaCode(e.target.value)}
-                placeholder="mensaje = 'Hola Python'"
-              />
-            </div>
-            <div className={styles.modalActions}>
-              <button
-                className={`${styles.modalButton} ${styles.cancelButton}`}
-                onClick={() => setShowPracticaModal(false)}
-              >
-                Cancelar
-              </button>
-              <button
-                className={`${styles.modalButton} ${styles.confirmButton}`}
-                onClick={handleCrearPractica}
-              >
-                Crear Práctica
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {showDeleteModal && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
@@ -406,16 +223,16 @@ const GestionLecciones = () => {
             </p>
             <div className={styles.modalActions}>
               <button
-                className={`${styles.modalButton} ${styles.cancelButton}`}
-                onClick={() => setShowDeleteModal(false)}
-              >
-                Cancelar
-              </button>
-              <button
                 className={`${styles.modalButton} ${styles.confirmButton}`}
                 onClick={handleDeleteLeccion}
               >
                 Eliminar
+              </button>
+              <button
+                className={`${styles.modalButton} ${styles.cancelButton}`}
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancelar
               </button>
             </div>
           </div>

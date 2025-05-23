@@ -13,9 +13,10 @@
 }
 
 .coursesTitle {
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: #374151;
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
 }
 
 .backButton {
@@ -170,17 +171,33 @@
   cursor: pointer;
 }
 
-.cancelButton {
-  background-color: #e2e8f0;
-}
-
 .confirmButton {
-  background-color: rgb(66, 153, 225);
+  background-color: #306998;
   color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .confirmButton:hover {
-  background-color: rgb(66, 153, 225);
+  background-color: #300898;
+}
+
+.cancelButton {
+  background-color: #ffd438;
+  color: #300898;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.cancelButton:hover{
+  background-color: #e6c231;
 }
 
 /* NOTIFICACIONES */

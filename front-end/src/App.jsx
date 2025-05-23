@@ -20,19 +20,20 @@ function App() {
   };
 
   const estiloBotonVolver = {
-    position: 'fixed',
-    top: '20px',
-    left: '20px',
-    padding: '8px 15px',
-    backgroundColor: '#303dcc',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
+    position: "fixed",
+    bottom: "10px",
+    left: "10px",
+    padding: "8px 15px",
+    backgroundColor: "#FFD438",
+    color: "#0c0461fd",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
     zIndex: 1000,
     display: "flex",
     alignItems: "center",
     gap: "5px",
+    fontWeight: "bold",
   };
 
   const estiloBoton = {
@@ -76,39 +77,50 @@ function App() {
 
   // Pantalla de selección de rol
   return (
-    <div style={{ 
-      padding: "20px", 
-      textAlign: "center",
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "#f3f4f6"
-    }}>
-      <h1 style={{ marginBottom: "30px", color: "" }}>Bienvenido a Python EDU</h1>
-      <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", justifyContent: "center" }}>
+    <div
+      style={{
+        padding: "20px",
+        textAlign: "center",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#f3f4f6",
+      }}
+    >
+      <h1 style={{ marginBottom: "30px", color: "" }}>
+        Bienvenido a Python EDU
+      </h1>
+      <div
+        style={{
+          display: "flex",
+          gap: "20px",
+          flexWrap: "wrap",
+          justifyContent: "center",
+        }}
+      >
         <button
           onClick={() => manejarVista("admin")}
           style={estiloBoton}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#0a5a52")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#0f766e")}
+          onMouseOver={(e) => (e.target.style.backgroundColor = "#301dcb")}
+          onMouseOut={(e) => (e.target.style.backgroundColor = "#303dcc")}
         >
           Entrar como Admin
         </button>
         <button
           onClick={() => manejarVista("docente")}
           style={estiloBoton}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#0a5a52")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#0f766e")}
+          onMouseOver={(e) => (e.target.style.backgroundColor = "#301dcb")}
+          onMouseOut={(e) => (e.target.style.backgroundColor = "#303dcc")}
         >
           Entrar como Docente
         </button>
         <button
           onClick={() => manejarVista("estudiante")}
           style={estiloBoton}
-          onMouseOver={(e) => e.target.style.backgroundColor = '#301dcb'}
-          onMouseOut={(e) => e.target.style.backgroundColor = '#303dcc'}
+          onMouseOver={(e) => (e.target.style.backgroundColor = "#301dcb")}
+          onMouseOut={(e) => (e.target.style.backgroundColor = "#303dcc")}
         >
           Entrar como Estudiante
         </button>
