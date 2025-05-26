@@ -44,6 +44,7 @@ const TeacherList = () => {
       try {
         const response = await teachersAPI.obtenerTodosDocente();
         setTeachers(response.data);
+        console.log("Docentes obtenidos", response.data);
       } catch (error) {
         console.error("Error al obtener docentes:", error);
       } finally {
@@ -204,7 +205,7 @@ const TeacherList = () => {
                     className="input-field"
                   />
                 </div>
-                {/* <div>
+                <div>
                   <label htmlFor="password">Contraseña</label>
                   <input
                     name="password"
@@ -214,7 +215,7 @@ const TeacherList = () => {
                     onChange={handleChange}
                     className="input-field"
                   />
-                </div> */}
+                </div>
                 <div className="modal-form-full">
                   <label htmlFor="specialty">Especialidad</label>
                   <input
@@ -253,7 +254,7 @@ const TeacherList = () => {
               <th>Nombre</th>
               <th>Email</th>
               <th>Teléfono</th>
-              <th>Especialidad</th> {/* 👈 Reemplazo aquí */}
+              <th>Especialidad</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -265,7 +266,7 @@ const TeacherList = () => {
                 </td>
                 <td>{docente.email}</td>
                 <td>{docente.phone}</td>
-                <td>{docente.specialty}</td> {/* 👈 Reemplazo aquí */}
+                <td>{docente.specialty}</td>
                 <td className="acciones-docente">
                   <button
                     className="boton-editar-docente"

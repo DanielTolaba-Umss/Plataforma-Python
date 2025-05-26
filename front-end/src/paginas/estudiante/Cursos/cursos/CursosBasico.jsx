@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Esto debe ser separado
 import "./CursosBasico.css"; // Asegúrate de tener este archivo CSS para estilos
 
 const lecciones = [
@@ -9,6 +10,7 @@ const lecciones = [
 ];
 
 const CursosBasico = () => {
+  const navigate = useNavigate();
   const [estadoLecciones, setEstadoLecciones] = useState(
     lecciones.map(() => ({ estado: "incompleto", boton: "Iniciar" }))
   );
@@ -42,7 +44,9 @@ const CursosBasico = () => {
         <span>Estado: ✅</span>
         <div className="curso-footer-buttons">
           <button>Quiz</button>
-          <button>Prueba</button>
+          <button onClick={() => navigate("/cursos/basico/Prueba")}>
+            Prueba
+          </button>
         </div>
       </footer>
     </div>
