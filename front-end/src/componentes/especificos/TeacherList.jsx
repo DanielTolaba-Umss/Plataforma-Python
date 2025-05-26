@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../estilos/TeacherList.css";
 import DeleteModal from "../comunes/DeleteModal";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, X } from "lucide-react";
 import { teachersAPI } from "../../api/docentesService";
 import LoadingModal from "../comunes/LoadingModal";
 import ProcessModal from "../comunes/ProcessModal";
@@ -152,113 +152,93 @@ const TeacherList = () => {
         </div>
 
         {showForm && (
-          <form className="formulario-docente">
-            <div className="grid-formulario">
-              <div className="grupo-formulario">
-                <label htmlFor="name">Nombres</label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  value={newTeacher.name}
-                  onChange={handleChange}
-                />
+          <div className="teacher-modal-overlay">
+            <div className="teacher-modal">
+              <div className="teacher-modal-header">
+                <h3 className="teacher-modal-title">
+                  {editMode ? "Editar Docente" : "Nuevo Docente"}
+                </h3>
+                <button className="teacher-modal-close" onClick={toggleForm}>
+                  <X size={24} />
+                </button>
               </div>
-
-              <div className="grupo-formulario">
-                <label htmlFor="lastName">Apellidos</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  id="lastName"
-                  value={newTeacher.lastName}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="grupo-formulario">
-                <label htmlFor="email">Correo electrónico</label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={newTeacher.email}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="grupo-formulario">
-                <label htmlFor="phone">Teléfono</label>
-                <input
-                  type="text"
-                  name="phone"
-                  id="phone"
-                  value={newTeacher.phone}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="grupo-formulario">
-                <label htmlFor="password">Contraseña</label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  value={newTeacher.password}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="grupo-formulario">
-                <label htmlFor="specialty">Especialidad</label>
-                <input
-                  type="text"
-                  name="specialty"
-                  id="specialty"
-                  value={newTeacher.specialty}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div className="botones-formulario-docente">
-              {editMode ? (
-                <>
-                  <button
-                    type="button"
-                    className="btn-guardar-cambios"
-                    onClick={handleUpdate}
-                  >
-                    Guardar Cambios
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-cancelar-formulario"
-                    onClick={toggleForm}
-                  >
+              <div className="modal-form-grid">
+                <div className="modal-form-full">
+                  <label htmlFor="name">Nombres</label>
+                  <input
+                    name="name"
+                    placeholder="Nombres"
+                    value={newTeacher.name}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                </div>
+                <div className="modal-form-full">
+                  <label htmlFor="lastName">Apellidos</label>
+                  <input
+                    name="lastName"
+                    placeholder="Apellidos"
+                    value={newTeacher.lastName}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                </div>
+                <div className="modal-form-full">
+                  <label htmlFor="email">Correo electrónico</label>
+                  <input
+                    name="email"
+                    type="email"
+                    placeholder="Correo electrónico"
+                    value={newTeacher.email}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phone">Teléfono</label>
+                  <input
+                    name="phone"
+                    placeholder="Teléfono"
+                    value={newTeacher.phone}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                </div>
+                {/* <div>
+                  <label htmlFor="password">Contraseña</label>
+                  <input
+                    name="password"
+                    type="password"
+                    placeholder="Contraseña"
+                    value={newTeacher.password}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                </div> */}
+                <div className="modal-form-full">
+                  <label htmlFor="specialty">Especialidad</label>
+                  <input
+                    name="specialty"
+                    placeholder="Especialidad"
+                    value={newTeacher.specialty}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                </div>
+                <div className="modal-action-buttons">
+                  <button onClick={toggleForm} className="btn-cancel">
                     Cancelar
                   </button>
-                </>
-              ) : (
-                <>
                   <button
-                    type="button"
-                    className="btn-crear-docente"
-                    onClick={handleCreate}
+                    onClick={editMode ? handleUpdate : handleCreate}
+                    className="btn-crear"
                   >
-                    Crear Docente
+                    {editMode ? "Guardar Cambios" : "Crear Docente"}
                   </button>
-                  <button
-                    type="button"
-                    className="btn-cancelar-formulario"
-                    onClick={toggleForm}
-                  >
-                    Cancelar
-                  </button>
-                </>
-              )}
+                </div>
+              </div>
             </div>
-          </form>
+          </div>
         )}
 
         <input
@@ -273,7 +253,7 @@ const TeacherList = () => {
               <th>Nombre</th>
               <th>Email</th>
               <th>Teléfono</th>
-              <th>Contraseña</th>
+              <th>Especialidad</th> {/* 👈 Reemplazo aquí */}
               <th>Acciones</th>
             </tr>
           </thead>
@@ -285,7 +265,7 @@ const TeacherList = () => {
                 </td>
                 <td>{docente.email}</td>
                 <td>{docente.phone}</td>
-                <td>********</td>
+                <td>{docente.specialty}</td> {/* 👈 Reemplazo aquí */}
                 <td className="acciones-docente">
                   <button
                     className="boton-editar-docente"
