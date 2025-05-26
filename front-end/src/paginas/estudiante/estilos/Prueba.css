@@ -1,33 +1,26 @@
 .prueba-container {
   font-family: Arial, sans-serif;
   padding: 20px;
-  background-color: #e4e5e4;
+  background-color: #f4f4f4; /* 🔥 Fondo general claro */
   width: 100vw;
   box-sizing: border-box;
 }
 
-/* 🔥 Nuevo contenedor para agrupar título, video y transcriptor */
 .contenedor-titulo-video {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 40px; /* 🔥 Espacio lateral */
+  padding: 0 40px;
 }
 
-.prueba-header {
-  margin-bottom: 20px;
-  /* text-align: center; 🔥 Centrado */
-}
-
-h1,
-h2 {
-  margin: 0;
-  padding: 5px 0;
+.prueba-header h1,
+.prueba-header h2 {
+  color: #3d2491; /* 🔥 Violeta */
 }
 
 .volver {
   text-decoration: none;
-  color: #555;
-  font-size: 14px;
+  color: #1a73e8; /* 🔥 Azul */
+  font-weight: bold;
 }
 
 .video-section {
@@ -38,19 +31,15 @@ h2 {
 
 .video-card {
   flex: 2;
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
-  text-align: center;
-  color: inherit;
 }
 
 .transcriptor {
   flex: 1;
-  background: white;
+  background: #ffffff;
   padding: 20px;
   border-radius: 12px;
-  color: black;
+  color: #000;
+  border: 2px solid #3d2491; /* 🔥 Violeta */
 }
 
 .acciones {
@@ -67,6 +56,7 @@ h2 {
   padding: 10px 40px;
   border-radius: 10px;
   justify-content: center;
+  gap: 20px;
 }
 
 .tab {
@@ -79,7 +69,7 @@ h2 {
 }
 
 .tab:hover {
-  color: #000;
+  color: #3d2491;
 }
 
 .tab.activo {
@@ -103,52 +93,55 @@ h2 {
   max-width: 1200px;
   margin: 20px auto;
   padding: 20px;
-  background-color: white;
+  background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #ffd700; /* 🔥 Amarillo */
 }
 
-.instrucciones h3,
-.instrucciones p {
-  /* text-align: center; 🔥 Centrado */
-  margin-bottom: 15px;
+.instrucciones h3 {
+  color: #3d2491;
 }
 
-/* 🔥 Editor elegante */
 .editor {
-  background-color: #ffffff;
+  background-color: #f9f9f9;
   padding: 20px;
-  border: 2px solid #cccccc;
+  border: 2px solid #1a73e8; /* 🔥 Azul */
   border-radius: 10px;
   font-family: monospace;
-  font-size: 14px;
   margin: 0 auto;
   width: 100%;
-  max-width: 900px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
 }
 
 .editor input[type="text"] {
   width: 100%;
   padding: 10px;
   margin-top: 10px;
-  border: 1px solid #cccccc;
+  border: 2px solid #ffd700; /* 🔥 Amarillo */
   border-radius: 5px;
 }
 
 .ejecutar-button {
-  background-color: #4caf50;
+  background-color: #1a73e8; /* 🔥 Azul */
+  color: #ffffff;
   border: none;
   padding: 10px 20px;
   font-weight: bold;
-  cursor: pointer;
   border-radius: 5px;
-  color: white;
   margin-top: 10px;
 }
 
 .ejecutar-button:hover {
-  background-color: #45a049;
+  background-color: #3d2491; /* 🔥 Violeta */
+}
+
+.resultado-simulacion {
+  background-color: #fff8dc; /* 🔥 Fondo tipo "resultado" */
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 8px;
+  border-left: 5px solid #ffd700; /* 🔥 Amarillo */
 }
 
 .progreso-footer {
@@ -168,14 +161,5 @@ h2 {
 .progreso {
   width: 25%;
   height: 100%;
-  background-color: #3d2491;
+  background-color: #1a73e8; /* 🔥 Azul */
 }
-
-.resultado-simulacion {
-  background-color: #f9f9f9;
-  padding: 15px;
-  margin-top: 15px;
-  border-radius: 8px;
-  font-family: monospace;
-  color: #333;
-}   
