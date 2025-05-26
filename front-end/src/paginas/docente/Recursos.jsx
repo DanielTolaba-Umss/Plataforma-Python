@@ -6,9 +6,10 @@ import { Edit, Trash, X, Upload, Download, CheckCircle2 } from "lucide-react";
 const Recursos = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
-  
-  // Modal states
+    // Modal states
   const [showPdfModal, setShowPdfModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [resourceToDelete, setResourceToDelete] = useState(null);
   const [modalMode, setModalMode] = useState('crear'); // 'crear' o 'editar'
   const [editId, setEditId] = useState(null);
   const [pdfData, setPdfData] = useState({
@@ -34,7 +35,7 @@ const Recursos = () => {
   // Filtrar solo los recursos de tipo PDF
   const pdfRecursos = recursos.filter(recurso => recurso.tipo === "PDF");
   
-  // Mostrar notificación
+  // Mostrar notif  icación
   const showNotification = (message, type = 'success') => {
     setNotification({
       show: true,
@@ -115,14 +116,23 @@ const Recursos = () => {
     setModalMode('editar');
     setShowPdfModal(true);
   };
-
   // Eliminar un PDF
-  const handleEliminarPdf = (id) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar este PDF?')) {
-      // Aquí iría la llamada a la API para eliminar el PDF
-      setRecursos(recursos.filter(recurso => recurso.id !== id));
-      showNotification("El PDF ha sido eliminado correctamente");
-    }
+  const openDeleteModal = (recurso) => {
+    setResourceToDelete(recurso);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    // Aquí iría la llamada a la API para eliminar el PDF
+    setRecursos(recursos.filter(recurso => recurso.id !== resourceToDelete.id));
+    showNotification("El PDF ha sido eliminado correctamente");
+    setShowDeleteModal(false);
+    setResourceToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setResourceToDelete(null);
   };
 
   // Submit PDF (crear o editar)
@@ -199,11 +209,10 @@ const Recursos = () => {
                       onClick={() => handleEditarPdf(recurso)}
                     >
                       <Edit size={18} color="white" />
-                    </button>
-                    <button 
+                    </button>                    <button 
                       className="action-button" 
                       title="Eliminar"
-                      onClick={() => handleEliminarPdf(recurso.id)}
+                      onClick={() => openDeleteModal(recurso)}
                     >
                       <Trash size={18} color="#300898" />
                     </button>
@@ -230,14 +239,10 @@ const Recursos = () => {
       {/* Modal para subir o editar PDF */}
       {showPdfModal && (
         <div className="recursos-modal-overlay">
-          <div className="recursos-modal">
-            <div className="recursos-modal-header">
+          <div className="recursos-modal">            <div className="recursos-modal-header">
               <h3 className="recursos-modal-title">
                 {modalMode === 'crear' ? 'Subir PDF' : 'Editar PDF'}
               </h3>
-              <button className="recursos-modal-close" onClick={resetPdfForm}>
-                <X size={24} />
-              </button>
             </div>
             <form onSubmit={handleSubmitPdf}>
               <div className="recursos-modal-form">
@@ -298,15 +303,7 @@ const Recursos = () => {
                     </div>
                   )}
                 </div>
-                
-                <div className="modal-action-buttons">
-                  <button 
-                    type="button" 
-                    className="btn-cancel"
-                    onClick={resetPdfForm}
-                  >
-                    Cancelar
-                  </button>
+                  <div className="modal-action-buttons">
                   <button 
                     type="submit" 
                     className="btn-subir"
@@ -314,9 +311,39 @@ const Recursos = () => {
                   >
                     {modalMode === 'crear' ? 'Subir PDF' : 'Guardar cambios'}
                   </button>
+                  <button 
+                    type="button" 
+                    className="btn-cancel"
+                    onClick={resetPdfForm}
+                  >
+                    Cancelar
+                  </button>
                 </div>
               </div>
-            </form>
+            </form>          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmación de eliminación */}
+      {showDeleteModal && (
+        <div className="recursos-modal-overlay">
+          <div className="recursos-modal-content">
+            <h3>Confirmar eliminación</h3>
+            <p>
+              ¿Estás seguro de que deseas eliminar el PDF{" "}
+              <strong>{resourceToDelete?.nombre}</strong>?
+            </p>
+            <p style={{ color: "#666", fontSize: "0.9rem", marginTop: "10px" }}>
+              Esta acción no se puede deshacer.
+            </p>
+            <div className="recursos-modal-actions">
+              <button className="recursos-confirm-button" onClick={confirmDelete}>
+                Eliminar
+              </button>
+              <button className="recursos-cancel-button" onClick={cancelDelete}>
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       )}

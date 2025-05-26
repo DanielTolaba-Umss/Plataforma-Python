@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "../../estilos/StudentList.css";
 import { Pencil, Trash, X, Search } from "lucide-react";
-import DeleteModal from "../comunes/DeleteModal";
 import { estudiantesApi } from "../../api/estudiantesService";
 
 // Los datos iniciales ahora vendrán de la API
 
-const StudentList = () => {
-  const [students, setStudents] = useState([]);
+const StudentList = () => {  const [students, setStudents] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -169,17 +169,17 @@ const StudentList = () => {
       setLoading(false);
     }
   };
-
   const openDeleteModal = (student) => {
-    setSelectedStudent(student);
+    setStudentToDelete(student);
     setShowDeleteModal(true);
   };
+
   const confirmDelete = async () => {
     try {
-      await estudiantesApi.eliminar(selectedStudent.id);
-      setStudents((prev) => prev.filter((e) => e.id !== selectedStudent.id));
+      await estudiantesApi.eliminar(studentToDelete.id);
+      setStudents((prev) => prev.filter((e) => e.id !== studentToDelete.id));
       setShowDeleteModal(false);
-      setSelectedStudent(null);
+      setStudentToDelete(null);
     } catch (error) {
       alert("Error al eliminar el estudiante: " + error.message);
     }
@@ -187,7 +187,7 @@ const StudentList = () => {
 
   const cancelDelete = () => {
     setShowDeleteModal(false);
-    setSelectedStudent(null);
+    setStudentToDelete(null);
   };
   return (
     <div className="student-container">
@@ -258,16 +258,15 @@ const StudentList = () => {
                         className="input-field"
                       />
                     </div>
-                  </div>
-                  <div className="modal-action-buttons">
-                    <button onClick={toggleForm} className="btn-cancel">
-                      Cancelar
-                    </button>
+                  </div>                  <div className="modal-action-buttons">
                     <button
                       onClick={editMode ? handleUpdate : handleCreate}
                       className="btn-crear"
                     >
                       {editMode ? "Guardar Cambios" : "Crear Estudiante"}
+                    </button>
+                    <button onClick={toggleForm} className="btn-cancel">
+                      Cancelar
                     </button>
                   </div>
                 </div>
@@ -306,10 +305,21 @@ const StudentList = () => {
                       <tr key={e.id}>
                         <td>{e.nombres} {e.apellidos}</td>
                         <td>{e.email}</td>
-                        <td>{e.telefono}</td>
-                        <td className="acciones">
-                          <Pencil size={18} className="accion editar" onClick={() => handleEdit(e)} />
-                          <Trash size={18} className="accion eliminar" onClick={() => openDeleteModal(e)} />
+                        <td>{e.telefono}</td>                        <td className="acciones">
+                          <button 
+                            className="accion editar" 
+                            onClick={() => handleEdit(e)}
+                            title="Editar"
+                          >
+                            <Pencil size={18} />
+                          </button>
+                          <button 
+                            className="accion eliminar" 
+                            onClick={() => openDeleteModal(e)}
+                            title="Eliminar"
+                          >
+                            <Trash size={18} />
+                          </button>
                         </td>
                       </tr>
                     ))
@@ -327,16 +337,31 @@ const StudentList = () => {
               </table>
             )}
           </>
-        )}
-      </div>
+        )}      </div>
 
-      <DeleteModal
-        isOpen={showDeleteModal}
-        onClose={cancelDelete}
-        onConfirm={confirmDelete}
-        itemName={selectedStudent?.nombre}
-        itemType="estudiante"
-      />
+      {/* Modal de confirmación de eliminación */}
+      {showDeleteModal && (
+        <div className="modalOverlay">
+          <div className="modalContent">
+            <h3>Confirmar eliminación</h3>
+            <p>
+              ¿Estás seguro de que deseas eliminar al estudiante{" "}
+              <strong>{studentToDelete?.nombres} {studentToDelete?.apellidos}</strong>?
+            </p>
+            <p style={{ color: "#666", fontSize: "0.9rem", marginTop: "10px" }}>
+              Esta acción no se puede deshacer.
+            </p>
+            <div className="modalActions">
+              <button className="confirmButton" onClick={confirmDelete}>
+                Eliminar
+              </button>
+              <button className="cancelButton" onClick={cancelDelete}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

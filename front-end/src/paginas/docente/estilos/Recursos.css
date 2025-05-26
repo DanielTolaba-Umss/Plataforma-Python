@@ -416,3 +416,52 @@
     }
 }
 
+/* MODAL DE ELIMINACIÓN */
+.recursos-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-top: 4px solid #ffd438;
+}
+
+.recursos-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.recursos-confirm-button {
+  background-color: #306998;
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.recursos-confirm-button:hover {
+  background-color: #300898;
+}
+
+.recursos-cancel-button {
+  background-color: #ffd438;
+  color: #300898;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.recursos-cancel-button:hover {
+  background-color: #e6c231;
+}
+

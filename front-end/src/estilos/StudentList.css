@@ -18,13 +18,18 @@
 }
 
 .btn-nuevo {
-  background-color: #059669;
+  background-color: #306998;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: 0.5rem;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-nuevo:hover {
+  background-color: #300898;
 }
 
 .input-busqueda {
@@ -122,19 +127,37 @@
 
 .acciones {
   display: flex;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 .accion {
+  border: none;
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
 .accion.editar {
-  color: #2563eb;
+  background-color: #306998;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.accion.editar:hover {
+  background-color: #300898;
 }
 
 .accion.eliminar {
-  color: #dc2626;
+  background-color: #ffd438;
+  color: #300898;
+  transition: background-color 0.2s;
+}
+
+.accion.eliminar:hover {
+  background-color: #e6c231;
 }
 .formulario-docente-inline {
   display: grid;
@@ -390,4 +413,66 @@ select.input-field[multiple] option:checked {
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+}
+
+/* MODAL DE ELIMINACIÓN */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-top: 4px solid #ffd438;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.confirmButton {
+  background-color: #306998;
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.confirmButton:hover {
+  background-color: #300898;
+}
+
+.cancelButton {
+  background-color: #ffd438;
+  color: #300898;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancelButton:hover {
+  background-color: #e6c231;
 }
