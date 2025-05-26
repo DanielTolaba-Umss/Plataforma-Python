@@ -44,8 +44,8 @@ public class StudentServiceTest {
     void createStudent_WithCourses_ShouldAssignCoursesCorrectly() {
         // Arrange
         CreateStudentDto createDto = new CreateStudentDto();
-        createDto.setNombre("Juan");
-        createDto.setApellido("Pérez");
+        createDto.setNombres("Juan");
+        createDto.setApellidos("Pérez");
         createDto.setEmail("juan.perez@example.com");
         createDto.setCursos(Arrays.asList(1L, 2L));
 
@@ -59,8 +59,8 @@ public class StudentServiceTest {
 
         StudentEntity studentEntity = new StudentEntity();
         studentEntity.setId(1L);
-        studentEntity.setNombre("Juan");
-        studentEntity.setApellido("Pérez");
+        studentEntity.setName("Juan");
+        studentEntity.setLastName("Pérez");
         studentEntity.setEmail("juan.perez@example.com");
         Set<CourseEntity> courses = new HashSet<>();
         courses.add(course1);
@@ -76,8 +76,8 @@ public class StudentServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals("Juan", result.getNombre());
-        assertEquals("Pérez", result.getApellido());
+        assertEquals("Juan", result.getNombres());
+        assertEquals("Pérez", result.getApellidos());
         assertEquals("juan.perez@example.com", result.getEmail());
         assertNotNull(result.getCursos());
         assertEquals(2, result.getCursos().size());
@@ -93,14 +93,14 @@ public class StudentServiceTest {
     void createStudent_WithoutCourses_ShouldCreateStudentWithEmptyCourses() {
         // Arrange
         CreateStudentDto createDto = new CreateStudentDto();
-        createDto.setNombre("María");
-        createDto.setApellido("García");
+        createDto.setNombres("María");
+        createDto.setApellidos("García");
         createDto.setEmail("maria.garcia@example.com");
 
         StudentEntity studentEntity = new StudentEntity();
         studentEntity.setId(2L);
-        studentEntity.setNombre("María");
-        studentEntity.setApellido("García");
+        studentEntity.setName("María");
+        studentEntity.setLastName("García");
         studentEntity.setEmail("maria.garcia@example.com");
         studentEntity.setCourses(new HashSet<>());
 
@@ -111,8 +111,8 @@ public class StudentServiceTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals("María", result.getNombre());
-        assertEquals("García", result.getApellido());
+        assertEquals("María", result.getNombres());
+        assertEquals("García", result.getApellidos());
         assertEquals("maria.garcia@example.com", result.getEmail());
         assertNotNull(result.getCursos());
         assertEquals(0, result.getCursos().size());
@@ -126,15 +126,15 @@ public class StudentServiceTest {
         // Arrange
         Long studentId = 1L;
         UpdateStudentDto updateDto = new UpdateStudentDto();
-        updateDto.setNombre("Juan Carlos");
-        updateDto.setApellido("Pérez");
+        updateDto.setNombres("Juan Carlos");
+        updateDto.setApellidos("Pérez");
         updateDto.setEmail("juan.carlos.perez@example.com");
         updateDto.setCursos(Arrays.asList(3L, 4L));
 
         StudentEntity existingStudent = new StudentEntity();
         existingStudent.setId(studentId);
-        existingStudent.setNombre("Juan");
-        existingStudent.setApellido("Pérez");
+        existingStudent.setName("Juan");
+        existingStudent.setLastName("Pérez");
         existingStudent.setEmail("juan.perez@example.com");
 
         CourseEntity course3 = new CourseEntity();
@@ -147,8 +147,8 @@ public class StudentServiceTest {
 
         StudentEntity updatedStudent = new StudentEntity();
         updatedStudent.setId(studentId);
-        updatedStudent.setNombre("Juan Carlos");
-        updatedStudent.setApellido("Pérez");
+        updatedStudent.setName("Juan Carlos");
+        updatedStudent.setLastName("Pérez");
         updatedStudent.setEmail("juan.carlos.perez@example.com");
         Set<CourseEntity> updatedCourses = new HashSet<>();
         updatedCourses.add(course3);
@@ -166,8 +166,8 @@ public class StudentServiceTest {
         // Assert
         assertTrue(result.isPresent());
         StudentDto studentDto = result.get();
-        assertEquals("Juan Carlos", studentDto.getNombre());
-        assertEquals("Pérez", studentDto.getApellido());
+        assertEquals("Juan Carlos", studentDto.getNombres());
+        assertEquals("Pérez", studentDto.getApellidos());
         assertEquals("juan.carlos.perez@example.com", studentDto.getEmail());
         assertNotNull(studentDto.getCursos());
         assertEquals(2, studentDto.getCursos().size());
@@ -191,8 +191,8 @@ public class StudentServiceTest {
 
         StudentEntity studentEntity = new StudentEntity();
         studentEntity.setId(studentId);
-        studentEntity.setNombre("Ana");
-        studentEntity.setApellido("López");
+        studentEntity.setName("Ana");
+        studentEntity.setLastName("López");
         studentEntity.setEmail("ana.lopez@example.com");
         Set<CourseEntity> courses = new HashSet<>();
         courses.add(course1);
@@ -206,8 +206,8 @@ public class StudentServiceTest {
         // Assert
         assertTrue(result.isPresent());
         StudentDto studentDto = result.get();
-        assertEquals("Ana", studentDto.getNombre());
-        assertEquals("López", studentDto.getApellido());
+        assertEquals("Ana", studentDto.getNombres());
+        assertEquals("López", studentDto.getApellidos());
         assertEquals("ana.lopez@example.com", studentDto.getEmail());
         assertNotNull(studentDto.getCursos());
         assertEquals(1, studentDto.getCursos().size());
@@ -225,8 +225,8 @@ public class StudentServiceTest {
 
         StudentEntity student1 = new StudentEntity();
         student1.setId(1L);
-        student1.setNombre("Carlos");
-        student1.setApellido("Ruiz");
+        student1.setName("Carlos");
+        student1.setLastName("Ruiz");
         student1.setEmail("carlos.ruiz@example.com");
         Set<CourseEntity> courses1 = new HashSet<>();
         courses1.add(course1);
@@ -234,8 +234,8 @@ public class StudentServiceTest {
 
         StudentEntity student2 = new StudentEntity();
         student2.setId(2L);
-        student2.setNombre("Sofía");
-        student2.setApellido("Morales");
+        student2.setName("Sofía");
+        student2.setLastName("Morales");
         student2.setEmail("sofia.morales@example.com");
         student2.setCourses(new HashSet<>());
 
@@ -248,12 +248,12 @@ public class StudentServiceTest {
         assertEquals(2, results.size());
         
         StudentDto firstStudent = results.get(0);
-        assertEquals("Carlos", firstStudent.getNombre());
+        assertEquals("Carlos", firstStudent.getNombres());
         assertEquals(1, firstStudent.getCursos().size());
         assertTrue(firstStudent.getCursos().contains(1L));
         
         StudentDto secondStudent = results.get(1);
-        assertEquals("Sofía", secondStudent.getNombre());
+        assertEquals("Sofía", secondStudent.getNombres());
         assertEquals(0, secondStudent.getCursos().size());
         
         verify(studentRepository).findAll();
