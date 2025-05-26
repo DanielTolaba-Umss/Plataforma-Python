@@ -107,37 +107,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.10</version>
-				<executions>
-					<execution>
-					<goals>
-						<goal>prepare-agent</goal>
-					</goals>
-					</execution>
-					<execution>
-					<id>report</id>
-					<phase>prepare-package</phase>
-					<goals>
-						<goal>report</goal>
-					</goals>
-					<configuration>
-						<excludes>
-						<!-- Evita instrumentar clases mockeadas -->
-						<exclude>**/*$MockitoMock*.class</exclude>
-						<exclude>**/*$Mock*.class</exclude>
-						<exclude>**/*$Proxy*.class</exclude>
-						<exclude>**/*$$EnhancerByMockito*.*</exclude>
-						<exclude>**/*$$SpringCGLIB*.*</exclude>
-						<!-- Opcional: también excluye clases de prueba -->
-						<exclude>**/*Test*.*</exclude>
-						</excludes>
-					</configuration>
-					</execution>
-				</executions>
-			</plugin>
+			
 		</plugins>
 	</build>
 </project>
