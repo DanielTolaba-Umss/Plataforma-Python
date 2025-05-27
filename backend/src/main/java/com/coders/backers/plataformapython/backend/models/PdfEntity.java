@@ -16,16 +16,15 @@ public class PdfEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "file_path", nullable = false)
     private String filePath;
 
-    private LocalDateTime uploadedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        uploadedAt = LocalDateTime.now();
-    }
+    @Column(name = "uploaded_at", nullable = false)
+    private LocalDateTime uploadedAt = LocalDateTime.now();
 }
