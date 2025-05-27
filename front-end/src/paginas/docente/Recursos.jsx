@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../docente/estilos/Recursos.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { Edit, Trash, X, Upload, Download, CheckCircle2 } from "lucide-react";
+import { pdfApi } from "../../api/pdfService";
 
 const Recursos = () => {
   const { courseId } = useParams();
@@ -24,16 +25,32 @@ const Recursos = () => {
     message: '',
     type: 'success'
   });
-
   // Estado para manejar los recursos
-  const [recursos, setRecursos] = useState([
-    { id: 1, nombre: "Practica 1", tipo: "Práctica" },
-    { id: 2, nombre: "PDF 1", tipo: "PDF", descripcion: "Descripción del PDF 1" },
-    { id: 3, nombre: "PDF 2", tipo: "PDF", descripcion: "Descripción del PDF 2" },
-  ]);
-
+  const [recursos, setRecursos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   // Filtrar solo los recursos de tipo PDF
-  const pdfRecursos = recursos.filter(recurso => recurso.tipo === "PDF");
+  const pdfRecursos = recursos.filter(recurso => recurso.name || recurso.nombre);
+
+  // Cargar PDFs al montar el componente
+  useEffect(() => {
+    const fetchPdfs = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const pdfsData = await pdfApi.getAll();
+        console.log("PDFs cargados:", pdfsData);
+        setRecursos(pdfsData);
+      } catch (error) {
+        setError("Error al cargar los PDFs: " + error.message);
+        console.error("Error al cargar PDFs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPdfs();
+  }, []);
   
   // Mostrar notif  icación
   const showNotification = (message, type = 'success') => {
@@ -104,77 +121,84 @@ const Recursos = () => {
     setModalMode('crear');
     setShowPdfModal(true);
   };
-
   // Abrir modal para editar un PDF existente
   const handleEditarPdf = (recurso) => {
     setPdfData({
-      nombre: recurso.nombre,
-      descripcion: recurso.descripcion || '',
-      archivo: recurso.archivo
+      nombre: recurso.name || recurso.nombre,
+      descripcion: recurso.description || recurso.descripcion || '',
+      archivo: null // No mostramos el archivo existente
     });
     setEditId(recurso.id);
     setModalMode('editar');
     setShowPdfModal(true);
   };
+
   // Eliminar un PDF
   const openDeleteModal = (recurso) => {
     setResourceToDelete(recurso);
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    // Aquí iría la llamada a la API para eliminar el PDF
-    setRecursos(recursos.filter(recurso => recurso.id !== resourceToDelete.id));
-    showNotification("El PDF ha sido eliminado correctamente");
-    setShowDeleteModal(false);
-    setResourceToDelete(null);
+  const confirmDelete = async () => {
+    try {
+      setLoading(true);
+      await pdfApi.delete(resourceToDelete.id);
+      setRecursos(recursos.filter(recurso => recurso.id !== resourceToDelete.id));
+      showNotification("El PDF ha sido eliminado correctamente");
+      setShowDeleteModal(false);
+      setResourceToDelete(null);
+    } catch (error) {
+      setError("Error al eliminar el PDF: " + error.message);
+      console.error("Error al eliminar PDF:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const cancelDelete = () => {
     setShowDeleteModal(false);
     setResourceToDelete(null);
   };
-
   // Submit PDF (crear o editar)
-  const handleSubmitPdf = (e) => {
+  const handleSubmitPdf = async (e) => {
     e.preventDefault();
     
-    if (modalMode === 'crear') {
-      // Crear nuevo PDF
-      const nuevoPdf = {
-        id: Date.now(), // Generar un ID temporal
-        nombre: pdfData.nombre,
-        descripcion: pdfData.descripcion,
-        tipo: "PDF",
-        archivo: pdfData.archivo
-      };
-      
-      // Aquí iría la llamada a la API para guardar el PDF
-      setRecursos([...recursos, nuevoPdf]);
-      console.log("Creando nuevo PDF:", nuevoPdf);
-      showNotification("El PDF ha sido subido correctamente");
-    } else {
-      // Actualizar PDF existente
-      const pdfActualizado = {
-        id: editId,
-        nombre: pdfData.nombre,
-        descripcion: pdfData.descripcion,
-        tipo: "PDF",
-        archivo: pdfData.archivo
-      };
-      
-      // Aquí iría la llamada a la API para actualizar el PDF
-      setRecursos(recursos.map(recurso => 
-        recurso.id === editId ? pdfActualizado : recurso
-      ));
-      console.log("Actualizando PDF:", pdfActualizado);
-      showNotification("El PDF ha sido actualizado correctamente");
-    }
-    
-    // Cerrar modal y resetear formulario
-    resetPdfForm();
-  };
+    try {
+      setLoading(true);
+      setError(null);
 
+      // Crear FormData para enviar el archivo
+      const formData = new FormData();
+      formData.append('name', pdfData.nombre);
+      formData.append('description', pdfData.descripcion);
+      formData.append('file', pdfData.archivo);
+
+      let result;
+      if (modalMode === 'crear') {
+        // Crear nuevo PDF
+        result = await pdfApi.upload(formData);
+        setRecursos([...recursos, result]);
+        console.log("PDF creado:", result);
+        showNotification("El PDF ha sido subido correctamente");
+      } else {
+        // Actualizar PDF existente
+        result = await pdfApi.update(editId, formData);
+        setRecursos(recursos.map(recurso => 
+          recurso.id === editId ? result : recurso
+        ));
+        console.log("PDF actualizado:", result);
+        showNotification("El PDF ha sido actualizado correctamente");
+      }
+      
+      // Cerrar modal y resetear formulario
+      resetPdfForm();
+    } catch (error) {
+      setError("Error al procesar el PDF: " + error.message);
+      console.error("Error al procesar PDF:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="recursos">
       {/* Notificación */}
@@ -185,53 +209,74 @@ const Recursos = () => {
         </div>
       )}
 
+      {/* Error banner */}
+      {error && (
+        <div className="error-banner">
+          <span className="error-message">{error}</span>
+          <button className="error-close" onClick={() => setError(null)}>
+            ×
+          </button>
+        </div>
+      )}
+
       <h2 className="recursos-title">RECURSOS</h2>
       <div className="recursos-content-wrapper">
-        <div className="tabla-container">
-          <div className="recursos-table">
-            <div className="recursos-table-header">
-              <div>Nombre</div>
-              <div>Descripción</div>
-              <div>Tipo</div>
-              <div>Acciones</div>
-            </div>
-            
-            {pdfRecursos.length > 0 ? (
-              pdfRecursos.map(recurso => (
-                <div key={recurso.id} className="recursos-table-row">
-                  <div>{recurso.nombre}</div>
-                  <div>{recurso.descripcion || '-'}</div>
-                  <div>{recurso.tipo}</div>
-                  <div className="action-buttons">
-                    <button 
-                      className="action-button" 
-                      title="Editar"
-                      onClick={() => handleEditarPdf(recurso)}
-                    >
-                      <Edit size={18} color="white" />
-                    </button>                    <button 
-                      className="action-button" 
-                      title="Eliminar"
-                      onClick={() => openDeleteModal(recurso)}
-                    >
-                      <Trash size={18} color="#300898" />
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="recursos-table-row">
-                <div style={{ textAlign: "center", gridColumn: "1 / span 4" }}>
-                  No hay PDFs disponibles
-                </div>
-              </div>
-            )}
+        {loading ? (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Cargando recursos...</p>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="tabla-container">
+              <div className="recursos-table">                <div className="recursos-table-header">
+                  <div>Nombre</div>
+                  <div>Descripción</div>
+                  <div>Tipo</div>
+                  <div>Acciones</div>
+                </div>
+                
+                {pdfRecursos.length > 0 ? (
+                  pdfRecursos.map(recurso => (
+                    <div key={recurso.id} className="recursos-table-row">                      <div>{recurso.name || recurso.nombre}</div>
+                      <div>{recurso.description || recurso.descripcion || '-'}</div>
+                      <div>PDF</div>
+                      <div className="action-buttons">
+                        <button 
+                          className="action-button" 
+                          title="Editar"
+                          onClick={() => handleEditarPdf(recurso)}
+                          disabled={loading}
+                        >
+                          <Edit size={18} color="white" />
+                        </button>
+                        <button 
+                          className="action-button" 
+                          title="Eliminar"
+                          onClick={() => openDeleteModal(recurso)}
+                          disabled={loading}
+                        >
+                          <Trash size={18} color="#300898" />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="recursos-table-row">
+                    <div style={{ textAlign: "center", gridColumn: "1 / span 4" }}>
+                      {loading ? "Cargando..." : "No hay PDFs disponibles"}
+                    </div>
+                  </div>                )}
+              </div>
+            </div>
+          </>
+        )}
         
         <div className="recursos-button-container">
           <button className="recursos-button">Subir Practica</button>
-          <button className="recursos-button" onClick={handleNuevoPdf}>Subir PDF</button>
+          <button className="recursos-button" onClick={handleNuevoPdf} disabled={loading}>
+            Subir PDF
+          </button>
           <button className="recursos-button">Subir Video</button>
         </div>
       </div>
@@ -302,19 +347,19 @@ const Recursos = () => {
                       </button>
                     </div>
                   )}
-                </div>
-                  <div className="modal-action-buttons">
+                </div>                <div className="modal-action-buttons">
                   <button 
                     type="submit" 
                     className="btn-subir"
-                    disabled={!pdfData.nombre || !pdfData.archivo}
+                    disabled={!pdfData.nombre || !pdfData.archivo || loading}
                   >
-                    {modalMode === 'crear' ? 'Subir PDF' : 'Guardar cambios'}
+                    {loading ? 'Procesando...' : (modalMode === 'crear' ? 'Subir PDF' : 'Guardar cambios')}
                   </button>
                   <button 
                     type="button" 
                     className="btn-cancel"
                     onClick={resetPdfForm}
+                    disabled={loading}
                   >
                     Cancelar
                   </button>
@@ -328,19 +373,26 @@ const Recursos = () => {
       {showDeleteModal && (
         <div className="recursos-modal-overlay">
           <div className="recursos-modal-content">
-            <h3>Confirmar eliminación</h3>
-            <p>
+            <h3>Confirmar eliminación</h3>            <p>
               ¿Estás seguro de que deseas eliminar el PDF{" "}
-              <strong>{resourceToDelete?.nombre}</strong>?
+              <strong>{resourceToDelete?.name || resourceToDelete?.nombre}</strong>?
             </p>
             <p style={{ color: "#666", fontSize: "0.9rem", marginTop: "10px" }}>
               Esta acción no se puede deshacer.
             </p>
             <div className="recursos-modal-actions">
-              <button className="recursos-confirm-button" onClick={confirmDelete}>
-                Eliminar
+              <button 
+                className="recursos-confirm-button" 
+                onClick={confirmDelete}
+                disabled={loading}
+              >
+                {loading ? 'Eliminando...' : 'Eliminar'}
               </button>
-              <button className="recursos-cancel-button" onClick={cancelDelete}>
+              <button 
+                className="recursos-cancel-button" 
+                onClick={cancelDelete}
+                disabled={loading}
+              >
                 Cancelar
               </button>
             </div>
