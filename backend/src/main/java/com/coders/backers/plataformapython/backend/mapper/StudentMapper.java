@@ -9,6 +9,8 @@ import com.coders.backers.plataformapython.backend.enums.Role;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class StudentMapper {
 
@@ -30,15 +32,20 @@ public class StudentMapper {
         dto.setNombres(entity.getName());
         dto.setApellidos(entity.getLastName());
         dto.setEmail(entity.getEmail());
-        dto.setTelefono(entity.getPhone());
-        dto.setActivo(entity.isActive());
+        dto.setTelefono(entity.getPhone());        dto.setActivo(entity.isActive());
         dto.setFechaInicio(
                 entity.getEnrollmentDate() != null ? entity.getEnrollmentDate().toLocalDate() : LocalDate.now());
-        dto.setCursos(Collections.emptyList());
+        
+        // Mapear los cursos del estudiante
+        List<Long> cursosIds = entity.getCourses() != null ? 
+            entity.getCourses().stream()
+                .map(course -> course.getId())
+                .collect(Collectors.toList()) : 
+            Collections.emptyList();
+        dto.setCursos(cursosIds);
+        
         return dto;
-    }
-
-    public static StudentEntity mapFromUpdateDto(UpdateStudentDto dto, StudentEntity existingStudent) {
+    }    public static StudentEntity mapFromUpdateDto(UpdateStudentDto dto, StudentEntity existingStudent) {
         StudentEntity entity = new StudentEntity();
         entity.setId(existingStudent.getId());
         entity.setName(dto.getNombres());
@@ -50,6 +57,7 @@ public class StudentMapper {
         entity.setRole(Role.STUDENT.name());
         entity.setEnrollmentDate(existingStudent.getEnrollmentDate()); // Preserve enrollment date
         entity.setCreatedAt(existingStudent.getCreatedAt()); // Preserve created at
+        // Nota: Los cursos se asignan en el servicio, no en el mapper
         return entity;
     }
 }

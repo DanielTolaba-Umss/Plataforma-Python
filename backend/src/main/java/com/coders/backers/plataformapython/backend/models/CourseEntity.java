@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import com.coders.backers.plataformapython.backend.models.userModel.TeacherEntity;
+import com.coders.backers.plataformapython.backend.models.userModel.StudentEntity;
 
 import java.util.HashSet;
 
@@ -79,13 +80,14 @@ public class CourseEntity {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = Date.valueOf(LocalDate.now());
-    }
-
-    @ManyToMany(fetch = FetchType.LAZY)
+    }    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "teacher_course",
         joinColumns = @JoinColumn(name = "curso_id"),
         inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
     private Set<TeacherEntity> teachers = new HashSet<>();
+    
+    @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+    private Set<StudentEntity> students = new HashSet<>();
 }

@@ -8,13 +8,15 @@ const api = axios.create({
   }
 });
 
-export const estudiantesApi = {
-  // Obtener todos los estudiantes
+export const estudiantesApi = {  // Obtener todos los estudiantes
   listar: async () => {
     try {
+      console.log("Solicitando lista de estudiantes al backend");
       const response = await api.get('/students');
+      console.log("Respuesta del backend (estudiantes):", response.data);
       return response.data;
     } catch (error) {
+      console.error("Error en listar estudiantes:", error.response || error);
       throw new Error('Error al obtener estudiantes: ' + (error.response?.data?.message || error.message));
     }
   },
@@ -26,24 +28,37 @@ export const estudiantesApi = {
     } catch (error) {
       throw new Error('Error al obtener estudiante: ' + (error.response?.data?.message || error.message));
     }
-  },
-
-  // Crear un nuevo estudiante
+  },  // Crear un nuevo estudiante
   crear: async (estudiante) => {
     try {
+      // Asegurarse de que cursos sea un array si está presente
+      if (estudiante.cursos && !Array.isArray(estudiante.cursos)) {
+        estudiante.cursos = [estudiante.cursos];
+      }
+      
+      console.log("Enviando petición para crear estudiante:", estudiante);
       const response = await api.post('/students', estudiante);
+      console.log("Respuesta de crear estudiante:", response.data);
       return response.data;
     } catch (error) {
+      console.error("Error en crear estudiante:", error.response || error);
       throw new Error('Error al crear estudiante: ' + (error.response?.data?.message || error.message));
     }
   },
-
   // Actualizar un estudiante
   actualizar: async (id, estudiante) => {
     try {
+      // Asegurarse de que cursos sea un array si está presente
+      if (estudiante.cursos && !Array.isArray(estudiante.cursos)) {
+        estudiante.cursos = [estudiante.cursos];
+      }
+      
+      console.log(`Actualizando estudiante ${id} con datos:`, estudiante);
       const response = await api.put(`/students/${id}`, estudiante);
+      console.log("Respuesta de actualizar estudiante:", response.data);
       return response.data;
     } catch (error) {
+      console.error("Error en actualizar estudiante:", error.response || error);
       throw new Error('Error al actualizar estudiante: ' + (error.response?.data?.message || error.message));
     }
   },
