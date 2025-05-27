@@ -1,0 +1,117 @@
+.configuracion-container {
+  padding: 20px;
+  background-color: #f9fafb;
+  width: 100%;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.form-card {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 100px;
+  position: relative;
+}
+
+.avatar-circle {
+  width: 90px;
+  height: 90px;
+  background-color: #0f766e;
+  border-radius: 9999px;
+}
+.avatar-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #0f766e;
+}
+.btn-foto {
+  background-color: #e5e7eb;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  z-index: 1;
+}
+
+.btn-foto:hover {
+  background-color: #d1d5db;
+}
+
+.form-card label {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+  color: #374151;
+}
+
+.form-card input,
+.form-card textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.form-grid {
+  display: flex;
+  gap: 16px;
+}
+
+.form-grid > div {
+  flex: 1;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.checkbox-group label {
+  font-size: 14px;
+  color: #374151;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-cancelar {
+  background-color: #e5e7eb;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #374151;
+}
+
+.btn-guardar {
+  background-color: #14b8a6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
