@@ -40,7 +40,7 @@ const Editor = ({ titulo, descripcion }) => {
           width="100%"
           defaultLanguage="python"
           defaultValue="# Escribe tu código Python aquí"
-          theme="vs-dark"
+          theme="vs-white"
           onMount={(editor) => {
             editorRef.current = editor;
           }}

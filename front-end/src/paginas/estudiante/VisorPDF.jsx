@@ -5,7 +5,7 @@ const VisorPDF = ({ src }) => {
     <div className="visor-pdf">
       <h4>Visor de PDF</h4>
       <iframe
-        src={src} // 🔥 Recibe el PDF por prop
+        src={src}
         width="100%"
         height="600px"
         title="Visor de PDF"
