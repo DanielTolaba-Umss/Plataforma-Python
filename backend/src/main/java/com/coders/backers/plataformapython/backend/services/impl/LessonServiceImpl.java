@@ -83,6 +83,30 @@ public class LessonServiceImpl implements LessonService {
     }
     
     @Override
+    public List<LessonDto> getLessonsByCourseIdAndLevel(Long courseId, String level) {
+        if (!courseRepository.existsById(courseId)) {
+            throw new ResourceNotFoundException("Curso no encontrado con id: " + courseId);
+        }
+        
+        List<LessonEntity> lessons = lessonRepository.findByCourseIdAndCourseLevel(courseId, level);
+        return lessons.stream()
+            .map(LessonMapper::mapToModelDto)
+            .collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<LessonDto> getActiveLessonsByCourseIdAndLevel(Long courseId, String level) {
+        if (!courseRepository.existsById(courseId)) {
+            throw new ResourceNotFoundException("Curso no encontrado con id: " + courseId);
+        }
+        
+        List<LessonEntity> activeLessons = lessonRepository.findByCourseIdAndCourseLevelAndActive(courseId, level, true);
+        return activeLessons.stream()
+            .map(LessonMapper::mapToModelDto)
+            .collect(Collectors.toList());
+    }
+    
+    @Override
     public LessonDto updateLesson(Long id, UpdateLessonDto updateLessonDto) {
         LessonEntity lessonEntity = lessonRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Lección no encontrada con id: " + id));
