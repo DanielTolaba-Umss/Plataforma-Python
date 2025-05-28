@@ -40,7 +40,7 @@ const GestionLecciones = () => {
 
         setLecciones(leccionesFiltradas);
       } catch (error) {
-        onsole.error("Error al cargar lecciones:", error);
+        console.error("Error al cargar lecciones:", error);
         showNotification(
           "Error al cargar lecciones: " +
             (error.response?.data?.message || error.message),
