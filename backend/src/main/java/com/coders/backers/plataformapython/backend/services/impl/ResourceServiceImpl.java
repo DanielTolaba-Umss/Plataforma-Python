@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Service
 public class ResourceServiceImpl implements ResourceService {
 
@@ -32,9 +31,16 @@ public class ResourceServiceImpl implements ResourceService {
     public ResourceDto create(ResourceDto dto) {
         ContenidoModel content = contenidoRepository.findById(dto.getContentId())
             .orElseThrow(() -> new ResourceNotFoundException("Content not found"));
+
         ResourceTypeModel type = typeRepository.findById(dto.getTypeId())
             .orElseThrow(() -> new ResourceNotFoundException("ResourceType not found"));
+
         ResourceModel model = ResourceMapper.toModel(dto, content, type);
+
+        // NUEVO: establece tipo de origen (URL o FILE)
+        model.setSourceType(dto.getSourceType());
+        model.setSource(dto.getSource());
+
         return ResourceMapper.toDto(repository.save(model));
     }
 
@@ -56,8 +62,10 @@ public class ResourceServiceImpl implements ResourceService {
     public ResourceDto update(Long id, ResourceDto dto) {
         ResourceModel existing = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
+
         ContenidoModel content = contenidoRepository.findById(dto.getContentId())
             .orElseThrow(() -> new ResourceNotFoundException("Content not found"));
+
         ResourceTypeModel type = typeRepository.findById(dto.getTypeId())
             .orElseThrow(() -> new ResourceNotFoundException("ResourceType not found"));
 
@@ -65,6 +73,10 @@ public class ResourceServiceImpl implements ResourceService {
         existing.setType(type);
         existing.setUrl(dto.getUrl());
         existing.setTitle(dto.getTitle());
+
+        // NUEVO: actualiza tipo de fuente y fuente
+        existing.setSourceType(dto.getSourceType());
+        existing.setSource(dto.getSource());
 
         return ResourceMapper.toDto(repository.save(existing));
     }
@@ -77,3 +89,4 @@ public class ResourceServiceImpl implements ResourceService {
         repository.deleteById(id);
     }
 }
+

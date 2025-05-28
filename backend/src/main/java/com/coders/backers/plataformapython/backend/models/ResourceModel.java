@@ -29,6 +29,18 @@ public class ResourceModel {
     @Column(nullable = false)
     private String title;
 
+    @Column(name = "source_type")
+    private String sourceType; 
+
+    @Column(name = "source")
+    private String source; 
+
+    public String getSourceType() { return sourceType; }
+    public void setSourceType(String sourceType) { this.sourceType = sourceType; }
+
+    public String getSource() { return source; }
+    public void setSource(String source) { this.source = source; }
+
     public Long getResourceId() { return resourceId; }
     public void setResourceId(Long resourceId) { this.resourceId = resourceId; }
 
