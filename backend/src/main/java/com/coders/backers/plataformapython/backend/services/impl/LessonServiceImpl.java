@@ -107,14 +107,14 @@ public class LessonServiceImpl implements LessonService {
     }
     
     @Override
-    public LessonDto updateLesson(Long id, UpdateLessonDto updateLessonDto) {
-        LessonEntity lessonEntity = lessonRepository.findById(id)
+    public LessonDto updateLesson(Long id, UpdateLessonDto updateLessonDto) {        LessonEntity lessonEntity = lessonRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Lección no encontrada con id: " + id));
         
         lessonEntity.setTitle(updateLessonDto.getTitle());
         lessonEntity.setDescription(updateLessonDto.getDescription());
-        lessonEntity.setQuizId(updateLessonDto.getQuizId());
-        lessonEntity.setPracticeId(updateLessonDto.getPracticeId());
+        
+        // TODO: Implementar actualización de Quiz y Practice a través de relaciones JPA
+        // cuando sea necesario. Por ahora, las relaciones se manejan a través de ContenidoModel
         
         // Actualizar el curso si ha cambiado
         if (updateLessonDto.getCourseId() != null && 
