@@ -229,18 +229,25 @@ const Recursos = () => {
         ) : (
           <>
             <div className="tabla-container">
-              <div className="recursos-table">                <div className="recursos-table-header">
+              <div className="recursos-table">
+                <div className="recursos-table-header">
                   <div>Nombre</div>
                   <div>Descripción</div>
-                  <div>Tipo</div>
+                  <div>Fecha de subida</div>
                   <div>Acciones</div>
                 </div>
                 
                 {pdfRecursos.length > 0 ? (
                   pdfRecursos.map(recurso => (
-                    <div key={recurso.id} className="recursos-table-row">                      <div>{recurso.name || recurso.nombre}</div>
+                    <div key={recurso.id} className="recursos-table-row">
+                      <div>{recurso.name || recurso.nombre}</div>
                       <div>{recurso.description || recurso.descripcion || '-'}</div>
-                      <div>PDF</div>
+                      <div>
+                        {recurso.uploadedAt ? 
+                          new Date(recurso.uploadedAt).toLocaleDateString('es-ES') : 
+                          '-'
+                        }
+                      </div>
                       <div className="action-buttons">
                         <button 
                           className="action-button" 
