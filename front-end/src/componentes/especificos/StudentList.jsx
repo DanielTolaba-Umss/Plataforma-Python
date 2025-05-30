@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "../../estilos/StudentList.css";
-import { Pencil, Trash, X, Search } from "lucide-react";
+import { Pencil, Trash, X, Search, Upload } from "lucide-react";
 import { estudiantesApi } from "../../api/estudiantesService";
+import * as XLSX from 'xlsx';
+import Papa from 'papaparse';
 
 // Los datos iniciales ahora vendrán de la API
 
 const StudentList = () => {  const [students, setStudents] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState(null);
@@ -14,6 +17,7 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [uploadFile, setUploadFile] = useState(null);
   const [newStudent, setNewStudent] = useState({
     id: null,
     nombres: "",
@@ -184,18 +188,318 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
       alert("Error al eliminar el estudiante: " + error.message);
     }
   };
-
   const cancelDelete = () => {
     setShowDeleteModal(false);
     setStudentToDelete(null);
   };
+
+  // Funciones para subir lista de estudiantes
+  const toggleUploadModal = () => {
+    setShowUploadModal(!showUploadModal);
+    setUploadFile(null);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && (file.type === "text/csv" || file.type === "application/vnd.ms-excel" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+      setUploadFile(file);
+    } else {
+      alert("Por favor selecciona un archivo CSV o Excel válido");
+      e.target.value = "";
+    }
+  };
+  // Función para procesar archivos CSV
+  const processCSVFile = (file) => {
+    return new Promise((resolve, reject) => {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          if (results.errors.length > 0) {
+            reject(new Error(`Error al procesar CSV: ${results.errors[0].message}`));
+            return;
+          }
+          resolve(results.data);
+        },
+        error: (error) => {
+          reject(new Error(`Error al leer CSV: ${error.message}`));
+        }
+      });
+    });
+  };
+
+  // Función para procesar archivos XLSX
+  const processXLSXFile = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+          
+          if (jsonData.length === 0) {
+            reject(new Error('El archivo Excel está vacío'));
+            return;
+          }
+
+          // Convertir a formato con headers
+          const headers = jsonData[0];
+          const rows = jsonData.slice(1);
+          const processedData = rows.map(row => {
+            const obj = {};
+            headers.forEach((header, index) => {
+              obj[header] = row[index] || '';
+            });
+            return obj;
+          });
+
+          resolve(processedData);
+        } catch (error) {
+          reject(new Error(`Error al procesar Excel: ${error.message}`));
+        }
+      };
+      reader.onerror = () => reject(new Error('Error al leer el archivo'));
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  // Función para validar y normalizar datos de estudiantes
+  const validateAndNormalizeStudentData = (rawData) => {
+    const validStudents = [];
+    const errors = [];
+
+    rawData.forEach((row, index) => {
+      const rowNumber = index + 2; // +2 porque empezamos desde la fila 2 (después del header)
+      
+      // Buscar las columnas necesarias (flexibilidad en nombres de columnas)
+      const findColumn = (possibleNames) => {
+        for (const name of possibleNames) {
+          const key = Object.keys(row).find(k => 
+            k.toLowerCase().trim().includes(name.toLowerCase())
+          );
+          if (key && row[key]) return row[key].toString().trim();
+        }
+        return '';
+      };
+
+      const nombres = findColumn(['nombres', 'nombre', 'first_name', 'firstname']);
+      const apellidos = findColumn(['apellidos', 'apellido', 'last_name', 'lastname']);
+      const email = findColumn(['email', 'correo', 'mail', 'e-mail']);
+      const telefono = findColumn(['telefono', 'teléfono', 'phone', 'tel', 'celular']);
+
+      // Validaciones
+      if (!nombres) {
+        errors.push(`Fila ${rowNumber}: Falta el nombre`);
+        return;
+      }
+      if (!apellidos) {
+        errors.push(`Fila ${rowNumber}: Faltan los apellidos`);
+        return;
+      }
+      if (!email) {
+        errors.push(`Fila ${rowNumber}: Falta el email`);
+        return;
+      }
+
+      // Validar formato de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        errors.push(`Fila ${rowNumber}: Email inválido (${email})`);
+        return;
+      }
+
+      // Verificar duplicados en el archivo
+      const isDuplicate = validStudents.some(s => s.email.toLowerCase() === email.toLowerCase());
+      if (isDuplicate) {
+        errors.push(`Fila ${rowNumber}: Email duplicado en el archivo (${email})`);
+        return;
+      }
+
+      validStudents.push({
+        nombres,
+        apellidos,
+        email,
+        telefono: telefono || null
+      });
+    });
+
+    return { validStudents, errors };
+  };
+
+  // Función para crear estudiantes en lotes
+  const createStudentsInBatches = async (students) => {
+    const batchSize = 5; // Crear de a 5 estudiantes para no sobrecargar el servidor
+    const results = {
+      created: [],
+      errors: []
+    };
+
+    for (let i = 0; i < students.length; i += batchSize) {
+      const batch = students.slice(i, i + batchSize);
+      
+      // Procesar el lote actual
+      const promises = batch.map(async (student, batchIndex) => {
+        try {
+          const created = await estudiantesApi.crear(student);
+          results.created.push({ ...student, id: created.id });
+          return created;
+        } catch (error) {
+          const globalIndex = i + batchIndex + 1;
+          results.errors.push(`Estudiante ${globalIndex} (${student.email}): ${error.message}`);
+          return null;
+        }
+      });
+
+      await Promise.all(promises);
+      
+      // Pequeña pausa entre lotes para no saturar el servidor
+      if (i + batchSize < students.length) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    }
+
+    return results;
+  };
+
+  const handleUploadSubmit = async (e) => {
+    e.preventDefault();
+    if (!uploadFile) {
+      alert("Por favor selecciona un archivo");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      console.log("Procesando archivo:", uploadFile.name);
+
+      // Procesar el archivo según su tipo
+      let rawData;
+      const fileExtension = uploadFile.name.toLowerCase().split('.').pop();
+      
+      if (fileExtension === 'csv') {
+        rawData = await processCSVFile(uploadFile);
+      } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
+        rawData = await processXLSXFile(uploadFile);
+      } else {
+        throw new Error('Formato de archivo no soportado. Use CSV o Excel.');
+      }
+
+      console.log("Datos procesados:", rawData);
+
+      if (rawData.length === 0) {
+        throw new Error('El archivo no contiene datos válidos');
+      }
+
+      // Validar y normalizar los datos
+      const { validStudents, errors } = validateAndNormalizeStudentData(rawData);
+
+      if (errors.length > 0 && validStudents.length === 0) {
+        throw new Error(`Errores en el archivo:\n${errors.join('\n')}`);
+      }
+
+      if (validStudents.length === 0) {
+        throw new Error('No se encontraron estudiantes válidos en el archivo');
+      }
+
+      // Verificar duplicados con estudiantes existentes
+      const existingEmails = students.map(s => s.email.toLowerCase());
+      const duplicateStudents = validStudents.filter(s => 
+        existingEmails.includes(s.email.toLowerCase())
+      );
+
+      if (duplicateStudents.length > 0) {
+        const duplicateList = duplicateStudents.map(s => s.email).join(', ');
+        const proceed = window.confirm(
+          `Los siguientes emails ya existen en el sistema:\n${duplicateList}\n\n¿Desea continuar con los estudiantes restantes?`
+        );
+        
+        if (!proceed) {
+          setLoading(false);
+          return;
+        }
+
+        // Filtrar estudiantes duplicados
+        const filteredStudents = validStudents.filter(s => 
+          !existingEmails.includes(s.email.toLowerCase())
+        );
+        
+        if (filteredStudents.length === 0) {
+          throw new Error('Todos los estudiantes en el archivo ya existen en el sistema');
+        }
+        
+        validStudents.splice(0, validStudents.length, ...filteredStudents);
+      }
+
+      console.log(`Creando ${validStudents.length} estudiantes...`);
+
+      // Crear estudiantes en lotes
+      const results = await createStudentsInBatches(validStudents);
+
+      // Mostrar resultados
+      let message = '';
+      if (results.created.length > 0) {
+        message += `✅ ${results.created.length} estudiantes creados exitosamente`;
+      }
+      if (results.errors.length > 0) {
+        message += `\n\n❌ ${results.errors.length} errores:\n${results.errors.slice(0, 5).join('\n')}`;
+        if (results.errors.length > 5) {
+          message += `\n... y ${results.errors.length - 5} errores más`;
+        }
+      }
+      if (errors.length > 0) {
+        message += `\n\n⚠️ ${errors.length} filas con problemas de formato:\n${errors.slice(0, 3).join('\n')}`;
+        if (errors.length > 3) {
+          message += `\n... y ${errors.length - 3} más`;
+        }
+      }
+
+      alert(message);
+
+      // Actualizar la lista si se crearon estudiantes
+      if (results.created.length > 0) {
+        setStudents(prev => [...prev, ...results.created]);
+      }
+
+      toggleUploadModal();
+      
+    } catch (error) {
+      console.error("Error al procesar archivo:", error);
+      setError("Error al procesar archivo: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && (file.type === "text/csv" || file.type === "application/vnd.ms-excel" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+      setUploadFile(file);
+    } else {
+      alert("Por favor selecciona un archivo CSV o Excel válido");
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
   return (
-    <div className="student-container">
-      <div className="header-student">
+    <div className="student-container">      <div className="header-student">
         <h2>Gestión de Estudiantes</h2>
-        <button className="btn-nuevo" onClick={toggleForm} disabled={loading}>
-          + Nuevo Estudiante
-        </button>
+        <div className="header-buttons">
+          <button className="btn-upload" onClick={toggleUploadModal} disabled={loading}>
+            <Upload size={18} />
+            Subir Lista
+          </button>
+          <button className="btn-nuevo" onClick={toggleForm} disabled={loading}>
+            + Nuevo Estudiante
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -338,6 +642,81 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
             )}
           </>
         )}      </div>
+
+      {/* Modal para subir lista de estudiantes */}
+      {showUploadModal && (
+        <div className="student-modal-overlay">
+          <div className="student-modal">
+            <div className="student-modal-header">
+              <h3 className="student-modal-title">Subir Lista de Estudiantes</h3>
+            </div>
+            
+            <form onSubmit={handleUploadSubmit}>              <div className="upload-form-container">
+                <p className="upload-instructions">
+                  <strong>Formato esperado:</strong><br/>
+                  • <strong>Columnas requeridas:</strong> Nombres, Apellidos, Email<br/>
+                  • <strong>Columna opcional:</strong> Teléfono<br/>
+                  • <strong>Formatos aceptados:</strong> CSV, Excel (.xlsx, .xls)<br/>
+                  • La primera fila debe contener los nombres de las columnas<br/>
+                  • Los emails deben ser únicos y válidos
+                </p>
+              
+                <div 
+                  className={`file-drop-area ${uploadFile ? 'has-file' : ''}`}
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                >
+                  {!uploadFile ? (
+                    <>
+                      <Upload size={32} className="upload-icon" />
+                      <p>Arrastra un archivo CSV/Excel aquí<br />o</p>
+                      <input
+                        type="file"
+                        id="upload-file"
+                        accept=".csv,.xlsx,.xls"
+                        onChange={handleFileChange}
+                        className="file-input"
+                      />
+                      <label htmlFor="upload-file" className="file-input-label">
+                        Seleccionar archivo
+                      </label>
+                    </>
+                  ) : (
+                    <div className="file-info">
+                      <p className="file-name">{uploadFile.name}</p>
+                      <button 
+                        type="button" 
+                        className="remove-file"
+                        onClick={() => setUploadFile(null)}
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="modal-action-buttons">
+                <button
+                  type="submit"
+                  className="btn-crear"
+                  disabled={!uploadFile || loading}
+                >
+                  {loading ? "Subiendo..." : "Subir Lista"}
+                </button>
+                <button 
+                  type="button"
+                  onClick={toggleUploadModal} 
+                  className="btn-cancel"
+                  disabled={loading}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Modal de confirmación de eliminación */}
       {showDeleteModal && (

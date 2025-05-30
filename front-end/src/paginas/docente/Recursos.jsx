@@ -397,7 +397,7 @@ const Recursos = () => {
                 <div className="recursos-table-header">
                   <div>Nombre</div>
                   <div>Descripción</div>
-                  <div>Fecha de subida</div>
+                  <div>Tipo</div>
                   <div>Acciones</div>
                 </div>
 
