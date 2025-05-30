@@ -446,8 +446,13 @@
   transition: background-color 0.3s ease;
 }
 
-.recursos-confirm-button:hover {
+.recursos-confirm-button:hover:not(:disabled) {
   background-color: #300898;
+}
+
+.recursos-confirm-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .recursos-cancel-button {
@@ -461,7 +466,126 @@
   transition: background-color 0.3s ease;
 }
 
-.recursos-cancel-button:hover {
+.recursos-cancel-button:hover:not(:disabled) {
   background-color: #e6c231;
+}
+
+.recursos-cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ERROR BANNER AND LOADING STYLES */
+.error-banner {
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-message {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.error-close {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+}
+
+.loading-spinner {
+  border: 3px solid #f3f4f6;
+  border-top: 3px solid #306998;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container p {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+/* DELETION MODAL STYLES */
+.recursos-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-top: 4px solid #ffd438;
+}
+
+.recursos-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.recursos-confirm-button {
+  background-color: #306998;
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.recursos-confirm-button:hover:not(:disabled) {
+  background-color: #300898;
+}
+
+.recursos-confirm-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.recursos-cancel-button {
+  background-color: #ffd438;
+  color: #300898;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.recursos-cancel-button:hover:not(:disabled) {
+  background-color: #e6c231;
+}
+
+.recursos-cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
