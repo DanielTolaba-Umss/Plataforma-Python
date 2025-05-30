@@ -22,12 +22,13 @@ const Recursos = () => {
   const [resourceToDelete, setResourceToDelete] = useState(null);
   const [modalMode, setModalMode] = useState("crear"); // 'crear' o 'editar'
   const [editId, setEditId] = useState(null);
-
+  
   // PDF form data
   const [pdfData, setPdfData] = useState({
     nombre: "",
     descripcion: "",
     archivo: null,
+    derechosAutor: false,
   });
 
   // Video form data
@@ -110,14 +111,18 @@ const Recursos = () => {
       });
     }, 3000);
   };
-
   // Handle PDF form change
   const handlePdfChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, files, type, checked } = e.target;
     if (name === "archivo") {
       setPdfData({
         ...pdfData,
         archivo: files[0],
+      });
+    } else if (type === "checkbox") {
+      setPdfData({
+        ...pdfData,
+        [name]: checked,
       });
     } else {
       setPdfData({
@@ -171,13 +176,13 @@ const Recursos = () => {
   const handleDragOver = (e) => {
     e.preventDefault();
   };
-
   // Reset PDF form
   const resetPdfForm = () => {
     setPdfData({
       nombre: "",
       descripcion: "",
       archivo: null,
+      derechosAutor: false,
     });
     setShowPdfModal(false);
     setModalMode("crear");
@@ -210,13 +215,13 @@ const Recursos = () => {
     setModalMode("crear");
     setShowVideoModal(true);
   };
-
   // Abrir modal para editar un PDF existente
   const handleEditarPdf = (recurso) => {
     setPdfData({
       nombre: recurso.name || recurso.nombre,
       descripcion: recurso.description || recurso.descripcion || "",
       archivo: null, // No mostramos el archivo existente
+      derechosAutor: false, // Reset checkbox for security
     });
     setEditId(recurso.id);
     setModalMode("editar");
@@ -227,38 +232,54 @@ const Recursos = () => {
   const openDeleteModal = (recurso) => {
     setResourceToDelete(recurso);
     setShowDeleteModal(true);
-  };
+  };  const confirmDelete = async () => {
+    if (!resourceToDelete) {
+      console.error("No hay recurso para eliminar");
+      return;
+    }
 
-  const confirmDelete = async (type) => {
-    if (type == "PDF") {
+    console.log("Recurso a eliminar:", resourceToDelete);
+
+    // Determinar el tipo de recurso basándose en si tiene las propiedades de PDF o Video
+    const isPdf = resourceToDelete.name || resourceToDelete.nombre;
+    const isVideo = resourceToDelete.url || resourceToDelete.resourceId;
+
+    console.log("Es PDF:", isPdf, "Es Video:", isVideo);
+
+    if (isPdf && !isVideo) {
+      // Es un PDF
       try {
         setLoading(true);
+        console.log("Eliminando PDF con ID:", resourceToDelete.id);
         await pdfApi.delete(resourceToDelete.id);
         setRecursos(
           recursos.filter((recurso) => recurso.id !== resourceToDelete.id)
         );
-        showNotification("El Recurso ha sido eliminado correctamente");
+        showNotification("El PDF ha sido eliminado correctamente");
         setShowDeleteModal(false);
         setResourceToDelete(null);
       } catch (error) {
-        setError("Error al eliminar el Recurso: " + error.message);
-        console.error("Error al eliminar Recurso:", error);
+        console.error("Error completo al eliminar PDF:", error);
+        setError("Error al eliminar el PDF: " + (error.message || error.toString()));
       } finally {
         setLoading(false);
       }
     } else {
+      // Es un video
       try {
         setLoading(true);
-        await deleteResource(resourceToDelete.resourceId);
-        setRecursos(
-          recursos.filter((recurso) => recurso.id !== resourceToDelete.id)
+        const videoId = resourceToDelete.resourceId || resourceToDelete.id;
+        console.log("Eliminando video con ID:", videoId);
+        await deleteResource(videoId);
+        setResources(
+          resources.filter((resource) => resource.id !== resourceToDelete.id)
         );
-        showNotification("El Recurso ha sido eliminado correctamente");
+        showNotification("El video ha sido eliminado correctamente");
         setShowDeleteModal(false);
         setResourceToDelete(null);
       } catch (error) {
-        setError("Error al eliminar el Recurso: " + error.message);
-        console.error("Error al eliminar Recurso:", error);
+        console.error("Error completo al eliminar video:", error);
+        setError("Error al eliminar el video: " + (error.message || error.toString()));
       } finally {
         setLoading(false);
       }
@@ -269,10 +290,15 @@ const Recursos = () => {
     setShowDeleteModal(false);
     setResourceToDelete(null);
   };
-
   // Submit PDF (crear o editar)
   const handleSubmitPdf = async (e) => {
     e.preventDefault();
+
+    // Validar que los derechos de autor estén aceptados
+    if (!pdfData.derechosAutor) {
+      alert("Debe confirmar que tiene los derechos de autor para distribuir este documento.");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -514,16 +540,15 @@ const Recursos = () => {
               </div>
             </div>
           </>
-        )}
-
-        <div className="recursos-button-container">
+        )}        <div className="recursos-button-container">
           <button className="recursos-button">Subir Practica</button>
           <button
-            className="recursos-button"
+            className={`recursos-button ${pdfRecursos.length > 0 ? 'disabled' : ''}`}
             onClick={handleNuevoPdf}
-            disabled={loading}
+            disabled={loading || pdfRecursos.length > 0}
+            title={pdfRecursos.length > 0 ? "Ya hay un PDF asignado a esta lección" : "Subir nuevo PDF"}
           >
-            Subir PDF
+            {pdfRecursos.length > 0 ? "PDF Ya Asignado" : "Subir PDF"}
           </button>
           <button
             className="recursos-button"
@@ -607,15 +632,32 @@ const Recursos = () => {
                       >
                         <X size={18} />
                       </button>
-                    </div>
-                  )}
+                    </div>                  )}
+                </div>
+
+                <div className="modal-form-full">
+                  <div className="checkbox-container">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="derechosAutor"
+                        checked={pdfData.derechosAutor}
+                        onChange={handlePdfChange}
+                        className="checkbox-input"
+                      />
+                      <span className="checkbox-custom"></span>
+                      <span className="checkbox-text">
+                        Confirmo que tengo los derechos de autor necesarios para distribuir este documento y/o que el contenido no infringe derechos de terceros.
+                      </span>
+                    </label>
+                  </div>
                 </div>
 
                 <div className="modal-action-buttons">
                   <button
                     type="submit"
                     className="btn-subir"
-                    disabled={!pdfData.nombre || !pdfData.archivo || loading}
+                    disabled={!pdfData.nombre || !pdfData.archivo || !pdfData.derechosAutor || loading}
                   >
                     {loading
                       ? "Procesando..."

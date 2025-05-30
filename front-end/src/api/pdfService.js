@@ -80,11 +80,10 @@ export const pdfApi = {  // Subir un nuevo PDF
       throw error;
     }
   },
-
   // Eliminar un PDF
   delete: async (id) => {
     try {
-      const response = await fetch(`${API_URL}/${id}`, {
+      const response = await fetch(`${PDF_API_URL}/${id}`, {
         method: "DELETE",
       });
 

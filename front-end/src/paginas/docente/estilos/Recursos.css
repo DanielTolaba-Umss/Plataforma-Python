@@ -126,6 +126,22 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
+.recursos-button.disabled,
+.recursos-button:disabled {
+    background-color: #9ca3af;
+    color: #6b7280;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recursos-button.disabled:hover,
+.recursos-button:disabled:hover {
+    background-color: #9ca3af;
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .action-buttons {
     display: flex;
     gap: 0.5rem;
