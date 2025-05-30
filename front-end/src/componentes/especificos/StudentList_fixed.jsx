@@ -7,7 +7,8 @@ import Papa from 'papaparse';
 
 // Los datos iniciales ahora vendrán de la API
 
-const StudentList = () => {  const [students, setStudents] = useState([]);
+const StudentList = () => {
+  const [students, setStudents] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -24,7 +25,9 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
     apellidos: "",
     email: "",
     telefono: "",
-  });  useEffect(() => {
+  });
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -44,7 +47,9 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
     };
 
     fetchData();
-  }, []);  const toggleForm = () => {
+  }, []);
+
+  const toggleForm = () => {
     setShowForm(!showForm);
     setEditMode(false);
     setNewStudent({
@@ -100,7 +105,9 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
           "Los campos Nombres, Apellidos y Email son obligatorios."
         );
         return;
-      }      setLoading(true);      
+      }
+
+      setLoading(true);      
       const studentData = {
         nombres: newStudent.nombres,
         apellidos: newStudent.apellidos,
@@ -123,7 +130,9 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
     } finally {
       setLoading(false);
     }
-  };const handleEdit = (estudiante) => {
+  };
+
+  const handleEdit = (estudiante) => {
     setEditMode(true);
     setShowForm(true);
     setNewStudent({
@@ -133,7 +142,9 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
       email: estudiante.email,
       telefono: estudiante.telefono || "",
     });
-  };  const handleUpdate = async () => {
+  };
+
+  const handleUpdate = async () => {
     try {
       if (!newStudent.nombres || !newStudent.email || !newStudent.apellidos) {
         alert("Los campos Nombres, Apellidos y Email son obligatorios.");
@@ -173,6 +184,7 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
       setLoading(false);
     }
   };
+  
   const openDeleteModal = (student) => {
     setStudentToDelete(student);
     setShowDeleteModal(true);
@@ -188,6 +200,7 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
       alert("Error al eliminar el estudiante: " + error.message);
     }
   };
+  
   const cancelDelete = () => {
     setShowDeleteModal(false);
     setStudentToDelete(null);
@@ -208,6 +221,7 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
       e.target.value = "";
     }
   };
+  
   // Función para procesar archivos CSV
   const processCSVFile = (file) => {
     return new Promise((resolve, reject) => {
@@ -488,8 +502,10 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
   const handleDragOver = (e) => {
     e.preventDefault();
   };
+
   return (
-    <div className="student-container">      <div className="header-student">
+    <div className="student-container">
+      <div className="header-student">
         <h2>Gestión de Estudiantes</h2>
         <div className="header-buttons">
           <button className="btn-upload" onClick={toggleUploadModal} disabled={loading}>
@@ -521,11 +537,14 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
           <>
             {showForm && (
               <div className="student-modal-overlay">
-                <div className="student-modal">                  <div className="student-modal-header">
+                <div className="student-modal">
+                  <div className="student-modal-header">
                     <h3 className="student-modal-title">
                       {editMode ? "Editar Estudiante" : "Nuevo Estudiante"}
                     </h3>
-                  </div>                  <div className="modal-form-grid">
+                  </div>
+
+                  <div className="modal-form-grid">
                     <div className="modal-form-full">
                       <input
                         name="nombres"
@@ -553,7 +572,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
                         onChange={handleChange}
                         className="input-field"
                       />
-                    </div>                    <div className="modal-form-full">
+                    </div>
+                    <div className="modal-form-full">
                       <input
                         name="telefono"
                         placeholder="Teléfono"
@@ -562,7 +582,9 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
                         className="input-field"
                       />
                     </div>
-                  </div>                  <div className="modal-action-buttons">
+                  </div>
+
+                  <div className="modal-action-buttons">
                     <button
                       onClick={editMode ? handleUpdate : handleCreate}
                       className="btn-crear"
@@ -574,7 +596,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
                     </button>
                   </div>
                 </div>
-              </div>            )}
+              </div>
+            )}
 
             <div className="search-container">
               <input
@@ -594,59 +617,54 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
               </button>
             </div>
 
-            {loading ? (
-              <p>Cargando estudiantes...</p>
-            ) : error ? (
-              <p className="error-message">{error}</p>
-            ) : (
-              <div className="table-scroll-wrapper">
-                <table className="tabla-estudiantes">
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Email</th>
-                      <th>Teléfono</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredStudents.length > 0 ? (
-                      filteredStudents.map((e) => (
-                        <tr key={e.id}>
-                          <td>{e.nombres} {e.apellidos}</td>
-                          <td>{e.email}</td>
-                          <td>{e.telefono}</td>
-                          <td className="acciones">
-                            <button 
-                              className="accion editar" 
-                              onClick={() => handleEdit(e)}
-                              title="Editar"
-                            >
-                              <Pencil size={18} />
-                            </button>
-                            <button 
-                              className="accion eliminar" 
-                              onClick={() => openDeleteModal(e)}
-                              title="Eliminar"
-                            >
-                              <Trash size={18} />
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="4" style={{ textAlign: "center", padding: "2rem", color: "#6b7280" }}>
-                          {searchTerm ? 
-                            `No se encontraron estudiantes que coincidan con "${searchTerm}"` : 
-                            "No hay estudiantes registrados"
-                          }
+            <div className="table-scroll-wrapper">
+              <table className="tabla-estudiantes">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredStudents.length > 0 ? (
+                    filteredStudents.map((e) => (
+                      <tr key={e.id}>
+                        <td>{e.nombres} {e.apellidos}</td>
+                        <td>{e.email}</td>
+                        <td>{e.telefono}</td>
+                        <td className="acciones">
+                          <button 
+                            className="accion editar" 
+                            onClick={() => handleEdit(e)}
+                            title="Editar"
+                          >
+                            <Pencil size={18} />
+                          </button>
+                          <button 
+                            className="accion eliminar" 
+                            onClick={() => openDeleteModal(e)}
+                            title="Eliminar"
+                          >
+                            <Trash size={18} />
+                          </button>
                         </td>
                       </tr>
-                    )}                  </tbody>
-                </table>
-              </div>
-            )}
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" style={{ textAlign: "center", padding: "2rem", color: "#6b7280" }}>
+                        {searchTerm ? 
+                          `No se encontraron estudiantes que coincidan con "${searchTerm}"` : 
+                          "No hay estudiantes registrados"
+                        }
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
       </div>
@@ -659,7 +677,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
               <h3 className="student-modal-title">Subir Lista de Estudiantes</h3>
             </div>
             
-            <form onSubmit={handleUploadSubmit}>              <div className="upload-form-container">
+            <form onSubmit={handleUploadSubmit}>
+              <div className="upload-form-container">
                 <p className="upload-instructions">
                   <strong>Formato esperado:</strong><br/>
                   • <strong>Columnas requeridas:</strong> Nombres, Apellidos, Email<br/>

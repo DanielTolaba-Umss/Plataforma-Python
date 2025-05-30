@@ -115,10 +115,12 @@
 
 .tabla-estudiantes {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background-color: white;
   border-radius: 8px;
   overflow: hidden;
+  table-layout: fixed;
 }
 
 .tabla-estudiantes th,
@@ -126,6 +128,17 @@
   padding: 0.9rem 1rem;
   text-align: left;
   border-bottom: 1px solid #f1f1f1;
+}
+
+.tabla-estudiantes th {
+  font-weight: 600;
+  color: #374151;
+  background-color: #ffffff;
+  transition: background-color 0.2s;
+}
+
+.tabla-estudiantes tbody tr:hover {
+  background-color: #f9fafb;
 }
 
 .etiqueta-modulo {
@@ -461,6 +474,26 @@ select.input-field[multiple] option:checked {
   overflow: hidden;
 }
 
+/* Wrapper for scrollable tables */
+/* Wrapper para la tabla con scroll */
+.table-scroll-wrapper {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Estilo para mantener las cabeceras fijas */
+.table-scroll-wrapper thead th {
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  z-index: 10;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 /* MODAL DE ELIMINACIÓN */
 .modalOverlay {
   position: fixed;
@@ -636,4 +669,24 @@ select.input-field[multiple] option:checked {
   padding: 0;
   margin: 0 auto;
   box-sizing: border-box;
+}
+
+/* Estilo personalizado para scrollbar */
+.table-scroll-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
 }
