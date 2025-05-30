@@ -3,6 +3,7 @@ import "../docente/estilos/Recursos.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { Edit, Trash, X, Upload, Download, CheckCircle2 } from "lucide-react";
 import { pdfApi } from "../../api/pdfService";
+import ErrorModal from "../../componentes/comunes/ErrorModal";
 
 import {
   createResource,
@@ -47,12 +48,15 @@ const Recursos = () => {
     message: "",
     type: "success",
   });
-
   // Estado para manejar los recursos
   const [recursos, setRecursos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [resources, setResources] = useState([]);
+  
+  // Error modal state
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Filtrar solo los recursos de tipo PDF
   const pdfRecursos = recursos.filter(
@@ -93,7 +97,6 @@ const Recursos = () => {
 
     fetchResources();
   }, []);
-
   // Mostrar notificación
   const showNotification = (message, type = "success") => {
     setNotification({
@@ -111,13 +114,40 @@ const Recursos = () => {
       });
     }, 3000);
   };
-  // Handle PDF form change
+
+  // Show error modal
+  const showError = (message) => {
+    setErrorMessage(message);
+    setShowErrorModal(true);
+    setError(null); // Clear banner error when showing modal
+  };
+
+  // Close error modal
+  const closeErrorModal = () => {
+    setShowErrorModal(false);
+    setErrorMessage("");
+  };  // Handle PDF form change
   const handlePdfChange = (e) => {
     const { name, value, files, type, checked } = e.target;
     if (name === "archivo") {
+      const file = files[0];
+      if (file) {
+        // Validate PDF file type
+        if (file.type !== "application/pdf") {
+          showError("Por favor selecciona solo archivos PDF válidos (.pdf)");
+          e.target.value = ""; // Clear the input
+          return;
+        }
+        // Validate file size (optional - 10MB limit)
+        if (file.size > 10 * 1024 * 1024) {
+          showError("El archivo PDF es demasiado grande. El tamaño máximo permitido es 10MB.");
+          e.target.value = ""; // Clear the input
+          return;
+        }
+      }
       setPdfData({
         ...pdfData,
-        archivo: files[0],
+        archivo: file,
       });
     } else if (type === "checkbox") {
       setPdfData({
@@ -131,14 +161,28 @@ const Recursos = () => {
       });
     }
   };
-
   // Handle Video form change
   const handleVideoChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "archivo") {
+      const file = files[0];
+      if (file) {
+        // Validate video file type
+        if (!file.type.startsWith("video/")) {
+          showError("Por favor selecciona solo archivos de video válidos (.mp4, .avi, .mov, etc.)");
+          e.target.value = ""; // Clear the input
+          return;
+        }
+        // Validate file size (optional - 100MB limit)
+        if (file.size > 100 * 1024 * 1024) {
+          showError("El archivo de video es demasiado grande. El tamaño máximo permitido es 100MB.");
+          e.target.value = ""; // Clear the input
+          return;
+        }
+      }
       setVideoData({
         ...videoData,
-        archivo: files[0],
+        archivo: file,
       });
     } else {
       setVideoData({
@@ -147,12 +191,20 @@ const Recursos = () => {
       });
     }
   };
-
   // Handle file drop for PDF
   const handlePdfDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    if (file && file.type === "application/pdf") {
+    if (file) {
+      if (file.type !== "application/pdf") {
+        showError("Por favor selecciona solo archivos PDF válidos (.pdf)");
+        return;
+      }
+      // Validate file size (optional - 10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        showError("El archivo PDF es demasiado grande. El tamaño máximo permitido es 10MB.");
+        return;
+      }
       setPdfData({
         ...pdfData,
         archivo: file,
@@ -164,7 +216,16 @@ const Recursos = () => {
   const handleVideoDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith("video/")) {
+    if (file) {
+      if (!file.type.startsWith("video/")) {
+        showError("Por favor selecciona solo archivos de video válidos (.mp4, .avi, .mov, etc.)");
+        return;
+      }
+      // Validate file size (optional - 100MB limit)
+      if (file.size > 100 * 1024 * 1024) {
+        showError("El archivo de video es demasiado grande. El tamaño máximo permitido es 100MB.");
+        return;
+      }
       setVideoData({
         ...videoData,
         archivo: file,
@@ -254,13 +315,12 @@ const Recursos = () => {
         await pdfApi.delete(resourceToDelete.id);
         setRecursos(
           recursos.filter((recurso) => recurso.id !== resourceToDelete.id)
-        );
-        showNotification("El PDF ha sido eliminado correctamente");
+        );        showNotification("El PDF ha sido eliminado correctamente");
         setShowDeleteModal(false);
         setResourceToDelete(null);
       } catch (error) {
         console.error("Error completo al eliminar PDF:", error);
-        setError("Error al eliminar el PDF: " + (error.message || error.toString()));
+        showError("Error al eliminar el PDF: " + (error.message || error.toString()));
       } finally {
         setLoading(false);
       }
@@ -273,13 +333,12 @@ const Recursos = () => {
         await deleteResource(videoId);
         setResources(
           resources.filter((resource) => resource.id !== resourceToDelete.id)
-        );
-        showNotification("El video ha sido eliminado correctamente");
+        );        showNotification("El video ha sido eliminado correctamente");
         setShowDeleteModal(false);
         setResourceToDelete(null);
       } catch (error) {
         console.error("Error completo al eliminar video:", error);
-        setError("Error al eliminar el video: " + (error.message || error.toString()));
+        showError("Error al eliminar el video: " + (error.message || error.toString()));
       } finally {
         setLoading(false);
       }
@@ -292,11 +351,9 @@ const Recursos = () => {
   };
   // Submit PDF (crear o editar)
   const handleSubmitPdf = async (e) => {
-    e.preventDefault();
-
-    // Validar que los derechos de autor estén aceptados
+    e.preventDefault();    // Validar que los derechos de autor estén aceptados
     if (!pdfData.derechosAutor) {
-      alert("Debe confirmar que tiene los derechos de autor para distribuir este documento.");
+      showError("Debe confirmar que tiene los derechos de autor para distribuir este documento.");
       return;
     }
 
@@ -330,7 +387,7 @@ const Recursos = () => {
       // Cerrar modal y resetear formulario
       resetPdfForm();
     } catch (error) {
-      setError("Error al procesar el PDF: " + error.message);
+      showError("Error al procesar el PDF: " + error.message);
       console.error("Error al procesar PDF:", error);
     } finally {
       setLoading(false);
@@ -339,9 +396,7 @@ const Recursos = () => {
 
   // Submit Video (crear o editar)
   const handleSubmitVideo = async (e) => {
-    e.preventDefault();
-
-    try {
+    e.preventDefault();    try {
       setLoading(true);
       setError(null);
 
@@ -362,7 +417,8 @@ const Recursos = () => {
       } else {
         // Subir archivo .mp4
         if (!archivo) {
-          throw new Error("No se seleccionó un archivo de video.");
+          showError("No se seleccionó un archivo de video.");
+          return;
         }
 
         const title = titulo;
@@ -382,7 +438,7 @@ const Recursos = () => {
       // Cerrar modal y resetear formulario
       resetVideoForm();
     } catch (error) {
-      setError("Error al procesar el video: " + error.message);
+      showError("Error al procesar el video: " + error.message);
       console.error("Error al procesar video:", error);
     } finally {
       setLoading(false);
@@ -390,8 +446,7 @@ const Recursos = () => {
   };
 
   return (
-    <div className="recursos">
-      {/* Notificación */}
+    <div className="recursos">      {/* Notificación */}
       {notification.show && (
         <div className={`notification ${notification.type}`}>
           <CheckCircle2 size={20} />
@@ -399,14 +454,12 @@ const Recursos = () => {
         </div>
       )}
 
-      {/* Error banner */}
-      {error && (
-        <div className="error-banner">
-          <span className="error-message">{error}</span>
-          <button className="error-close" onClick={() => setError(null)}>
-            ×
-          </button>
-        </div>
+      {/* Error Modal */}
+      {showErrorModal && (
+        <ErrorModal 
+          message={errorMessage} 
+          onClose={closeErrorModal} 
+        />
       )}
 
       <h2 className="recursos-title">RECURSOS</h2>

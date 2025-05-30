@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../../estilos/StudentList.css";
 import { Pencil, Trash, X, Search, Upload } from "lucide-react";
 import { estudiantesApi } from "../../api/estudiantesService";
+import ErrorModal from "../../componentes/comunes/ErrorModal";
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
 
@@ -468,8 +469,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
       toggleUploadModal();
       
     } catch (error) {
-      console.error("Error al procesar archivo:", error);
-      setError("Error al procesar archivo: " + error.message);
+      console.error("Error al procesar archivo ya que no contiene los campos necesarios", error);
+      setError("Error al procesar archivo ya que no contiene los campos necesarios " );
     } finally {
       setLoading(false);
     }
