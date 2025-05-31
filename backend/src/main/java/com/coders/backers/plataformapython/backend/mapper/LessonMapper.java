@@ -5,9 +5,7 @@ import com.coders.backers.plataformapython.backend.dto.lesson.LessonDto;
 import com.coders.backers.plataformapython.backend.models.CourseEntity;
 import com.coders.backers.plataformapython.backend.models.LessonEntity;
 
-public class LessonMapper {
-
-    public static LessonDto mapToModelDto(LessonEntity lesson) {
+public class LessonMapper {    public static LessonDto mapToModelDto(LessonEntity lesson) {
         return new LessonDto(
                 lesson.getId(),
                 lesson.getTitle(),
@@ -16,8 +14,8 @@ public class LessonMapper {
                 lesson.getCreatedAt(),
                 lesson.getUpdatedAt(),
                 lesson.getCourse() != null ? CourseMapper.mapToModelDto(lesson.getCourse()) : null,
-                lesson.getQuizId(),
-                lesson.getPracticeId()
+                getQuizIdFromContenidos(lesson),
+                lesson.getPractice() != null ? lesson.getPractice().getId() : null
         );
     }
 
@@ -36,13 +34,23 @@ public class LessonMapper {
     }
     
     public static LessonEntity mapFromCreateDto(CreateLessonDto createDto, CourseEntity course) {
-        LessonEntity lesson = new LessonEntity(
+        return new LessonEntity(
                 createDto.getTitle(),
                 createDto.getDescription(),
                 course
         );
-        lesson.setQuizId(createDto.getQuizId());
-        lesson.setPracticeId(createDto.getPracticeId());
-        return lesson;
+    }
+
+    /**
+     * Método auxiliar para obtener el ID del quiz desde los contenidos de la lección
+     */
+    private static Long getQuizIdFromContenidos(LessonEntity lesson) {
+        if (lesson.getContenidos() != null && !lesson.getContenidos().isEmpty()) {
+            return lesson.getContenidos().stream()
+                    .findFirst()
+                    .map(contenido -> contenido.getContenidoId())
+                    .orElse(null);
+        }
+        return null;
     }
 }
