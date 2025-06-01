@@ -56,14 +56,9 @@ jobs:
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
 
-      # Puedes usar esto si quieres asegurar que el build se genera correctamente
       - name: Build backend (verify)
         run: ./mvnw clean package -DskipTests
         working-directory: ./backend
-
-      # El build Docker es opcional aquí, mejor dejarlo solo para el pipeline de deploy
-      # - name: Build backend Docker image
-      #   run: docker build -t plataforma-backend ./backend
 
   frontend:
     name: Frontend - Lint & Build
