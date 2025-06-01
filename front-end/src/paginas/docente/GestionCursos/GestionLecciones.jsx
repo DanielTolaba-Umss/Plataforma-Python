@@ -16,11 +16,6 @@ const GestionLecciones = () => {
   const [leccionToEdit, setLeccionToEdit] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [leccionToDelete, setLeccionToDelete] = useState(null);
-  const [notification, setNotification] = useState({
-    show: false,
-    message: "",
-    type: "",
-  });
 
   const nivelId = localStorage.getItem("nivelId");
   useEffect(() => {
@@ -153,12 +148,6 @@ const GestionLecciones = () => {
 
   return (
     <div className={styles.coursesContainer}>
-      {notification.show && (
-        <div className={`${styles.notification} ${styles[notification.type]}`}>
-          {notification.message}
-        </div>
-      )}
-
       <div className={styles.coursesHeader}>
         <h2 className={styles.coursesTitle}>Lecciones del {nivelId}</h2>
         <button
