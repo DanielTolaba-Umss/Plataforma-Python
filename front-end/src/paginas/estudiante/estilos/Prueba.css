@@ -19,8 +19,19 @@
 
 .volver {
   text-decoration: none;
-  color: #1a73e8; /* 🔥 Azul */
+  color: #fff; /* 🔥 Cambiamos el color del texto a blanco */
+  background-color: #1a73e8; /* 🔥 Azul */
+  padding: 8px 16px;
+  border-radius: 10px; /* 🔥 Bordes redondeados */
   font-weight: bold;
+  display: inline-block;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.volver:hover {
+  background-color: #3d2491; /* 🔥 Violeta al pasar el mouse */
+  transform: translateY(-2px); /* 🔥 Efecto de elevación */
+  text-decoration: none; /* 🔥 Quitamos subrayado en hover */
 }
 
 .video-section {
@@ -162,4 +173,18 @@
   width: 25%;
   height: 100%;
   background-color: #1a73e8; /* 🔥 Azul */
+}
+.visor-pdf {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 🔥 Centra el contenido horizontalmente */
+  margin: 20px auto; /* 🔥 Márgenes para separación */
+  max-width: 1200px; /* 🔥 Límite máximo para el ancho */
+}
+
+.visor-pdf iframe {
+  width: 100%; /* 🔥 Ocupar el ancho del contenedor */
+  max-width: 1050px; /* 🔥 Límite máximo para evitar que sobresalga */
+  /* height: 600px; */
+  border: none;
 }

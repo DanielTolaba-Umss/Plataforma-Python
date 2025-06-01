@@ -10,7 +10,7 @@ const Prueba = () => {
     <div className="prueba-container">
       <div className="contenedor-titulo-video">
         <header className="prueba-header">
-          <a href="/cursos/basico" className="volver">
+          <a href="/cursos/1/lecciones" className="volver">
             &lt; Volver
           </a>
           <h1>Fundamentos Python</h1>

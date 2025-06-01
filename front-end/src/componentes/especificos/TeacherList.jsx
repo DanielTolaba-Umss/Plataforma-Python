@@ -23,6 +23,7 @@ const TeacherList = () => {
     specialty: "",
     active: true, // por defecto activo
   });
+  const [errores, setErrores] = useState({});
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -35,6 +36,11 @@ const TeacherList = () => {
       password: "",
       specialty: "",
     });
+  };
+
+  const validarPassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=]).{8,}$/;
+    return regex.test(password);
   };
 
   // Dentro del componente
@@ -56,7 +62,34 @@ const TeacherList = () => {
   }, []);
 
   const handleChange = (e) => {
-    setNewTeacher({ ...newTeacher, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    let errorMsg = "";
+
+    if (name === "name" || name === "lastName") {
+      const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/;
+      if (!soloLetras.test(value)) {
+        errorMsg = "Solo se permiten letras.";
+      }
+    }
+
+    if (name === "phone") {
+      const soloNumeros = /^[0-9]*$/;
+      if (!soloNumeros.test(value)) {
+        errorMsg = "Solo se permiten números.";
+      } else if (value.length > 8) {
+        errorMsg = "Máximo 8 caracteres.";
+      }
+    }
+
+    if (name === "password") {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=]).{8,}$/;
+      if (value && !regex.test(value)) {
+        errorMsg = "La contraseña no cumple los requisitos.";
+      }
+    }
+
+    setErrores((prev) => ({ ...prev, [name]: errorMsg }));
+    setNewTeacher({ ...newTeacher, [name]: value });
   };
 
   const handleCreate = async () => {
@@ -67,18 +100,24 @@ const TeacherList = () => {
       return;
     }
 
+    if (!validarPassword(password)) {
+      alert(
+        "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un caracter especial (@#$%^&+=)"
+      );
+      return;
+    }
+
     try {
-      setProcessing(true); //Mostrar el modal process
+      setProcessing(true);
       const response = await teachersAPI.crearDocente(newTeacher);
       const docenteCreado = response.data;
-
       setTeachers((prev) => [...prev, docenteCreado]);
       toggleForm();
     } catch (error) {
       console.error("Error al crear docente:", error);
       alert("Hubo un error al crear el docente.");
     } finally {
-      setProcessing(false); // 👈 Ocultar el modal
+      setProcessing(false);
     }
   };
 
@@ -100,6 +139,13 @@ const TeacherList = () => {
       return;
     }
 
+    if (!validarPassword(password)) {
+      alert(
+        "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un caracter especial (@#$%^&+=)"
+      );
+      return;
+    }
+
     const actualizado = {
       name,
       lastName,
@@ -107,7 +153,7 @@ const TeacherList = () => {
       phone,
       password,
       specialty,
-      active, // <--- aquí está la clave
+      active,
     };
 
     try {
@@ -173,6 +219,7 @@ const TeacherList = () => {
                     onChange={handleChange}
                     className="input-field"
                   />
+                  {errores.name && <p className="error-text">{errores.name}</p>}
                 </div>
                 <div className="modal-form-full">
                   <label htmlFor="lastName">Apellidos</label>
@@ -183,6 +230,10 @@ const TeacherList = () => {
                     onChange={handleChange}
                     className="input-field"
                   />
+                  {errores.lastName && (
+                    <p className="error-text">{errores.lastName}</p>
+                  )}{" "}
+                  {/* Cambiado */}
                 </div>
                 <div className="modal-form-full">
                   <label htmlFor="email">Correo electrónico</label>
@@ -204,6 +255,10 @@ const TeacherList = () => {
                     onChange={handleChange}
                     className="input-field"
                   />
+                  {errores.phone && (
+                    <p className="error-text">{errores.phone}</p>
+                  )}{" "}
+                  {/* Cambiado */}
                 </div>
                 <div>
                   <label htmlFor="password">Contraseña</label>
@@ -215,7 +270,18 @@ const TeacherList = () => {
                     onChange={handleChange}
                     className="input-field"
                   />
+                  {/* Instrucción con estilo */}
+                  <p className="instruction-text">
+                    La contraseña debe tener al menos 8 caracteres, una
+                    mayúscula, una minúscula, un número y un carácter especial
+                    (@#$%^&+=)
+                  </p>
+                  {/* Error */}
+                  {errores.password && (
+                    <p className="error-text">{errores.password}</p>
+                  )}
                 </div>
+
                 <div className="modal-form-full">
                   <label htmlFor="specialty">Especialidad</label>
                   <input

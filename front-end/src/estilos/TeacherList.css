@@ -298,3 +298,15 @@
 .teacher-modal input::placeholder {
   color: #aaa;
 }
+.error-text {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
+.instruction-text {
+  color: gray;
+  font-size: 0.75rem;
+  margin-top: 0.1rem; /* MÁS PEGADO AL INPUT */
+  margin-bottom: 0.1rem;
+}
