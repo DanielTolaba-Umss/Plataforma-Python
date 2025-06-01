@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./CursosBasico.css"; // Asegúrate de tener este archivo CSS para estilos
+import { useNavigate } from "react-router-dom";
 
 const lecciones = [
   { id: 1, titulo: "Lección 1" },
@@ -12,6 +13,7 @@ const CursosBasico = () => {
   const [estadoLecciones, setEstadoLecciones] = useState(
     lecciones.map(() => ({ estado: "incompleto", boton: "Iniciar" }))
   );
+    const navigate = useNavigate();
 
   const manejarClick = (index) => {
     const nuevosEstados = [...estadoLecciones];
@@ -41,7 +43,9 @@ const CursosBasico = () => {
       <footer className="curso-footer">
         <span>Estado: ✅</span>
         <div className="curso-footer-buttons">
-          <button>Quiz</button>
+          <button onClick={() => navigate("/cursos/basico/quiz")}>
+            Quiz
+          </button>
           <button>Prueba</button>
         </div>
       </footer>

@@ -6,6 +6,7 @@ import CursosBasico from "../paginas/estudiante/Cursos/cursos/CursosBasico";
 import CursosIntermedio from "../paginas/estudiante/Cursos/cursos/CursosIntermedio";
 import CursosAvanzado from "../paginas/estudiante/Cursos/cursos/CursosAvanzado";
 import PerfilEstudiante from "../paginas/estudiante/PerfilEstudiante";
+import Quiz from "../paginas/estudiante/Cursos/cursos/Quiz"; 
 // import "./App.css";
 
 const RutasEstudiante = () => {
@@ -17,6 +18,8 @@ const RutasEstudiante = () => {
       <Route path="/cursos/intermedio" element={<CursosIntermedio />} />
       <Route path="/cursos/avanzado" element={<CursosAvanzado />} />
       <Route path="/perfil" element={<PerfilEstudiante />} />
+      <Route path="/cursos/basico/quiz" element={<Quiz />} /> 
+
     </Routes>
   );
 };
