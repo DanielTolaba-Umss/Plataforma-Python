@@ -1,13 +1,16 @@
 package com.coders.backers.plataformapython.backend.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "resource_type")
 public class ResourceTypeModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "type_id")
     private Long typeId;
 
