@@ -5,12 +5,12 @@ import { estudiantesApi } from "../../api/estudiantesService";
 
 // Los datos iniciales ahora vendrán de la API
 
-const StudentList = () => {  const [students, setStudents] = useState([]);
+const StudentList = () => {
+  const [students, setStudents] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState(null);
-  const [selectedStudent, setSelectedStudent] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,16 +20,17 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
     apellidos: "",
     email: "",
     telefono: "",
-  });  useEffect(() => {
+  });
+  useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Cargamos los estudiantes
         const estudiantesData = await estudiantesApi.listar();
         console.log("Datos de estudiantes:", estudiantesData);
-        
+
         setStudents(estudiantesData);
       } catch (error) {
         setError("Error al cargar los datos: " + error.message);
@@ -40,7 +41,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
     };
 
     fetchData();
-  }, []);  const toggleForm = () => {
+  }, []);
+  const toggleForm = () => {
     setShowForm(!showForm);
     setEditMode(false);
     setNewStudent({
@@ -63,7 +65,7 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
 
   // Función para manejar la búsqueda al presionar Enter
   const handleSearchKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       // La búsqueda se realiza automáticamente con filteredStudents
     }
@@ -75,28 +77,23 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
   };
 
   // Filtrar estudiantes basado en el término de búsqueda
-  const filteredStudents = students.filter(student => {
+  const filteredStudents = students.filter((student) => {
     if (!searchTerm.trim()) return true;
-    
+
     const searchLower = searchTerm.toLowerCase().trim();
     const fullName = `${student.nombres} ${student.apellidos}`.toLowerCase();
     const email = student.email.toLowerCase();
-    
+
     return fullName.includes(searchLower) || email.includes(searchLower);
   });
 
   const handleCreate = async () => {
     try {
-      if (
-        !newStudent.nombres ||
-        !newStudent.email ||
-        !newStudent.apellidos
-      ) {
-        alert(
-          "Los campos Nombres, Apellidos y Email son obligatorios."
-        );
+      if (!newStudent.nombres || !newStudent.email || !newStudent.apellidos) {
+        alert("Los campos Nombres, Apellidos y Email son obligatorios.");
         return;
-      }      setLoading(true);      
+      }
+      setLoading(true);
       const studentData = {
         nombres: newStudent.nombres,
         apellidos: newStudent.apellidos,
@@ -109,8 +106,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
       console.log("Respuesta del backend al crear estudiante:", createdStudent);
 
       // Actualizar la lista de estudiantes
-      setStudents(prev => [...prev, createdStudent]);
-      
+      setStudents((prev) => [...prev, createdStudent]);
+
       toggleForm();
       setError(null);
     } catch (error) {
@@ -119,7 +116,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
     } finally {
       setLoading(false);
     }
-  };const handleEdit = (estudiante) => {
+  };
+  const handleEdit = (estudiante) => {
     setEditMode(true);
     setShowForm(true);
     setNewStudent({
@@ -129,7 +127,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
       email: estudiante.email,
       telefono: estudiante.telefono || "",
     });
-  };  const handleUpdate = async () => {
+  };
+  const handleUpdate = async () => {
     try {
       if (!newStudent.nombres || !newStudent.email || !newStudent.apellidos) {
         alert("Los campos Nombres, Apellidos y Email son obligatorios.");
@@ -149,14 +148,20 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
         newStudent.id,
         studentData
       );
-      console.log("Respuesta del backend al actualizar estudiante:", updatedStudent);
-      
+      console.log(
+        "Respuesta del backend al actualizar estudiante:",
+        updatedStudent
+      );
+
       // Actualizar la lista de estudiantes
-      setStudents(prev => {
-        const newList = prev.map(student => 
+      setStudents((prev) => {
+        const newList = prev.map((student) =>
           student.id === newStudent.id ? updatedStudent : student
         );
-        console.log("Nueva lista de estudiantes después de actualizar:", newList);
+        console.log(
+          "Nueva lista de estudiantes después de actualizar:",
+          newList
+        );
         return newList;
       });
 
@@ -217,11 +222,14 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
           <>
             {showForm && (
               <div className="student-modal-overlay">
-                <div className="student-modal">                  <div className="student-modal-header">
+                <div className="student-modal">
+                  {" "}
+                  <div className="student-modal-header">
                     <h3 className="student-modal-title">
                       {editMode ? "Editar Estudiante" : "Nuevo Estudiante"}
                     </h3>
-                  </div>                  <div className="modal-form-grid">
+                  </div>{" "}
+                  <div className="modal-form-grid">
                     <div className="modal-form-full">
                       <input
                         name="nombres"
@@ -249,7 +257,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
                         onChange={handleChange}
                         className="input-field"
                       />
-                    </div>                    <div className="modal-form-full">
+                    </div>{" "}
+                    <div className="modal-form-full">
                       <input
                         name="telefono"
                         placeholder="Teléfono"
@@ -258,7 +267,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
                         className="input-field"
                       />
                     </div>
-                  </div>                  <div className="modal-action-buttons">
+                  </div>{" "}
+                  <div className="modal-action-buttons">
                     <button
                       onClick={editMode ? handleUpdate : handleCreate}
                       className="btn-crear"
@@ -271,7 +281,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
                   </div>
                 </div>
               </div>
-            )}            <div className="search-container">
+            )}{" "}
+            <div className="search-container">
               <input
                 type="text"
                 placeholder="Buscar por nombre o correo..."
@@ -280,41 +291,48 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
                 onChange={handleSearchChange}
                 onKeyPress={handleSearchKeyPress}
               />
-              <button 
+              <button
                 className="search-button"
                 onClick={handleClearSearch}
                 title={searchTerm ? "Limpiar búsqueda" : "Buscar"}
               >
                 {searchTerm ? <X size={20} /> : <Search size={20} />}
               </button>
-            </div>{loading ? (
+            </div>
+            {loading ? (
               <p>Cargando estudiantes...</p>
             ) : error ? (
               <p className="error-message">{error}</p>
             ) : (
-              <table className="tabla-estudiantes">                <thead>
+              <table className="tabla-estudiantes">
+                {" "}
+                <thead>
                   <tr>
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Teléfono</th>
                     <th>Acciones</th>
                   </tr>
-                </thead>                <tbody>
+                </thead>{" "}
+                <tbody>
                   {filteredStudents.length > 0 ? (
                     filteredStudents.map((e) => (
                       <tr key={e.id}>
-                        <td>{e.nombres} {e.apellidos}</td>
+                        <td>
+                          {e.nombres} {e.apellidos}
+                        </td>
                         <td>{e.email}</td>
-                        <td>{e.telefono}</td>                        <td className="acciones">
-                          <button 
-                            className="accion editar" 
+                        <td>{e.telefono}</td>{" "}
+                        <td className="acciones">
+                          <button
+                            className="accion editar"
                             onClick={() => handleEdit(e)}
                             title="Editar"
                           >
                             <Pencil size={18} />
                           </button>
-                          <button 
-                            className="accion eliminar" 
+                          <button
+                            className="accion eliminar"
                             onClick={() => openDeleteModal(e)}
                             title="Eliminar"
                           >
@@ -325,11 +343,17 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" style={{ textAlign: "center", padding: "2rem", color: "#6b7280" }}>
-                        {searchTerm ? 
-                          `No se encontraron estudiantes que coincidan con "${searchTerm}"` : 
-                          "No hay estudiantes registrados"
-                        }
+                      <td
+                        colSpan="4"
+                        style={{
+                          textAlign: "center",
+                          padding: "2rem",
+                          color: "#6b7280",
+                        }}
+                      >
+                        {searchTerm
+                          ? `No se encontraron estudiantes que coincidan con "${searchTerm}"`
+                          : "No hay estudiantes registrados"}
                       </td>
                     </tr>
                   )}
@@ -337,7 +361,8 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
               </table>
             )}
           </>
-        )}      </div>
+        )}{" "}
+      </div>
 
       {/* Modal de confirmación de eliminación */}
       {showDeleteModal && (
@@ -346,7 +371,10 @@ const StudentList = () => {  const [students, setStudents] = useState([]);
             <h3>Confirmar eliminación</h3>
             <p>
               ¿Estás seguro de que deseas eliminar al estudiante{" "}
-              <strong>{studentToDelete?.nombres} {studentToDelete?.apellidos}</strong>?
+              <strong>
+                {studentToDelete?.nombres} {studentToDelete?.apellidos}
+              </strong>
+              ?
             </p>
             <p style={{ color: "#666", fontSize: "0.9rem", marginTop: "10px" }}>
               Esta acción no se puede deshacer.
