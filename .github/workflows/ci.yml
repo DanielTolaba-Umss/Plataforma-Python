@@ -44,6 +44,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven
 
+      - name: Ensure mvnw is executable
+        run: chmod +x mvnw
+        working-directory: ./backend
+
       - name: Run tests with Maven
         run: ./mvnw test
         working-directory: ./backend
@@ -52,8 +56,14 @@ jobs:
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
 
-      - name: Build backend Docker image
-        run: docker build -t plataforma-backend ./backend
+      # Puedes usar esto si quieres asegurar que el build se genera correctamente
+      - name: Build backend (verify)
+        run: ./mvnw clean package -DskipTests
+        working-directory: ./backend
+
+      # El build Docker es opcional aquí, mejor dejarlo solo para el pipeline de deploy
+      # - name: Build backend Docker image
+      #   run: docker build -t plataforma-backend ./backend
 
   frontend:
     name: Frontend - Lint & Build
