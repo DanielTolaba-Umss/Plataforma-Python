@@ -1,79 +1,61 @@
-import React, { useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import "./Lecciones.css";
+// src/componentes/Estudiantes/LeccionesNivel.jsx
+import React, { useState, useEffect } from "react";
+import { useParams, useLocation } from "react-router-dom";
+import { leccionesAPI } from "../../../../api/leccionService";
+import "./Lecciones.css"; // Asegúrate de importar el CSS
 
-const lecciones = [
-  {
-    id: 1,
-    titulo: "Introducción a Python",
-    descripcion: "Conceptos básicos y sintaxis inicial",
-  },
-  {
-    id: 2,
-    titulo: "Variables y Tipos",
-    descripcion: "Uso de variables y tipos de datos",
-  },
-  {
-    id: 3,
-    titulo: "Estructuras de Control",
-    descripcion: "Condicionales y bucles",
-  },
-  {
-    id: 4,
-    titulo: "Funciones",
-    descripcion: "Creación y uso de funciones",
-  },
-];
-
-const Lecciones = () => {
-  const { nivelId } = useParams();
+const LeccionesNivel = () => {
+  const { id } = useParams();
   const location = useLocation();
-  const nivel = location.state?.nivel;
+  const [lecciones, setLecciones] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const nivel =
+    location.state?.nivel || JSON.parse(localStorage.getItem("nivel"));
 
   useEffect(() => {
-    console.log("Nivel recibido:", nivel);
-    // Aquí podrías hacer una petición para obtener las lecciones reales usando nivelId
-  }, [nivelId, nivel]);
-
-  const [estadoLecciones, setEstadoLecciones] = React.useState(
-    lecciones.map(() => ({ estado: "incompleto", boton: "Iniciar" }))
-  );
-
-  const manejarClick = (index) => {
-    const nuevosEstados = [...estadoLecciones];
-    nuevosEstados[index] = {
-      estado: "completo",
-      boton: "Continuar",
+    const fetchLecciones = async () => {
+      try {
+        setLoading(true);
+        const response = await leccionesAPI.obtenerPorCursoYNivel(
+          id,
+          nivel.level
+        );
+        setLecciones(response.data);
+      } catch (err) {
+        setError("Error al cargar las lecciones");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
-    setEstadoLecciones(nuevosEstados);
-  };
+
+    if (id && nivel?.level) {
+      fetchLecciones();
+    }
+  }, [id, nivel]);
+
+  if (loading) return <div>Cargando lecciones...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
-    <div className="curso-container">
-      <header className="curso-header">
-        <h2>{nivel ? nivel.title : "Lecciones del Curso"}</h2>
-      </header>
+    <div className="lecciones-container">
+      <h1 className="lecciones-title">Lecciones del nivel: {nivel.level}</h1>
 
-      <main className="curso-lecciones">
+      <div className="lecciones-grid">
         {lecciones.map((leccion) => (
-          <div className="leccion-card" key={leccion.id}>
-            <div className="leccion-content">
-              <h3>{leccion.titulo}</h3>
-              <p className="leccion-descripcion">{leccion.descripcion}</p>
-            </div>
-            <div className="leccion-actions"></div>
+          <div key={leccion.id} className="leccion-card">
+            <h3 className="leccion-title">{leccion.title}</h3>
+            <p className="leccion-description">{leccion.description}</p>
           </div>
         ))}
-      </main>
-
-      <footer className="curso-footer">
-        <div className="curso-footer-buttons">
-          <button className="footer-button">Quiz</button>
-          <button className="footer-button">Prueba</button>
-        </div>
-      </footer>
+      </div>
+      <div className="curso-footer-buttons">
+        <button className="footer-button">Quiz</button>
+      </div>
     </div>
   );
 };
 
-export default Lecciones;
+export default LeccionesNivel;

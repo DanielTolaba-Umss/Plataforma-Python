@@ -11,6 +11,7 @@ const Sidebar = () => {
 
   const [isCursosOpen, setIsCursosOpen] = useState(false);
   const [niveles, setNiveles] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // Extraer el ID del nivel de la URL
   const nivelIdActivo = location.pathname.split("/")[2];
@@ -38,8 +39,10 @@ const Sidebar = () => {
     setIsCursosOpen(!isCursosOpen);
   };
 
-  const manejarClickNivel = (nivel) => {
-    navigate(`/cursos/${nivel.id}`, { state: { nivel } });
+  // Modifica la función handleNivelClick en tu Sidebar.jsx
+  const handleNivelClick = (nivel) => {
+    localStorage.setItem("nivel", JSON.stringify(nivel));
+    navigate(`/cursos/${nivel.id}/lecciones`, { state: { nivel } });
   };
 
   return (
@@ -68,7 +71,7 @@ const Sidebar = () => {
                 className={`sidebar-sublink ${
                   nivelIdActivo === nivel.id.toString() ? "active" : ""
                 }`}
-                onClick={() => manejarClickNivel(nivel)}
+                onClick={() => handleNivelClick(nivel)}
               >
                 {nivel.title}
               </button>

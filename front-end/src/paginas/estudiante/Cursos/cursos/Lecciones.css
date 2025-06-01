@@ -1,140 +1,13 @@
-.curso-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Cambiado de height a min-height para contenido largo */
-  overflow: hidden;
-  background-color: #E5E5E5;
-  width: 100vw; /* Ocupa todo el ancho del viewport */
-  margin: 0;
-  padding: 0; /* Eliminamos el padding-right */
-  max-width: none; /* Eliminamos la restricción de ancho máximo */
-    
-}
-
-
-.curso-header {
-  position: sticky;
-  top: 0;
-  background-color: #E5E5E5;
-  padding: 1rem 2rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-  border-bottom: 1px solid #e5e7eb;
-  z-index: 10;
-  width: 100%; /* Ocupa todo el ancho */
-  box-sizing: border-box; /* Incluye padding en el ancho */
-  text-align: center;
-}
-
-.curso-lecciones {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
-  overflow-y: auto;
-  flex: 1;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  scrollbar-width: none;
-
-}
-
-
-.curso-lecciones::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
-}
-
-/* Actualiza tus estilos de leccion-card para que coincidan con moduleCard */
-.leccion-card {
-  background-color: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-  border: 1px solid #e5e5e5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  min-height: 150px;
-  justify-content: space-between;
- /* Cambiado de center a left para coincidir con moduleCard */
-}
-
-.leccion-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-color: #ffd438;
-}
-
-.leccion-card h3 {
-  font-size: 1.125rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: #300898;
-  width: 100%;
-}
-
-/* Añade estos estilos para coincidir completamente con moduleCard */
-.leccion-icon-container {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 9999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-  background-color: #306998;
-}
-
-.leccion-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  color: #ffd438;
-}
-
-.leccion-description {
-  color: #666;
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
-}
-
-/* Ajusta el grid para lecciones */
-.curso-lecciones {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  padding: 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .curso-lecciones {
-    grid-template-columns: repeat(1, 1fr); /* 2 columnas en tablet */
-  }
-}
-
-@media (min-width: 1024px) {
-  .curso-lecciones {
-    grid-template-columns: repeat(2, 1fr); /* 3 columnas en desktop */
-  }
-}
-
-.curso-footer {
-  justify-content:space-around;
-  position: sticky;
-  bottom: 0;
-  background-color: #E5E5E5;
-  padding: 1rem 2rem;
-  border-top: 1px solid #e5e7eb;
-  display: flex;
-  align-items: center;
-}
 
 .curso-footer-buttons {
+  position: fixed;       
+  bottom: 2rem;          
+  right: 2rem;           
   display: flex;
   gap: 1rem;
+  justify-content: end;
 }
+
 
 
 .curso-footer-buttons button {
@@ -149,10 +22,82 @@
   font-size: 0.875rem;
   font-weight: 500;
   transition: background-color 0.2s;
-  margin-top: 0.5rem;
+
 }
 
 .curso-footer-buttons button:hover {
   background-color: #300898;
 }
 
+
+/* src/componentes/Estudiantes/LeccionesNivel.css */
+.lecciones-container {
+  flex: 1;
+  background-color: #e5e5e5;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.lecciones-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.lecciones-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+}
+
+.lecciones-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .lecciones-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.leccion-card {
+  background-color: white;
+  padding: 1.5rem; /* Aumentado para más espacio interno */
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 120px; /* Altura mínima para consistencia */
+  border: 1px solid #e5e5e5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 150px;
+  justify-content: space-between;
+
+}
+
+.leccion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #ffd438;
+}
+
+/* Título y Descripción - Ajustes específicos */
+.leccion-title {
+  font-size: 1.25rem; /* Tamaño aumentado */
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.75rem;
+}
+
+.leccion-description {
+  color: #666;
+  font-size: 1rem; /* Tamaño aumentado */
+  line-height: 1.5;
+}

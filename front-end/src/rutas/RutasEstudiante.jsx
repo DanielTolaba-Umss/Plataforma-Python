@@ -11,7 +11,8 @@ const RutasEstudiante = () => {
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/cursos" element={<Cursos />} />
-      <Route path="/cursos/:nivelId" element={<Lecciones />} />
+      // En tu archivo de rutas principal (App.jsx o similar)
+      <Route path="/cursos/:id/lecciones" element={<Lecciones />} />
       <Route path="/perfil" element={<PerfilEstudiante />} />
     </Routes>
   );
