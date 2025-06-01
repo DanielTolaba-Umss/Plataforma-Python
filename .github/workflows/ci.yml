@@ -36,25 +36,33 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven
+      #   - name: Cache Maven packages
+      #     uses: actions/cache@v3
+      #     with:
+      #       path: ~/.m2
+      #       key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+      #       restore-keys: |
+      #         ${{ runner.os }}-maven
 
       - name: Ensure mvnw is executable
         run: chmod +x mvnw
         working-directory: ./backend
 
-      - name: Run tests with Maven
-        run: ./mvnw test
+      - name: Clean and rebuild project
+        run: ./mvnw clean install
         working-directory: ./backend
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/plataforma_python_db
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
+
+      #   - name: Run tests with Maven
+      #     run: ./mvnw test
+      #     working-directory: ./backend
+      # env:
+      #   SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/plataforma_python_db
+      #   SPRING_DATASOURCE_USERNAME: postgres
+      #   SPRING_DATASOURCE_PASSWORD: postgres
 
       - name: Build backend (verify)
         run: ./mvnw clean package -DskipTests
