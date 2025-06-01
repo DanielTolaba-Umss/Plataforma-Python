@@ -25,22 +25,37 @@ const GestionLecciones = () => {
   const nivelId = localStorage.getItem("nivelId");
   useEffect(() => {
     const fetchLecciones = async () => {
-      try {
-        const response = await leccionesAPI.obtenerTodas();
-        if (response.status !== 200)
-          throw new Error("Error en la respuesta del servidor");
+      const nivelLevel = localStorage.getItem("nivelLevel"); // Obtener nivel desde localStorage
 
-        const leccionesFiltradas = response.data.filter((leccion) => ({
+      if (!nivelId || !nivelLevel) {
+        console.warn(
+          "Faltan datos para obtener lecciones (nivelId o nivelLevel)"
+        );
+        return;
+      }
+
+      try {
+        const response = await leccionesAPI.obtenerPorCursoYNivel(
+          nivelId,
+          nivelLevel
+        ); // Usar el endpoint correcto
+
+        if (response.status !== 200) {
+          throw new Error("Error en la respuesta del servidor");
+        }
+
+        const leccionesFormateadas = response.data.map((leccion) => ({
           id: leccion.id,
-          nombre: leccion.titulo || "Sin titulo",
-          descripcion: leccion.description || "Sin description",
-          color: styles.blueIcon,
-          slug: (leccion.title || "").toLowerCase().replace(/\s+/g, "-"),
+          title: leccion.title || "Sin título",
+          description: leccion.description || "Sin descripción",
+          slug: (leccion.titulo || "").toLowerCase().replace(/\s+/g, "-"),
         }));
 
-        setLecciones(leccionesFiltradas);
+        console.log("Datos recibidos:", response.data);
+
+        setLecciones(leccionesFormateadas);
       } catch (error) {
-        onsole.error("Error al cargar lecciones:", error);
+        console.error("Error al cargar lecciones:", error);
         showNotification(
           "Error al cargar lecciones: " +
             (error.response?.data?.message || error.message),
@@ -48,6 +63,7 @@ const GestionLecciones = () => {
         );
       }
     };
+
     fetchLecciones();
   }, [nivelId]);
 
@@ -61,7 +77,7 @@ const GestionLecciones = () => {
         ...prev,
         {
           id: response.data.leccion_id,
-          title: response.data.titulo,
+          title: response.data.title,
           description: response.data.description,
           nivelId: response.data.curso_Id,
         },

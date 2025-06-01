@@ -9,7 +9,11 @@ const GestionCurso = () => {
 
   const [niveles, setNiveles] = useState([]);
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [nuevoNivel, setNuevoNivel] = useState({ title: "", description: "" });
+  const [nuevoNivel, setNuevoNivel] = useState({
+    title: "",
+    description: "",
+    level: "",
+  });
   const [nivelToEdit, setNivelToEdit] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
   const [nivelToDelete, setNivelToDelete] = useState(null);
@@ -26,6 +30,7 @@ const GestionCurso = () => {
           id: nivel.id,
           nombre: nivel.title || "Sin título",
           descripcion: nivel.description || "Sin descripción",
+          level: nivel.level || "Sin nivel", // Agregado el level
           color: styles.blueIcon,
           slug: (nivel.title || "").toLowerCase().replace(/\s+/g, "-"),
         }));
@@ -48,14 +53,22 @@ const GestionCurso = () => {
   };
 
   const handleModuleSelect = (nivelId) => {
-    localStorage.setItem("nivelId", nivelId); // ✅ Guardar nivelId
-    navigate(`/gestion-curso/lecciones/${nivelId}`); // Navega igual
+    const nivelSeleccionado = niveles.find((n) => n.id === nivelId);
+    if (nivelSeleccionado) {
+      localStorage.setItem("nivelId", nivelId);
+      localStorage.setItem("nivelLevel", nivelSeleccionado.level);
+      navigate(`/gestion-curso/lecciones/${nivelId}`);
+    }
   };
 
   const handleCreateNivel = async () => {
     try {
       if (!nuevoNivel.title.trim()) {
         showNotification("El título es obligatorio", "error");
+        return;
+      }
+      if (!nuevoNivel.level.trim()) {
+        showNotification("El nivel es obligatorio", "error");
         return;
       }
 
@@ -65,12 +78,13 @@ const GestionCurso = () => {
         id: response.data.id,
         nombre: response.data.title,
         descripcion: response.data.description,
+        level: response.data.level, // Agregado el level
         color: styles.blueIcon,
         slug: response.data.title.toLowerCase().replace(/\s+/g, "-"),
       };
 
       setNiveles((prev) => [...prev, createdNivel]);
-      setNuevoNivel({ title: "", description: "" });
+      setNuevoNivel({ title: "", description: "", level: "" });
       setMostrarModal(false);
       showNotification("Nivel creado con éxito", "success");
     } catch (error) {
@@ -88,6 +102,7 @@ const GestionCurso = () => {
       ...nivel,
       title: nivel.nombre,
       description: nivel.descripcion,
+      level: nivel.level, // Agregado el level
     });
     setShowEditForm(true);
   };
@@ -97,6 +112,7 @@ const GestionCurso = () => {
       const datosActualizados = {
         title: nivelToEdit.title,
         description: nivelToEdit.description,
+        level: nivelToEdit.level, // Agregado el level
       };
 
       const response = await cursosAPI.actualizar(
@@ -111,6 +127,7 @@ const GestionCurso = () => {
                 ...n,
                 nombre: response.data.title,
                 descripcion: response.data.description,
+                level: response.data.level, // Agregado el level
                 slug: response.data.title.toLowerCase().replace(/\s+/g, "-"),
               }
             : n
@@ -186,6 +203,9 @@ const GestionCurso = () => {
                 </div>
                 <h3 className={styles.moduleTitle}>{nivel.nombre}</h3>
                 <p className={styles.moduleDescription}>{nivel.descripcion}</p>
+                <div className={styles.moduleLevel}>
+                  <span className={styles.levelBadge}>{nivel.level}</span>
+                </div>
               </div>
               <div className={styles.moduleActions}>
                 <button
@@ -213,6 +233,7 @@ const GestionCurso = () => {
         <Plus />
       </button>
 
+      {/* Modal de creación */}
       {mostrarModal && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
@@ -234,6 +255,19 @@ const GestionCurso = () => {
                 setNuevoNivel({ ...nuevoNivel, description: e.target.value })
               }
             ></textarea>
+            {/* Campo Level agregado */}
+            <select
+              className={styles.modalInput}
+              value={nuevoNivel.level}
+              onChange={(e) =>
+                setNuevoNivel({ ...nuevoNivel, level: e.target.value })
+              }
+            >
+              <option value="">Selecciona un nivel</option>
+              <option value="basico">Básico</option>
+              <option value="intermedio">Intermedio</option>
+              <option value="avanzado">Avanzado</option>
+            </select>
             <div className={styles.modalButtons}>
               <button
                 className={styles.modalConfirm}
@@ -252,6 +286,7 @@ const GestionCurso = () => {
         </div>
       )}
 
+      {/* Modal de edición */}
       {showEditForm && nivelToEdit && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
@@ -273,6 +308,19 @@ const GestionCurso = () => {
                 setNivelToEdit({ ...nivelToEdit, description: e.target.value })
               }
             ></textarea>
+            {/* Campo Level agregado */}
+            <select
+              className={styles.modalInput}
+              value={nivelToEdit.level}
+              onChange={(e) =>
+                setNivelToEdit({ ...nivelToEdit, level: e.target.value })
+              }
+            >
+              <option value="">Selecciona un nivel</option>
+              <option value="basico">Básico</option>
+              <option value="intermedio">Intermedio</option>
+              <option value="avanzado">Avanzado</option>
+            </select>
             <div className={styles.modalButtons}>
               <button
                 className={styles.modalConfirm}
@@ -291,6 +339,7 @@ const GestionCurso = () => {
         </div>
       )}
 
+      {/* Modal de confirmación de eliminación */}
       {showDeleteModal && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
