@@ -466,4 +466,20 @@
 }
 
 
+/* Agregar a tu archivo CSS */
+.moduleLevel {
+  margin-top: 8px;
+}
+
+.levelBadge {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
 
