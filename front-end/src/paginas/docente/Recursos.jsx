@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../docente/estilos/Recursos.css";
-import { useNavigate, useParams } from "react-router-dom";
-import { Edit, Trash, X, Upload, Download, CheckCircle2 } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { Edit, Trash, X, Upload, CheckCircle2 } from "lucide-react";
 import { pdfApi } from "../../api/pdfService";
 
 import {
@@ -13,7 +13,6 @@ import {
 
 const Recursos = () => {
   const { courseId } = useParams();
-  const navigate = useNavigate();
 
   // Modal states
   const [showPdfModal, setShowPdfModal] = useState(false);
