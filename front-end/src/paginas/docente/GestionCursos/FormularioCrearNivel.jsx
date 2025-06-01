@@ -9,6 +9,7 @@ const FormularioCrearNivel = ({ onClose, onSubmit }) => {
     const newLevel = {
       name: formData.get("name"),
       description: formData.get("description"),
+      level: formData.get("level"),
     };
     onSubmit(newLevel);
   };
@@ -34,7 +35,7 @@ const FormularioCrearNivel = ({ onClose, onSubmit }) => {
               name="name"
               required
               className={styles.input}
-              placeholder="Ej: Nivel Básico"
+              placeholder="Ej: Principiante en python"
             />
           </div>
 
@@ -50,6 +51,17 @@ const FormularioCrearNivel = ({ onClose, onSubmit }) => {
               className={styles.textarea}
               placeholder="Breve descripción del nivel..."
             />
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="level" className={styles.label}>
+              Nivel del curso
+            </label>
+            <select id="level" name="level" required className={styles.input}>
+              <option value="">Selecciona un nivel</option>
+              <option value="basico">Básico</option>
+              <option value="intermedio">Intermedio</option>
+              <option value="avanzado">Avanzado</option>
+            </select>
           </div>
 
           <button type="submit" className={styles.submitButton}>

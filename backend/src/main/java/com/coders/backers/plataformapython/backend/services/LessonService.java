@@ -17,6 +17,8 @@ public interface LessonService {
     List<LessonDto> getActiveLessons();
     List<LessonDto> getLessonsByCourseId(Long courseId);
     List<LessonDto> getActiveLessonsByCourseId(Long courseId);
+    List<LessonDto> getLessonsByCourseIdAndLevel(Long courseId, String level);
+    List<LessonDto> getActiveLessonsByCourseIdAndLevel(Long courseId, String level);
     
     // Update
     LessonDto updateLesson(Long id, UpdateLessonDto updateLessonDto);
