@@ -35,191 +35,186 @@ public class PythonExecutionServiceImpl implements PythonExecutionService {
      @Override
      public CodeExecutionResult executeCode(CodeExecutionRequest request) {
         try {
-      // Crear el proceso Docker con límites de recursos
-      ProcessBuilder pb = new ProcessBuilder(
-      "docker", "run",
-      "--rm",
-      "-i",
-      "python-sandbox");
+            // Crear el proceso Docker con límites de recursos
+            ProcessBuilder pb = new ProcessBuilder(
+                "docker", "run",
+                "--rm",
+                "-i",
+                "python-sandbox");
+            
+            Process process = pb.start();
+            // Crear un Future para manejar el timeout
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Future<CodeExecutionResult> future = executor.submit(() -> {
+                try {
+                    try {
+                        OutputStreamWriter writer = new
+                        OutputStreamWriter(process.getOutputStream());
+                        if (request.getCode() == null || request.getCode().trim().isEmpty()) {
+                            log.error("El código recibido está vacío");
+                        }
+                
+        // Construir un mapa y serializarlo para garantizar un JSON válido
+                        java.util.Map<String, String> jsonMap = new java.util.HashMap<>();
+                        jsonMap.put("code", request.getCode());
+                        String jsonCode = objectMapper.writeValueAsString(jsonMap);
+                        log.info("Enviando al contenedor: {}", jsonCode);
+            
+                        writer.write(jsonCode);
+                        writer.flush();
+                        writer.close();
+                    } catch (Exception e) {
+                        log.error("Error escribiendo código al contenedor Python", e);
+                    }
+        
+                    boolean completed = process.waitFor(5, TimeUnit.SECONDS);
+                    if (!completed) {
+                        log.warn("El proceso Python no finalizó dentro del tiempo esperado");
+                        process.destroyForcibly();
+                    }
+                    StringBuilder outputBuilder = new StringBuilder();
+                    try {
+                        BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(process.getInputStream()));
+                        
+                        String line;
+                        log.info("Comenzando a leer salida del proceso...");
+                        
+                        while ((line = reader.readLine()) != null) {
+                            outputBuilder.append(line).append("\n");
+                            log.debug("Línea leída: {}", line);
+                        }
+            
+                        log.info("Finalizada lectura de salida del proceso");
+                    } catch (Exception e) {
+                        log.error("Error leyendo la salida del contenedor", e);
+                    }
+        
+                    StringBuilder errorBuilder = new StringBuilder();
+                    try (BufferedReader errorReader = new BufferedReader(
+                        new InputStreamReader(process.getErrorStream()))) {
+                        String line;
+                        while ((line = errorReader.readLine()) != null) {
+                            errorBuilder.append(line).append("\n");
+                        }
+                    }
+        
+                    if (errorBuilder.length() > 0) {
+                        log.warn("Error del contenedor Python: {}", errorBuilder.toString());
+                    }
+                    String output = outputBuilder.toString().trim();
+                    log.info("Respuesta del contenedor Python: {}", output);
+                    if (output.isEmpty()) {
+                        log.warn("La respuesta del contenedor Python está vacía");
+                    
+                        // Probemos a ejecutar Docker directamente para depuración
+                        try {
+                            ProcessBuilder debugPb = new ProcessBuilder(
+                                "docker", "run", "--rm", "python-sandbox",
+                                "python", "-c",
+                                "import json; print(json.dumps({'success': True, 'output': 'Test directo', 'error': ''}))"
+                            );
+                            Process debugProcess = debugPb.start();
+                            BufferedReader debugReader = new BufferedReader(
+                            new InputStreamReader(debugProcess.getInputStream()));
+                            String debugLine = debugReader.readLine();
+                            log.info("Prueba de depuración Docker: {}", debugLine);
+                        } catch (Exception debugEx) {
+                            log.error("Error en prueba de depuración: ", debugEx);
+                        }
+            
+                        String directOutput =
+                        "El código se ejecutó correctamente pero no produjo salida";
+                        
+                        if (request.getCode().contains("print")) {
+                            try {
+                                ProcessBuilder directRunPb = new ProcessBuilder(
+                                    "docker", "run", "--rm", "-i", "-e", "PYTHONUNBUFFERED=1",
+                                    "python-sandbox");
+                                Process directRunProcess = directRunPb.start();
+                                try (OutputStreamWriter writer = new OutputStreamWriter(
+                                    directRunProcess.getOutputStream())) {
+                                    
+                                    // Construir un mapa y serializarlo para garantizar un JSON válido
+                                    java.util.Map<String, String> jsonMap = new java.util.HashMap<>();
+                                    jsonMap.put("code", request.getCode());
+                                    String jsonCode = objectMapper.writeValueAsString(jsonMap);
+                                    log.info("Enviando al contenedor (ejecución directa): {}", jsonCode);
+                                    
+                                    writer.write(jsonCode);
+                                    writer.flush();
+                                    writer.close();
+                                }
+                
+                                BufferedReader directReader = new BufferedReader(
+                                new InputStreamReader(directRunProcess.getInputStream()));
+                                StringBuilder directBuilder = new StringBuilder();
+                                String directLine;
+                                while ((directLine = directReader.readLine()) != null) {
+                                    directBuilder.append(directLine).append("\n");
+                                }
+                                
+                                if (directBuilder.length() > 0) {
+                                    directOutput = directBuilder.toString().trim();
+                                    log.info("Salida directa de Python: {}", directOutput);
+                                }
+                            } catch (Exception directEx) {
+                                log.error("Error en ejecución directa: ", directEx);
+                            }
+                        }
+                    
+                        return CodeExecutionResult.builder()
+                            .success(true)
+                            .output(directOutput)
+                            .error("")
+                            .build();
+                    }
+        
+                    try {
+                        log.info("Intentando parsear el JSON: {}", output);
+                        return objectMapper.readValue(output, CodeExecutionResult.class);
+                    } catch (Exception e) {
+                        log.error("Error al parsear el JSON de respuesta: {} - Contenido: [{}]", e.getMessage(), output);
+                        log.error("Stack trace: ", e);
+                        
+                        if (output.contains("El resultado es:")) {
+                            return CodeExecutionResult.builder()
+                                .success(true)
+                                .output(output)
+                                .error("")
+                                .build();
+                        } else {
+                            return CodeExecutionResult.builder()
+                                .success(true)
+                                .output(output)
+                                .error("")
+                                .build();
+                        }
+                    }
+                } catch (Exception e) {
+                    log.error("Error leyendo la respuesta del contenedor Python: ", e);
+                    throw e;
+                }
+            });
       
-      Process process = pb.start();
-      // Crear un Future para manejar el timeout
-      ExecutorService executor = Executors.newSingleThreadExecutor();
-      Future<CodeExecutionResult> future = executor.submit(() -> {
-      try {
-      try {
-      OutputStreamWriter writer = new
-      OutputStreamWriter(process.getOutputStream());
-      if (request.getCode() == null || request.getCode().trim().isEmpty()) {
-      log.error("El código recibido está vacío");
-      }
-      
-      // Construir un mapa y serializarlo para garantizar un JSON válido
-      java.util.Map<String, String> jsonMap = new java.util.HashMap<>();
-      jsonMap.put("code", request.getCode());
-      String jsonCode = objectMapper.writeValueAsString(jsonMap);
-      log.info("Enviando al contenedor: {}", jsonCode);
-      
-      writer.write(jsonCode);
-      writer.flush();
-      writer.close();
-      } catch (Exception e) {
-      log.error("Error escribiendo código al contenedor Python", e);
-      }
-      
-      boolean completed = process.waitFor(5, TimeUnit.SECONDS);
-      if (!completed) {
-      log.warn("El proceso Python no finalizó dentro del tiempo esperado");
-      process.destroyForcibly();
-      }
-      StringBuilder outputBuilder = new StringBuilder();
-      try {
-      BufferedReader reader = new BufferedReader(
-      new InputStreamReader(process.getInputStream()));
-      
-      String line;
-      log.info("Comenzando a leer salida del proceso...");
-      
-      while ((line = reader.readLine()) != null) {
-      outputBuilder.append(line).append("\n");
-      log.debug("Línea leída: {}", line);
-      }
-      
-      log.info("Finalizada lectura de salida del proceso");
-      } catch (Exception e) {
-      log.error("Error leyendo la salida del contenedor", e);
-      }
-      
-      StringBuilder errorBuilder = new StringBuilder();
-      try (BufferedReader errorReader = new BufferedReader(
-      new InputStreamReader(process.getErrorStream()))) {
-      String line;
-      while ((line = errorReader.readLine()) != null) {
-      errorBuilder.append(line).append("\n");
-      }
-      }
-      
-      if (errorBuilder.length() > 0) {
-      log.warn("Error del contenedor Python: {}", errorBuilder.toString());
-      }
-      String output = outputBuilder.toString().trim();
-      log.info("Respuesta del contenedor Python: {}", output);
-      if (output.isEmpty()) {
-      log.warn("La respuesta del contenedor Python está vacía");
-      
-      // Probemos a ejecutar Docker directamente para depuración
-      try {
-      ProcessBuilder debugPb = new ProcessBuilder(
-      "docker", "run", "--rm", "python-sandbox",
-      "python", "-c",
-      "import json; print(json.dumps({'success': True, 'output': 'Test directo', 'error': ''}))"
-      );
-      Process debugProcess = debugPb.start();
-      BufferedReader debugReader = new BufferedReader(
-      new InputStreamReader(debugProcess.getInputStream()));
-      String debugLine = debugReader.readLine();
-      log.info("Prueba de depuración Docker: {}", debugLine);
-      } catch (Exception debugEx) {
-      log.error("Error en prueba de depuración: ", debugEx);
-      }
-      
-      String directOutput =
-      "El código se ejecutó correctamente pero no produjo salida";
-      
-      if (request.getCode().contains("print")) {
-      try {
-      ProcessBuilder directRunPb = new ProcessBuilder(
-      "docker", "run", "--rm", "-i", "-e", "PYTHONUNBUFFERED=1",
-      "python-sandbox");
-      Process directRunProcess = directRunPb.start();
-      try (OutputStreamWriter writer = new OutputStreamWriter(
-      directRunProcess.getOutputStream())) {
-      
-      // Construir un mapa y serializarlo para garantizar un JSON válido
-      java.util.Map<String, String> jsonMap = new java.util.HashMap<>();
-      jsonMap.put("code", request.getCode());
-      String jsonCode = objectMapper.writeValueAsString(jsonMap);
-      log.info("Enviando al contenedor (ejecución directa): {}", jsonCode);
-      
-      writer.write(jsonCode);
-      writer.flush();
-      writer.close();
-      }
-      
-      BufferedReader directReader = new BufferedReader(
-      new InputStreamReader(directRunProcess.getInputStream()));
-      StringBuilder directBuilder = new StringBuilder();
-      String directLine;
-      while ((directLine = directReader.readLine()) != null) {
-      directBuilder.append(directLine).append("\n");
-      }
-      
-      if (directBuilder.length() > 0) {
-      directOutput = directBuilder.toString().trim();
-      log.info("Salida directa de Python: {}", directOutput);
-      }
-      } catch (Exception directEx) {
-      log.error("Error en ejecución directa: ", directEx);
-      }
-      }
-      
-      return CodeExecutionResult.builder()
-      .success(true)
-      .output(directOutput)
-      .error("")
-      .build();
-      }
-      
-      try {
-      log.info("Intentando parsear el JSON: {}", output);
-      return objectMapper.readValue(output, CodeExecutionResult.class);
-      } catch (Exception e) {
-      log.error("Error al parsear el JSON de respuesta: {} - Contenido: [{}]",
-      e.getMessage(),
-      output);
-      log.error("Stack trace: ", e);
-      
-      if (output.contains("El resultado es:")) {
-      return CodeExecutionResult.builder()
-      .success(true)
-      .output(output)
-      .error("")
-      .build();
-      } else {
-      return CodeExecutionResult.builder()
-      .success(true)
-      .output(output)
-      .error("")
-      .build();
-      }
-      }
-      } catch (Exception e) {
-      log.error("Error leyendo la respuesta del contenedor Python: ", e);
-      throw e;
-      }
-      });
-      
-      try {
-      CodeExecutionResult result = future.get(executionTimeout, TimeUnit.SECONDS);
-      process.waitFor();
-      return result;
-      } catch (TimeoutException e) {
-      process.destroyForcibly();
-      return CodeExecutionResult.builder()
-      .success(false)
-      .error("La ejecución excedió el tiempo límite de " + executionTimeout +
-      " segundos")
-      .build();
-      } finally {
-      executor.shutdownNow();
-      }
-      } catch (Exception e) {
-      log.error("Error ejecutando código Python", e);
-      return CodeExecutionResult.builder()
-      .success(false)
-      .error("Error interno del servidor: " + e.getMessage())
-      .build();
-      }
+            try {
+                CodeExecutionResult result = future.get(executionTimeout, TimeUnit.SECONDS);
+                process.waitFor();
+                return result;
+            } catch (TimeoutException e) {
+                process.destroyForcibly();
+                return CodeExecutionResult.builder().success(false)
+                    .error("La ejecución excedió el tiempo límite de " + executionTimeout + " segundos").build();
+            } finally {
+                executor.shutdownNow();
+            }
+        } catch (Exception e) {
+            log.error("Error ejecutando código Python", e);
+            return CodeExecutionResult.builder()
+                .success(false)
+                .error("Error interno del servidor: " + e.getMessage())
+                .build();
+        }
     }
      
 /*
