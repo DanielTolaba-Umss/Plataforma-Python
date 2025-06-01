@@ -14,6 +14,7 @@ const RutasEstudiante = () => {
       <Route path="/cursos" element={<Cursos />} />
       // En tu archivo de rutas principal (App.jsx o similar)
       <Route path="/cursos/:id/lecciones" element={<Lecciones />} />
+      <Route path="/cursos/:id/lecciones/Practica" element={<Prueba />} />
       <Route path="/perfil" element={<PerfilEstudiante />} />
     </Routes>
   );
