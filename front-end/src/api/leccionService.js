@@ -8,4 +8,5 @@ export const leccionesAPI = {
     activar: (id) => api.put(`/lessons/${id}/activate`),
     obtenerTodas: () => api.get('/lessons'),
     crear: (datos) => api.post('/lessons', datos),
+    obtenerPorCursoYNivel: (courseId, level) => api.get(`/lessons/course/${courseId}/level/${level}`),
 };
