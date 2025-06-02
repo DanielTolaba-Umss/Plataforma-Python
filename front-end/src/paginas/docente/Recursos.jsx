@@ -14,6 +14,7 @@ import {
 
 const Recursos = () => {
   const { courseId } = useParams();
+  console.log("🚀 ~ Recursos ~ courseId:", courseId);
   // Modal states
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -21,10 +22,10 @@ const Recursos = () => {
   const [resourceToDelete, setResourceToDelete] = useState(null);
   const [modalMode, setModalMode] = useState("crear"); // 'crear' o 'editar'
   const [editId, setEditId] = useState(null);
-  
+
   // Error state
   const [error, setError] = useState(null);
-  
+
   // PDF form data
   const [pdfData, setPdfData] = useState({
     nombre: "",
@@ -48,11 +49,11 @@ const Recursos = () => {
     show: false,
     message: "",
     type: "success",
-  });  // Estado para manejar los recursos
+  }); // Estado para manejar los recursos
   const [recursos, setRecursos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [resources, setResources] = useState([]);
-  
+
   // Error modal state
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -125,7 +126,7 @@ const Recursos = () => {
   const closeErrorModal = () => {
     setShowErrorModal(false);
     setErrorMessage("");
-  };  // Handle PDF form change
+  }; // Handle PDF form change
   const handlePdfChange = (e) => {
     const { name, value, files, type, checked } = e.target;
     if (name === "archivo") {
@@ -139,7 +140,9 @@ const Recursos = () => {
         }
         // Validate file size (optional - 10MB limit)
         if (file.size > 10 * 1024 * 1024) {
-          showError("El archivo PDF es demasiado grande. El tamaño máximo permitido es 10MB.");
+          showError(
+            "El archivo PDF es demasiado grande. El tamaño máximo permitido es 10MB."
+          );
           e.target.value = ""; // Clear the input
           return;
         }
@@ -168,13 +171,17 @@ const Recursos = () => {
       if (file) {
         // Validate video file type
         if (!file.type.startsWith("video/")) {
-          showError("Por favor selecciona solo archivos de video válidos (.mp4, .avi, .mov, etc.)");
+          showError(
+            "Por favor selecciona solo archivos de video válidos (.mp4, .avi, .mov, etc.)"
+          );
           e.target.value = ""; // Clear the input
           return;
         }
         // Validate file size (optional - 100MB limit)
         if (file.size > 100 * 1024 * 1024) {
-          showError("El archivo de video es demasiado grande. El tamaño máximo permitido es 100MB.");
+          showError(
+            "El archivo de video es demasiado grande. El tamaño máximo permitido es 100MB."
+          );
           e.target.value = ""; // Clear the input
           return;
         }
@@ -201,7 +208,9 @@ const Recursos = () => {
       }
       // Validate file size (optional - 10MB limit)
       if (file.size > 10 * 1024 * 1024) {
-        showError("El archivo PDF es demasiado grande. El tamaño máximo permitido es 10MB.");
+        showError(
+          "El archivo PDF es demasiado grande. El tamaño máximo permitido es 10MB."
+        );
         return;
       }
       setPdfData({
@@ -217,12 +226,16 @@ const Recursos = () => {
     const file = e.dataTransfer.files[0];
     if (file) {
       if (!file.type.startsWith("video/")) {
-        showError("Por favor selecciona solo archivos de video válidos (.mp4, .avi, .mov, etc.)");
+        showError(
+          "Por favor selecciona solo archivos de video válidos (.mp4, .avi, .mov, etc.)"
+        );
         return;
       }
       // Validate file size (optional - 100MB limit)
       if (file.size > 100 * 1024 * 1024) {
-        showError("El archivo de video es demasiado grande. El tamaño máximo permitido es 100MB.");
+        showError(
+          "El archivo de video es demasiado grande. El tamaño máximo permitido es 100MB."
+        );
         return;
       }
       setVideoData({
@@ -292,7 +305,8 @@ const Recursos = () => {
   const openDeleteModal = (recurso) => {
     setResourceToDelete(recurso);
     setShowDeleteModal(true);
-  };  const confirmDelete = async () => {
+  };
+  const confirmDelete = async () => {
     if (!resourceToDelete) {
       console.error("No hay recurso para eliminar");
       return;
@@ -314,12 +328,15 @@ const Recursos = () => {
         await pdfApi.delete(resourceToDelete.id);
         setRecursos(
           recursos.filter((recurso) => recurso.id !== resourceToDelete.id)
-        );        showNotification("El PDF ha sido eliminado correctamente");
+        );
+        showNotification("El PDF ha sido eliminado correctamente");
         setShowDeleteModal(false);
         setResourceToDelete(null);
       } catch (error) {
         console.error("Error completo al eliminar PDF:", error);
-        showError("Error al eliminar el PDF: " + (error.message || error.toString()));
+        showError(
+          "Error al eliminar el PDF: " + (error.message || error.toString())
+        );
       } finally {
         setLoading(false);
       }
@@ -332,12 +349,15 @@ const Recursos = () => {
         await deleteResource(videoId);
         setResources(
           resources.filter((resource) => resource.id !== resourceToDelete.id)
-        );        showNotification("El video ha sido eliminado correctamente");
+        );
+        showNotification("El video ha sido eliminado correctamente");
         setShowDeleteModal(false);
         setResourceToDelete(null);
       } catch (error) {
         console.error("Error completo al eliminar video:", error);
-        showError("Error al eliminar el video: " + (error.message || error.toString()));
+        showError(
+          "Error al eliminar el video: " + (error.message || error.toString())
+        );
       } finally {
         setLoading(false);
       }
@@ -350,9 +370,11 @@ const Recursos = () => {
   };
   // Submit PDF (crear o editar)
   const handleSubmitPdf = async (e) => {
-    e.preventDefault();    // Validar que los derechos de autor estén aceptados
+    e.preventDefault(); // Validar que los derechos de autor estén aceptados
     if (!pdfData.derechosAutor) {
-      showError("Debe confirmar que tiene los derechos de autor para distribuir este documento.");
+      showError(
+        "Debe confirmar que tiene los derechos de autor para distribuir este documento."
+      );
       return;
     }
 
@@ -395,7 +417,8 @@ const Recursos = () => {
 
   // Submit Video (crear o editar)
   const handleSubmitVideo = async (e) => {
-    e.preventDefault();    try {
+    e.preventDefault();
+    try {
       setLoading(true);
       setError(null);
 
@@ -449,9 +472,15 @@ const Recursos = () => {
       {error && (
         <div className="notification error">
           <span>{error}</span>
-          <button 
+          <button
             onClick={() => setError(null)}
-            style={{ background: 'none', border: 'none', color: 'white', marginLeft: '10px', cursor: 'pointer' }}
+            style={{
+              background: "none",
+              border: "none",
+              color: "white",
+              marginLeft: "10px",
+              cursor: "pointer",
+            }}
           >
             <X size={16} />
           </button>
@@ -468,10 +497,7 @@ const Recursos = () => {
 
       {/* Error Modal */}
       {showErrorModal && (
-        <ErrorModal 
-          message={errorMessage} 
-          onClose={closeErrorModal} 
-        />
+        <ErrorModal message={errorMessage} onClose={closeErrorModal} />
       )}
 
       <h2 className="recursos-title">RECURSOS</h2>
@@ -605,13 +631,20 @@ const Recursos = () => {
               </div>
             </div>
           </>
-        )}        <div className="recursos-button-container">
+        )}{" "}
+        <div className="recursos-button-container">
           <button className="recursos-button">Subir Practica</button>
           <button
-            className={`recursos-button ${pdfRecursos.length > 0 ? 'disabled' : ''}`}
+            className={`recursos-button ${
+              pdfRecursos.length > 0 ? "disabled" : ""
+            }`}
             onClick={handleNuevoPdf}
             disabled={loading || pdfRecursos.length > 0}
-            title={pdfRecursos.length > 0 ? "Ya hay un PDF asignado a esta lección" : "Subir nuevo PDF"}
+            title={
+              pdfRecursos.length > 0
+                ? "Ya hay un PDF asignado a esta lección"
+                : "Subir nuevo PDF"
+            }
           >
             {pdfRecursos.length > 0 ? "PDF Ya Asignado" : "Subir PDF"}
           </button>
@@ -697,7 +730,8 @@ const Recursos = () => {
                       >
                         <X size={18} />
                       </button>
-                    </div>                  )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="modal-form-full">
@@ -712,7 +746,9 @@ const Recursos = () => {
                       />
                       <span className="checkbox-custom"></span>
                       <span className="checkbox-text">
-                        Confirmo que tengo los derechos de autor necesarios para distribuir este documento y/o que el contenido no infringe derechos de terceros.
+                        Confirmo que tengo los derechos de autor necesarios para
+                        distribuir este documento y/o que el contenido no
+                        infringe derechos de terceros.
                       </span>
                     </label>
                   </div>
@@ -722,7 +758,12 @@ const Recursos = () => {
                   <button
                     type="submit"
                     className="btn-subir"
-                    disabled={!pdfData.nombre || !pdfData.archivo || !pdfData.derechosAutor || loading}
+                    disabled={
+                      !pdfData.nombre ||
+                      !pdfData.archivo ||
+                      !pdfData.derechosAutor ||
+                      loading
+                    }
                   >
                     {loading
                       ? "Procesando..."
