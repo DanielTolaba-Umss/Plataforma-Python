@@ -184,3 +184,129 @@
 .btn-cancelar-formulario:hover {
   background-color: #e6c231;
 }
+.teacher-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.teacher-modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.teacher-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.teacher-modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #300898; /* Título destacado en púrpura */
+}
+
+.teacher-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #300898; /* Botón cerrar en púrpura */
+  cursor: pointer;
+}
+
+.modal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.modal-form-full {
+  grid-column: span 2;
+}
+
+.input-field {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #ffd438; /* Amarillo cuando enfocado */
+}
+
+.modal-action-buttons {
+  grid-column: span 2;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-cancel {
+  background-color: #ffd438; /* Amarillo */
+  color: #300898; /* Texto púrpura */
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #e6c231; /* Amarillo más oscuro */
+}
+
+.btn-crear {
+  background-color: #306998; /* Azul */
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-crear:hover {
+  background-color: #300898; /* Azul oscuro */
+}
+
+.teacher-modal label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #300898; /* Color púrpura para etiquetas */
+}
+
+.teacher-modal input::placeholder {
+  color: #aaa;
+}
+.error-text {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
+.instruction-text {
+  color: gray;
+  font-size: 0.75rem;
+  margin-top: 0.1rem; /* MÁS PEGADO AL INPUT */
+  margin-bottom: 0.1rem;
+}

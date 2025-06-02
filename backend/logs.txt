@@ -1,0 +1,608 @@
+[INFO] -------------------------------------------------------------
+Error:  COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/dto/course/CourseDTO.java:[14,8] class CourseDto is public, should be declared in a file named CourseDto.java
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/dto/lesson/LessonDTO.java:[16,8] class LessonDto is public, should be declared in a file named LessonDto.java
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/dto/student/StudentDTO.java:[13,8] class StudentDto is public, should be declared in a file named StudentDto.java
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/controllers/ResourceController.java:[54,12] cannot find symbol
+  symbol:   method setTitle(java.lang.String)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.resources.ResourceDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/controllers/ResourceController.java:[55,12] cannot find symbol
+  symbol:   method setContentId(java.lang.Long)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.resources.ResourceDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/controllers/ResourceController.java:[56,12] cannot find symbol
+  symbol:   method setTypeId(java.lang.Long)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.resources.ResourceDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/controllers/ResourceController.java:[57,12] cannot find symbol
+  symbol:   method setUrl(java.lang.String)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.resources.ResourceDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[11,12] cannot find symbol
+  symbol:   method setContenidoId(java.lang.Long)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[12,44] cannot find symbol
+  symbol:   method getId()
+  location: class com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[13,12] cannot find symbol
+  symbol:   method setActive(boolean)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[14,12] cannot find symbol
+  symbol:   method setCreationDate(java.time.LocalDateTime)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[15,12] cannot find symbol
+  symbol:   method setUpdateDate(java.time.LocalDateTime)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[22,28] cannot find symbol
+  symbol:   method isActive()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[23,34] cannot find symbol
+  symbol:   method getCreationDate()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[24,32] cannot find symbol
+  symbol:   method getUpdateDate()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/models/userModel/StudentEntity.java:[41,9] cannot find symbol
+  symbol:   method setRole(java.lang.String)
+  location: class com.coders.backers.plataformapython.backend.models.userModel.StudentEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/models/userModel/StudentEntity.java:[45,9] cannot find symbol
+  symbol:   method setRole(java.lang.String)
+  location: class com.coders.backers.plataformapython.backend.models.userModel.StudentEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[18,23] cannot find symbol
+  symbol:   method isActive()
+  location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[17,23] cannot find symbol
+  symbol:   method getUpdatedAt()
+  location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[16,23] cannot find symbol
+  symbol:   method getCreatedAt()
+  location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[15,23] cannot find symbol
+  symbol:   method getOrden()
+  location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[14,23] cannot find symbol
+  symbol:   method getLevel()
+  location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[13,23] cannot find symbol
+  symbol:   method getDescription()
+  location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[12,23] cannot find symbol
+  symbol:   method getTitle()
+  location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[11,23] cannot find symbol
+  symbol:   method getId()
+  location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[24,26] cannot find symbol
+  symbol:   method getId()
+  location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[25,26] cannot find symbol
+  symbol:   method getTitle()
+  location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[26,26] cannot find symbol
+  symbol:   method getDescription()
+  location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[27,26] cannot find symbol
+  symbol:   method getLevel()
+  location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[28,26] cannot find symbol
+  symbol:   method getOrden()
+  location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[29,26] cannot find symbol
+  symbol:   method getCreatedAt()
+  location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[30,26] cannot find symbol
+  symbol:   method getUpdatedAt()
+  location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[31,26] cannot find symbol
+  symbol:   method isActive()
+  location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[37,26] cannot find symbol
+  symbol:   method getTitle()
+  location: variable createDto of type com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[38,26] cannot find symbol
+  symbol:   method getDescription()
+  location: variable createDto of type com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[39,26] cannot find symbol
+  symbol:   method getLevel()
+  location: variable createDto of type com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[40,26] cannot find symbol
+  symbol:   method getOrden()
+  location: variable createDto of type com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[18,23] cannot find symbol
+  symbol:   method getPractice()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[18,54] cannot find symbol
+  symbol:   method getPractice()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[16,23] cannot find symbol
+  symbol:   method getCourse()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[16,79] cannot find symbol
+  symbol:   method getCourse()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[15,23] cannot find symbol
+  symbol:   method getUpdatedAt()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[14,23] cannot find symbol
+  symbol:   method getCreatedAt()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[13,23] cannot find symbol
+  symbol:   method isActive()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[12,23] cannot find symbol
+  symbol:   method getDescription()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[11,23] cannot find symbol
+  symbol:   method getTitle()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[10,23] cannot find symbol
+  symbol:   method getId()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[24,26] cannot find symbol
+  symbol:   method getId()
+  location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[25,26] cannot find symbol
+  symbol:   method getTitle()
+  location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[26,26] cannot find symbol
+  symbol:   method getDescription()
+  location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[27,26] cannot find symbol
+  symbol:   method isActive()
+  location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[28,26] cannot find symbol
+  symbol:   method getCreatedAt()
+  location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[29,26] cannot find symbol
+  symbol:   method getUpdatedAt()
+  location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[31,26] cannot find symbol
+  symbol:   method getQuizId()
+  location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[32,26] cannot find symbol
+  symbol:   method getPracticeId()
+  location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[38,26] cannot find symbol
+  symbol:   method getTitle()
+  location: variable createDto of type com.coders.backers.plataformapython.backend.dto.lesson.CreateLessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[39,26] cannot find symbol
+  symbol:   method getDescription()
+  location: variable createDto of type com.coders.backers.plataformapython.backend.dto.lesson.CreateLessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[48,19] cannot find symbol
+  symbol:   method getContenidos()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[48,54] cannot find symbol
+  symbol:   method getContenidos()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[49,26] cannot find symbol
+  symbol:   method getContenidos()
+  location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[12,12] cannot find symbol
+  symbol:   method setId(java.lang.Long)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[13,12] cannot find symbol
+  symbol:   method setInstrucciones(java.lang.String)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[14,12] cannot find symbol
+  symbol:   method setCodigoInicial(java.lang.String)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[15,12] cannot find symbol
+  symbol:   method setSolucionReferencia(java.lang.String)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[16,12] cannot find symbol
+  symbol:   method setCasosPrueba(java.lang.String)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[17,12] cannot find symbol
+  symbol:   method setRestricciones(java.lang.String)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[18,12] cannot find symbol
+  symbol:   method setIntentosMax(java.lang.Integer)
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[20,48] cannot find symbol
+  symbol:   method getId()
+  location: class com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[27,36] cannot find symbol
+  symbol:   method getInstrucciones()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[28,36] cannot find symbol
+  symbol:   method getCodigoInicial()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[29,41] cannot find symbol
+  symbol:   method getSolucionReferencia()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[30,34] cannot find symbol
+  symbol:   method getCasosPrueba()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[31,36] cannot find symbol
+  symbol:   method getRestricciones()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[32,34] cannot find symbol
+  symbol:   method getIntentosMax()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[37,36] cannot find symbol
+  symbol:   method getInstrucciones()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[38,36] cannot find symbol
+  symbol:   method getCodigoInicial()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[39,41] cannot find symbol
+  symbol:   method getSolucionReferencia()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[40,34] cannot find symbol
+  symbol:   method getCasosPrueba()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[41,36] cannot find symbol
+  symbol:   method getRestricciones()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[42,34] cannot find symbol
+  symbol:   method getIntentosMax()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[18,20] cannot find symbol
+  symbol:   method getExplicacion()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[17,20] cannot find symbol
+  symbol:   method getRespuestaCorrecta()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[16,20] cannot find symbol
+  symbol:   method getOpciones()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[15,20] cannot find symbol
+  symbol:   method getPuntos()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[14,20] cannot find symbol
+  symbol:   method getTipoPregunta()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[13,20] cannot find symbol
+  symbol:   method getTextoPregunta()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[30,23] cannot find symbol
+  symbol:   method getExplicacion()
+  location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[29,23] cannot find symbol
+  symbol:   method getRespuestaCorrecta()
+  location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[28,23] cannot find symbol
+  symbol:   method getOpciones()
+  location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[27,23] cannot find symbol
+  symbol:   method getPuntos()
+  location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[26,23] cannot find symbol
+  symbol:   method getTipoPregunta()
+  location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[25,23] cannot find symbol
+  symbol:   method getTextoPregunta()
+  location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[24,23] cannot find symbol
+  symbol:   method getQuiz()
+  location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[23,23] cannot find symbol
+  symbol:   method getId()
+  location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[34,36] cannot find symbol
+  symbol:   method getTextoPregunta()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[35,35] cannot find symbol
+  symbol:   method getTipoPregunta()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[36,29] cannot find symbol
+  symbol:   method getPuntos()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[37,31] cannot find symbol
+  symbol:   method getOpciones()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[38,40] cannot find symbol
+  symbol:   method getRespuestaCorrecta()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[39,34] cannot find symbol
+  symbol:   method getExplicacion()
+  location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+[INFO] 100 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  9.292 s
+[INFO] Finished at: 2025-06-01T16:08:51Z
+[INFO] ------------------------------------------------------------------------
+Error:  Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project backend: Compilation failure: Compilation failure: 
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/dto/course/CourseDTO.java:[14,8] class CourseDto is public, should be declared in a file named CourseDto.java
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/dto/lesson/LessonDTO.java:[16,8] class LessonDto is public, should be declared in a file named LessonDto.java
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/dto/student/StudentDTO.java:[13,8] class StudentDto is public, should be declared in a file named StudentDto.java
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/controllers/ResourceController.java:[54,12] cannot find symbol
+Error:    symbol:   method setTitle(java.lang.String)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.resources.ResourceDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/controllers/ResourceController.java:[55,12] cannot find symbol
+Error:    symbol:   method setContentId(java.lang.Long)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.resources.ResourceDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/controllers/ResourceController.java:[56,12] cannot find symbol
+Error:    symbol:   method setTypeId(java.lang.Long)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.resources.ResourceDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/controllers/ResourceController.java:[57,12] cannot find symbol
+Error:    symbol:   method setUrl(java.lang.String)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.resources.ResourceDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[11,12] cannot find symbol
+Error:    symbol:   method setContenidoId(java.lang.Long)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[12,44] cannot find symbol
+Error:    symbol:   method getId()
+Error:    location: class com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[13,12] cannot find symbol
+Error:    symbol:   method setActive(boolean)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[14,12] cannot find symbol
+Error:    symbol:   method setCreationDate(java.time.LocalDateTime)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[15,12] cannot find symbol
+Error:    symbol:   method setUpdateDate(java.time.LocalDateTime)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[22,28] cannot find symbol
+Error:    symbol:   method isActive()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[23,34] cannot find symbol
+Error:    symbol:   method getCreationDate()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/ContenidoMapper.java:[24,32] cannot find symbol
+Error:    symbol:   method getUpdateDate()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.content.ContenidoDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/models/userModel/StudentEntity.java:[41,9] cannot find symbol
+Error:    symbol:   method setRole(java.lang.String)
+Error:    location: class com.coders.backers.plataformapython.backend.models.userModel.StudentEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/models/userModel/StudentEntity.java:[45,9] cannot find symbol
+Error:    symbol:   method setRole(java.lang.String)
+Error:    location: class com.coders.backers.plataformapython.backend.models.userModel.StudentEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[18,23] cannot find symbol
+Error:    symbol:   method isActive()
+Error:    location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[17,23] cannot find symbol
+Error:    symbol:   method getUpdatedAt()
+Error:    location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[16,23] cannot find symbol
+Error:    symbol:   method getCreatedAt()
+Error:    location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[15,23] cannot find symbol
+Error:    symbol:   method getOrden()
+Error:    location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[14,23] cannot find symbol
+Error:    symbol:   method getLevel()
+Error:    location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[13,23] cannot find symbol
+Error:    symbol:   method getDescription()
+Error:    location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[12,23] cannot find symbol
+Error:    symbol:   method getTitle()
+Error:    location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[11,23] cannot find symbol
+Error:    symbol:   method getId()
+Error:    location: variable course of type com.coders.backers.plataformapython.backend.models.CourseEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[24,26] cannot find symbol
+Error:    symbol:   method getId()
+Error:    location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[25,26] cannot find symbol
+Error:    symbol:   method getTitle()
+Error:    location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[26,26] cannot find symbol
+Error:    symbol:   method getDescription()
+Error:    location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[27,26] cannot find symbol
+Error:    symbol:   method getLevel()
+Error:    location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[28,26] cannot find symbol
+Error:    symbol:   method getOrden()
+Error:    location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[29,26] cannot find symbol
+Error:    symbol:   method getCreatedAt()
+Error:    location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[30,26] cannot find symbol
+Error:    symbol:   method getUpdatedAt()
+Error:    location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[31,26] cannot find symbol
+Error:    symbol:   method isActive()
+Error:    location: variable courseDto of type com.coders.backers.plataformapython.backend.dto.course.CourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[37,26] cannot find symbol
+Error:    symbol:   method getTitle()
+Error:    location: variable createDto of type com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[38,26] cannot find symbol
+Error:    symbol:   method getDescription()
+Error:    location: variable createDto of type com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[39,26] cannot find symbol
+Error:    symbol:   method getLevel()
+Error:    location: variable createDto of type com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/CourseMapper.java:[40,26] cannot find symbol
+Error:    symbol:   method getOrden()
+Error:    location: variable createDto of type com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[18,23] cannot find symbol
+Error:    symbol:   method getPractice()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[18,54] cannot find symbol
+Error:    symbol:   method getPractice()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[16,23] cannot find symbol
+Error:    symbol:   method getCourse()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[16,79] cannot find symbol
+Error:    symbol:   method getCourse()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[15,23] cannot find symbol
+Error:    symbol:   method getUpdatedAt()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[14,23] cannot find symbol
+Error:    symbol:   method getCreatedAt()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[13,23] cannot find symbol
+Error:    symbol:   method isActive()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[12,23] cannot find symbol
+Error:    symbol:   method getDescription()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[11,23] cannot find symbol
+Error:    symbol:   method getTitle()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[10,23] cannot find symbol
+Error:    symbol:   method getId()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[24,26] cannot find symbol
+Error:    symbol:   method getId()
+Error:    location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[25,26] cannot find symbol
+Error:    symbol:   method getTitle()
+Error:    location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[26,26] cannot find symbol
+Error:    symbol:   method getDescription()
+Error:    location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[27,26] cannot find symbol
+Error:    symbol:   method isActive()
+Error:    location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[28,26] cannot find symbol
+Error:    symbol:   method getCreatedAt()
+Error:    location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[29,26] cannot find symbol
+Error:    symbol:   method getUpdatedAt()
+Error:    location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[31,26] cannot find symbol
+Error:    symbol:   method getQuizId()
+Error:    location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[32,26] cannot find symbol
+Error:    symbol:   method getPracticeId()
+Error:    location: variable lessonDto of type com.coders.backers.plataformapython.backend.dto.lesson.LessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[38,26] cannot find symbol
+Error:    symbol:   method getTitle()
+Error:    location: variable createDto of type com.coders.backers.plataformapython.backend.dto.lesson.CreateLessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[39,26] cannot find symbol
+Error:    symbol:   method getDescription()
+Error:    location: variable createDto of type com.coders.backers.plataformapython.backend.dto.lesson.CreateLessonDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[48,19] cannot find symbol
+Error:    symbol:   method getContenidos()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[48,54] cannot find symbol
+Error:    symbol:   method getContenidos()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/LessonMapper.java:[49,26] cannot find symbol
+Error:    symbol:   method getContenidos()
+Error:    location: variable lesson of type com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[12,12] cannot find symbol
+Error:    symbol:   method setId(java.lang.Long)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[13,12] cannot find symbol
+Error:    symbol:   method setInstrucciones(java.lang.String)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[14,12] cannot find symbol
+Error:    symbol:   method setCodigoInicial(java.lang.String)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[15,12] cannot find symbol
+Error:    symbol:   method setSolucionReferencia(java.lang.String)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[16,12] cannot find symbol
+Error:    symbol:   method setCasosPrueba(java.lang.String)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[17,12] cannot find symbol
+Error:    symbol:   method setRestricciones(java.lang.String)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[18,12] cannot find symbol
+Error:    symbol:   method setIntentosMax(java.lang.Integer)
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.PracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[20,48] cannot find symbol
+Error:    symbol:   method getId()
+Error:    location: class com.coders.backers.plataformapython.backend.models.LessonEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[27,36] cannot find symbol
+Error:    symbol:   method getInstrucciones()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[28,36] cannot find symbol
+Error:    symbol:   method getCodigoInicial()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[29,41] cannot find symbol
+Error:    symbol:   method getSolucionReferencia()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[30,34] cannot find symbol
+Error:    symbol:   method getCasosPrueba()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[31,36] cannot find symbol
+Error:    symbol:   method getRestricciones()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[32,34] cannot find symbol
+Error:    symbol:   method getIntentosMax()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[37,36] cannot find symbol
+Error:    symbol:   method getInstrucciones()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[38,36] cannot find symbol
+Error:    symbol:   method getCodigoInicial()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[39,41] cannot find symbol
+Error:    symbol:   method getSolucionReferencia()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[40,34] cannot find symbol
+Error:    symbol:   method getCasosPrueba()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[41,36] cannot find symbol
+Error:    symbol:   method getRestricciones()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/PracticeMapper.java:[42,34] cannot find symbol
+Error:    symbol:   method getIntentosMax()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[18,20] cannot find symbol
+Error:    symbol:   method getExplicacion()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[17,20] cannot find symbol
+Error:    symbol:   method getRespuestaCorrecta()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[16,20] cannot find symbol
+Error:    symbol:   method getOpciones()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[15,20] cannot find symbol
+Error:    symbol:   method getPuntos()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[14,20] cannot find symbol
+Error:    symbol:   method getTipoPregunta()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[13,20] cannot find symbol
+Error:    symbol:   method getTextoPregunta()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.CreateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[30,23] cannot find symbol
+Error:    symbol:   method getExplicacion()
+Error:    location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[29,23] cannot find symbol
+Error:    symbol:   method getRespuestaCorrecta()
+Error:    location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[28,23] cannot find symbol
+Error:    symbol:   method getOpciones()
+Error:    location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[27,23] cannot find symbol
+Error:    symbol:   method getPuntos()
+Error:    location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[26,23] cannot find symbol
+Error:    symbol:   method getTipoPregunta()
+Error:    location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[25,23] cannot find symbol
+Error:    symbol:   method getTextoPregunta()
+Error:    location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[24,23] cannot find symbol
+Error:    symbol:   method getQuiz()
+Error:    location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[23,23] cannot find symbol
+Error:    symbol:   method getId()
+Error:    location: variable entity of type com.coders.backers.plataformapython.backend.models.QuestionEntity
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[34,36] cannot find symbol
+Error:    symbol:   method getTextoPregunta()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[35,35] cannot find symbol
+Error:    symbol:   method getTipoPregunta()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[36,29] cannot find symbol
+Error:    symbol:   method getPuntos()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[37,31] cannot find symbol
+Error:    symbol:   method getOpciones()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[38,40] cannot find symbol
+Error:    symbol:   method getRespuestaCorrecta()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+Error:  /home/runner/work/Plataforma-Python/Plataforma-Python/backend/src/main/java/com/coders/backers/plataformapython/backend/mapper/QuestionMapper.java:[39,34] cannot find symbol
+Error:    symbol:   method getExplicacion()
+Error:    location: variable dto of type com.coders.backers.plataformapython.backend.dto.question.UpdateQuestionDto
+Error:  -> [Help 1]
+Error:  
+Error:  To see the full stack trace of the errors, re-run Maven with the -e switch.
+Error:  Re-run Maven using the -X switch to enable full debug logging.
+Error:  
+Error:  For more information about the errors and possible solutions, please read the following articles:
+Error:  [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+Error: Process completed with exit code 1.
