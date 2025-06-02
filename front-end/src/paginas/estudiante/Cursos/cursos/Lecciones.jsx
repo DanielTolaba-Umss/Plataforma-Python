@@ -1,6 +1,6 @@
 // src/componentes/Estudiantes/LeccionesNivel.jsx
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom"; // Agrega useNavigate aquí
 import { leccionesAPI } from "../../../../api/leccionService";
 import "./Lecciones.css"; // Asegúrate de importar el CSS
 
@@ -10,6 +10,7 @@ const LeccionesNivel = () => {
   const [lecciones, setLecciones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Nuevo hook para redirección
 
   const nivel =
     location.state?.nivel || JSON.parse(localStorage.getItem("nivel"));
@@ -45,7 +46,12 @@ const LeccionesNivel = () => {
 
       <div className="lecciones-grid">
         {lecciones.map((leccion) => (
-          <div key={leccion.id} className="leccion-card">
+          <div
+            key={leccion.id}
+            className="leccion-card"
+            onClick={() => navigate(`/cursos/${id}/lecciones/Practica`)}
+            style={{ cursor: "pointer" }}
+          >
             <h3 className="leccion-title">{leccion.title}</h3>
             <p className="leccion-description">{leccion.description}</p>
           </div>
