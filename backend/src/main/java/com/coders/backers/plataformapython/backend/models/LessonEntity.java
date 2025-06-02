@@ -43,20 +43,20 @@ public class LessonEntity {
     @JoinColumn(name = "curso_id")
     private CourseEntity course;
     
-    // Cambiar de Long quizId a relación JPA
+    
     @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private PracticeEntity practice;
     
-    // Relación con contenido (en lugar de quiz directo)
+    
     @OneToMany(mappedBy = "leccion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ContenidoModel> contenidos = new ArrayList<>();
 
-    // Constructor para crear una nueva lección
+    
     public LessonEntity(String title, String description, CourseEntity course) {
         this.title = title;
         this.description = description;
         this.course = course;
-    }    // Constructor completo para fines de mapeo
+    }   
     public LessonEntity(Long id, String title, String description, boolean active, 
                        Date createdAt, Date updatedAt, CourseEntity course) {
         this.id = id;
@@ -68,7 +68,7 @@ public class LessonEntity {
         this.course = course;
     }
 
-    // Constructor adicional que mantiene compatibilidad temporal para métodos que aún usan IDs
+    
     public LessonEntity(Long id, String title, String description, boolean active, 
                        Date createdAt, Date updatedAt, CourseEntity course, 
                        Long quizId, Long practiceId) {
@@ -79,7 +79,7 @@ public class LessonEntity {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.course = course;
-        // Los IDs se ignorarán ya que ahora usamos relaciones JPA
+       
     }
     
     @PrePersist
