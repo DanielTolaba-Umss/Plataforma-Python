@@ -11,9 +11,9 @@ const StudentList = () => {
   const [students, setStudents] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [studentToDelete, setStudentToDelete] = useState(null);  const [loading, setLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [uploadFile, setUploadFile] = useState(null);

@@ -665,9 +665,84 @@ const StudentList = () => {
                 </tbody>
               </table>
             )}
-          </>
-        )}{" "}
+          </>        )}{" "}
       </div>
+
+      {/* Modal para subir lista de estudiantes */}
+      {showUploadModal && (
+        <div className="student-modal-overlay">
+          <div className="student-modal">
+            <div className="student-modal-header">
+              <h3 className="student-modal-title">Subir Lista de Estudiantes</h3>
+            </div>
+            
+            <form onSubmit={handleUploadSubmit}>
+              <div className="upload-form-container">
+                <p className="upload-instructions">
+                  <strong>Formato esperado:</strong><br/>
+                  • <strong>Columnas requeridas:</strong> Nombres, Apellidos, Email<br/>
+                  • <strong>Columna opcional:</strong> Teléfono<br/>
+                  • <strong>Formatos aceptados:</strong> CSV, Excel (.xlsx, .xls)<br/>
+                  • La primera fila debe contener los nombres de las columnas<br/>
+                  • Los emails deben ser únicos y válidos
+                </p>
+              
+                <div 
+                  className={`file-drop-area ${uploadFile ? 'has-file' : ''}`}
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                >
+                  {!uploadFile ? (
+                    <>
+                      <Upload size={32} className="upload-icon" />
+                      <p>Arrastra un archivo CSV/Excel aquí<br />o</p>
+                      <input
+                        type="file"
+                        id="upload-file"
+                        accept=".csv,.xlsx,.xls"
+                        onChange={handleFileChange}
+                        className="file-input"
+                      />
+                      <label htmlFor="upload-file" className="file-input-label">
+                        Seleccionar archivo
+                      </label>
+                    </>
+                  ) : (
+                    <div className="file-info">
+                      <p className="file-name">{uploadFile.name}</p>
+                      <button 
+                        type="button" 
+                        className="remove-file"
+                        onClick={() => setUploadFile(null)}
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="modal-action-buttons">
+                <button
+                  type="submit"
+                  className="btn-crear"
+                  disabled={!uploadFile || loading}
+                >
+                  {loading ? "Subiendo..." : "Subir Lista"}
+                </button>
+                <button 
+                  type="button"
+                  onClick={toggleUploadModal} 
+                  className="btn-cancel"
+                  disabled={loading}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Modal de confirmación de eliminación */}
       {showDeleteModal && (
