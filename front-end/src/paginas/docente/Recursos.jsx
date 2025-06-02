@@ -14,7 +14,6 @@ import {
 
 const Recursos = () => {
   const { courseId } = useParams();
-
   // Modal states
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -22,6 +21,9 @@ const Recursos = () => {
   const [resourceToDelete, setResourceToDelete] = useState(null);
   const [modalMode, setModalMode] = useState("crear"); // 'crear' o 'editar'
   const [editId, setEditId] = useState(null);
+  
+  // Error state
+  const [error, setError] = useState(null);
   
   // PDF form data
   const [pdfData, setPdfData] = useState({
@@ -441,9 +443,22 @@ const Recursos = () => {
       setLoading(false);
     }
   };
-
   return (
-    <div className="recursos">      {/* Notificación */}
+    <div className="recursos">
+      {/* Error Banner */}
+      {error && (
+        <div className="notification error">
+          <span>{error}</span>
+          <button 
+            onClick={() => setError(null)}
+            style={{ background: 'none', border: 'none', color: 'white', marginLeft: '10px', cursor: 'pointer' }}
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
+
+      {/* Notificación */}
       {notification.show && (
         <div className={`notification ${notification.type}`}>
           <CheckCircle2 size={20} />
