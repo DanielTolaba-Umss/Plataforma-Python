@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { quizzesAPI } from "../../../../api/quizzes";
 import { questionsAPI } from "../../../../api/question"; 
-import "./CursosBasico.css";
+//import "./CursosBasico.css";
 
 const QuizList = () => {
   const [quizzes, setQuizzes] = useState([]);

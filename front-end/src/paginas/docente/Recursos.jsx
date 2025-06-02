@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { Edit, Trash, X, Upload, CheckCircle2 } from "lucide-react";
 import { pdfApi } from "../../api/pdfService";
 
+import { practiceAPI } from "../../api/practice"; 
 import {
   createResource,
   uploadResourceFile,
@@ -21,7 +22,9 @@ const Recursos = () => {
   const [resourceToDelete, setResourceToDelete] = useState(null);
   const [modalMode, setModalMode] = useState("crear"); // 'crear' o 'editar'
   const [editId, setEditId] = useState(null);
-
+  const { leccionId } = useParams();
+  const [showPracticeModal, setShowPracticeModal] = useState(false);  
+  const [practiceData, setPracticeData] = useState({  instrucciones: "",  codigoInicial: "",solucionReferencia: "",  casosPrueba: "",  restricciones: "",  intentosMax: 3,  leccionId: leccionId || null});  
   // PDF form data
   const [pdfData, setPdfData] = useState({
     nombre: "",
@@ -362,6 +365,89 @@ const Recursos = () => {
     }
   };
 
+  // Handle Practice form change
+const handlePracticeChange = (e) => {
+  const { name, value } = e.target;
+  setPracticeData({
+    ...practiceData,
+    [name]: value,
+  });
+};
+
+
+// Handle file drop for Practice
+const handlePracticeDrop = (e) => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && (file.type === "application/pdf" || file.type === "application/zip" || file.type === "application/msword")) {
+    setPracticeData({
+      ...practiceData,
+      archivo: file,
+    });
+  }
+};
+
+// Reset Practice form
+const resetPracticeForm = () => {
+  console.log("Reseteando práctica con courseId:", courseId);
+
+  setPracticeData({
+    instrucciones: "",
+    codigoInicial: "",
+    solucionReferencia: "",
+    casosPrueba: "",
+    restricciones: "",
+    intentosMax: 3,
+    leccionId: courseId,
+  });
+  setShowPracticeModal(false);
+  setModalMode("crear");
+  setEditId(null);
+};
+
+  // Abrir modal para crear una nueva Práctica
+const handleNuevaPractica = () => {
+  resetPracticeForm();
+  setModalMode("crear");
+  setShowPracticeModal(true);
+};
+
+// Submit Practice (crear o editar)
+const handleSubmitPractice = async (e) => {
+  console.log("Valor de leccionId en practiceData:", practiceData.leccionId);
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
+
+  try {
+    const nuevaPractica = {
+      instrucciones: practiceData.instrucciones,
+      codigoInicial: practiceData.codigoInicial,
+      solucionReferencia: practiceData.solucionReferencia,
+      casosPrueba: practiceData.casosPrueba,
+      restricciones: practiceData.restricciones,
+      intentosMax: parseInt(practiceData.intentosMax),
+      leccionId: Number(practiceData.leccionId) || null,
+    };
+      if (!nuevaPractica.leccionId) {
+     setError("El ID de la lección no es válido.");
+       setLoading(false);
+      return;
+}
+console.log("Datos enviados al backend:", nuevaPractica);
+
+    await practiceAPI.crear(nuevaPractica);
+    showNotification("Práctica creada correctamente");
+    resetPracticeForm();
+  } catch (error) {
+    console.error("Error al crear la práctica:", error);
+    setError("Error al crear la práctica.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
   return (
     <div className="recursos">
       {/* Notificación */}
@@ -516,7 +602,7 @@ const Recursos = () => {
         )}
 
         <div className="recursos-button-container">
-          <button className="recursos-button">Subir Practica</button>
+          <button className="recursos-button"onClick={handleNuevaPractica}disabled={loading}>Subir Practica</button>
           <button
             className="recursos-button"
             onClick={handleNuevoPdf}
@@ -812,6 +898,123 @@ const Recursos = () => {
           </div>
         </div>
       )}
+        {showPracticeModal && (
+            console.log("🟣 Modal mostrado"),
+  <div className="recursos-modal-overlay">
+    <div className="recursos-modal" style={{ maxWidth: '800px' }}>
+      <div className="recursos-modal-header">
+        <h3 className="recursos-modal-title">
+          {modalMode === "crear" ? "Crear Nueva Práctica" : "Editar Práctica"}
+        </h3>
+      </div>
+      <form onSubmit={handleSubmitPractice}>
+        <div className="recursos-modal-form">
+          
+          <div className="modal-form-row">
+            <div className="modal-form-half">
+              <label>Intentos Máximos</label>
+              <input
+                type="number"
+                name="intentosMax"
+                value={practiceData.intentosMax}
+                onChange={handlePracticeChange}
+                className="input-field"
+                min="1"
+                required
+              />
+            </div>
+            
+          </div>
+
+          <div className="modal-form-full">
+            <label>Instrucciones</label>
+            <textarea
+              name="instrucciones"
+              value={practiceData.instrucciones}
+              onChange={handlePracticeChange}
+              className="input-field textarea"
+              rows="3"
+              required
+            />
+          </div>
+
+          <div className="modal-form-full">
+            <label>Código Inicial</label>
+            <textarea
+              name="codigoInicial"
+              value={practiceData.codigoInicial}
+              onChange={handlePracticeChange}
+              className="input-field textarea code-area"
+              rows="5"
+              required
+            />
+          </div>
+
+          <div className="modal-form-full">
+            <label>Solución de Referencia</label>
+            <textarea
+              name="solucionReferencia"
+              value={practiceData.solucionReferencia}
+              onChange={handlePracticeChange}
+              className="input-field textarea code-area"
+              rows="5"
+              required
+            />
+          </div>
+
+          <div className="modal-form-full">
+            <label>Casos de Prueba (JSON)</label>
+            <textarea
+              name="casosPrueba"
+              value={practiceData.casosPrueba}
+              onChange={handlePracticeChange}
+              className="input-field textarea"
+              rows="3"
+              placeholder='[{"input": "entrada", "output": "salida esperada"}]'
+              required
+            />
+          </div>
+
+          <div className="modal-form-full">
+            <label>Restricciones</label>
+            <textarea
+              name="restricciones"
+              value={practiceData.restricciones}
+              onChange={handlePracticeChange}
+              className="input-field textarea"
+              rows="2"
+              required
+            />
+          </div>
+          <div className="modal-action-buttons">
+            <button
+              type="submit"
+              className="btn-subir"
+                onClick={() => console.log("🟡 Botón presionado")}
+
+              disabled={loading || 
+                !practiceData.instrucciones || 
+                !practiceData.codigoInicial ||
+                !practiceData.solucionReferencia ||
+                !practiceData.casosPrueba ||
+                !practiceData.restricciones}
+            >
+              {loading ? "Procesando..." : "Guardar Práctica"}
+            </button>
+            <button
+              type="button"
+              className="btn-cancel"
+              onClick={resetPracticeForm}
+              disabled={loading}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
     </div>
   );
 };
