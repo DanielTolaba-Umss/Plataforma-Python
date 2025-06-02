@@ -52,10 +52,13 @@ public class StudentServiceImpl implements StudentService {    @Autowired
     }
 
     @Override
-    public Optional<StudentDto> getStudentById(Long id) {
-        return studentRepository.findById(id)
-                .map(StudentMapper::mapToDto);
-    }    @Override
+    public StudentDto getStudentById(Long id) {
+        StudentEntity student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+        return StudentMapper.mapToDto(student);
+    }    
+    
+    @Override
     public Optional<StudentDto> updateStudent(Long id, UpdateStudentDto dto) {
         return studentRepository.findById(id).map(existing -> {
             StudentEntity updatedEntity = StudentMapper.mapFromUpdateDto(dto, existing);

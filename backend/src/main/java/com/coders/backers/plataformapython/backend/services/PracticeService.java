@@ -8,5 +8,6 @@ public interface PracticeService {
     List<PracticeDto> getAllPractice();
     void deletePractice(Long id);
     PracticeDto updatePractice(Long id, UpdatePracticeDto dto);
+    PracticeDto getPracticeById(Long id);
 
 }

@@ -8,9 +8,12 @@ import lombok.RequiredArgsConstructor;
 
 import com.coders.backers.plataformapython.backend.dto.practice.PracticeDto;
 import com.coders.backers.plataformapython.backend.dto.practice.UpdatePracticeDto;
+import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
 import com.coders.backers.plataformapython.backend.dto.practice.CreatePracticeDto;
 import com.coders.backers.plataformapython.backend.mapper.PracticeMapper;
+import com.coders.backers.plataformapython.backend.mapper.TeacherMapper;
 import com.coders.backers.plataformapython.backend.models.*;
+import com.coders.backers.plataformapython.backend.models.userModel.TeacherEntity;
 import com.coders.backers.plataformapython.backend.repository.*;
 import com.coders.backers.plataformapython.backend.services.PracticeService;
 
@@ -54,6 +57,13 @@ public class PracticeServiceImpl implements PracticeService {
 
         PracticeEntity updated = practiceModuleRepository.save(entity);
         return PracticeMapper.toDto(updated);
+    }
+
+    @Override
+    public PracticeDto getPracticeById(Long id) {
+        PracticeEntity practice = practiceModuleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Practice not found with id: " + id));
+        return PracticeMapper.toDto(practice);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.coders.backers.plataformapython.backend.dto.python;
+package com.coders.backers.plataformapython.backend.dto.tryPractice.python;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

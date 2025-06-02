@@ -12,30 +12,32 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TryPracticeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "intento_id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "estudiante_progreso_id", nullable = false)
-    private Long estudianteProgresoId;
+    @Column(name = "student_id", nullable = false)
+    private Long studentId;
 
     @Column(name = "practice_id", nullable = false)
     private Long practiceId;
 
-    @Column(name = "codigoenviado", columnDefinition = "TEXT")
-    private String codigoEnviado;
+    private String code;
 
-    @Column(name = "resultados_pruebas", columnDefinition = "TEXT")
-    private String resultadosPruebas;
+    @Column(name = "test_results", columnDefinition = "TEXT")
+    private Boolean [] testResults;
 
-    @Column(name = "aprobado")
-    private boolean aprobado;
+    private boolean approved;
 
-    @Column(name = "retroalimentacion")
-    private String retroalimentacion;
+    private String feedback;
 
-    @Column(name = "fecha_intento")
-    private Date fechaIntento;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createAt;
+
+    public TryPracticeEntity(String code, Long studentId, Long practiceId) {
+        this.code = code;
+        this.studentId = studentId;
+        this.practiceId = practiceId;
+    }
 }

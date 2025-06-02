@@ -201,17 +201,16 @@ public class StudentServiceTest {
         when(studentRepository.findById(studentId)).thenReturn(Optional.of(studentEntity));
 
         // Act
-        Optional<StudentDto> result = studentService.getStudentById(studentId);
+        StudentDto result = studentService.getStudentById(studentId);
 
         // Assert
-        assertTrue(result.isPresent());
-        StudentDto studentDto = result.get();
-        assertEquals("Ana", studentDto.getNombres());
-        assertEquals("López", studentDto.getApellidos());
-        assertEquals("ana.lopez@example.com", studentDto.getEmail());
-        assertNotNull(studentDto.getCursos());
-        assertEquals(1, studentDto.getCursos().size());
-        assertTrue(studentDto.getCursos().contains(1L));
+
+        assertEquals("Ana", result.getNombres());
+        assertEquals("López",result.getApellidos());
+        assertEquals("ana.lopez@example.com", result.getEmail());
+        assertNotNull(result.getCursos());
+        assertEquals(1, result.getCursos().size());
+        assertTrue(result.getCursos().contains(1L));
         
         verify(studentRepository).findById(studentId);
     }

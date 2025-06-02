@@ -1,7 +1,7 @@
 package com.coders.backers.plataformapython.backend.services.impl;
 
-import com.coders.backers.plataformapython.backend.dto.python.CodeExecutionRequest;
-import com.coders.backers.plataformapython.backend.dto.python.CodeExecutionResult;
+import com.coders.backers.plataformapython.backend.dto.tryPractice.python.CodeExecutionRequest;
+import com.coders.backers.plataformapython.backend.dto.tryPractice.python.CodeExecutionResult;
 import com.coders.backers.plataformapython.backend.services.PythonExecutionService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -435,5 +435,4 @@ public class PythonExecutionServiceImpl implements PythonExecutionService {
                 .error(errorMessage)
                 .build();
     }
-
 }

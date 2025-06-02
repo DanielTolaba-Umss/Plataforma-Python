@@ -10,11 +10,11 @@ import java.sql.Date;
 @AllArgsConstructor
 public class TryPracticeDto {
     private Long id;
-    private Long estudianteProgresoId;
+    private Long studentId;
     private Long practiceId;
-    private String codigoEnviado;
-    private String resultadosPruebas;
-    private boolean aprobado;
-    private String retroalimentacion;
-    private Date fechaIntento;
+    private String code;
+    private Boolean [] testResults;
+    private boolean approved;
+    private String feedback;
+    private Date createAt;
 }

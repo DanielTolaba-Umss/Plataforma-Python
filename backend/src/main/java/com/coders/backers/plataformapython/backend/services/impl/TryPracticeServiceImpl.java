@@ -1,13 +1,18 @@
 package com.coders.backers.plataformapython.backend.services.impl;
 
+import com.coders.backers.plataformapython.backend.dto.practice.PracticeDto;
+import com.coders.backers.plataformapython.backend.dto.student.StudentDto;
 import com.coders.backers.plataformapython.backend.dto.tryPractice.*;
-import com.coders.backers.plataformapython.backend.dto.tryPractice.CreateTryPracticeDto;
-import com.coders.backers.plataformapython.backend.dto.tryPractice.UpdateTryPracticeDto;
+import com.coders.backers.plataformapython.backend.dto.tryPractice.python.CodeExecutionRequest;
 import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
 import com.coders.backers.plataformapython.backend.mapper.TryPracticeMapper;
 import com.coders.backers.plataformapython.backend.models.TryPracticeEntity;
 import com.coders.backers.plataformapython.backend.repository.TryPracticeRepository;
+import com.coders.backers.plataformapython.backend.services.PracticeService;
+import com.coders.backers.plataformapython.backend.services.StudentService;
 import com.coders.backers.plataformapython.backend.services.TryPracticeService;
+import com.coders.backers.plataformapython.backend.utils.PythonExecution;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,28 +24,32 @@ import java.util.stream.Collectors;
 public class TryPracticeServiceImpl implements TryPracticeService {
 
     private final TryPracticeRepository tryPracticeRepository;
+    private final PythonExecution pythonExecution;
+    private PracticeService practiceService;
+    private StudentService studentService;
 
     @Override
-    public TryPracticeDto createTryPractice(CreateTryPracticeDto dto) {
-        TryPracticeEntity entity = TryPracticeMapper.mapFromCreateDto(dto);
+    public TryPracticeDto createTryPractice(CodeExecutionRequest code) {
+        TryPracticeEntity entity = TryPracticeMapper.mapToEntity(code);
+
+        try {
+            StudentDto student = studentService.getStudentById(code.getStudentId());
+            if (student == null) {
+                throw new ResourceNotFoundException("Student not found with id: " + code.getStudentId());
+            }
+
+            PracticeDto practice = practiceService.getPracticeById(code.getPracticeId());
+            if (practice == null) {
+                throw new ResourceNotFoundException("Practice not found with id: " + code.getPracticeId());
+            }
+
+            String testCases = practice.getCasosPrueba();
+            
+            String codeReceived = entity.getCode();
+        } catch (Exception e) {
+        }
+
         return TryPracticeMapper.mapToDto(tryPracticeRepository.save(entity));
-    }
-
-    @Override
-    public TryPracticeDto updateTryPractice(Long id, UpdateTryPracticeDto dto) {
-        TryPracticeEntity entity = tryPracticeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("TryPractice not found with id: " + id));
-
-        TryPracticeMapper.mapFromUpdateDto(dto, entity);
-
-        return TryPracticeMapper.mapToDto(tryPracticeRepository.save(entity));
-    }
-
-    @Override
-    public void deleteTryPractice(Long id) {
-        TryPracticeEntity entity = tryPracticeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("TryPractice not found with id: " + id));
-        tryPracticeRepository.delete(entity);
     }
 
     @Override
@@ -58,8 +67,8 @@ public class TryPracticeServiceImpl implements TryPracticeService {
     }
 
     @Override
-    public List<TryPracticeDto> getByEstudianteProgresoId(Long estudianteProgresoId) {
-        return tryPracticeRepository.findByEstudianteProgresoId(estudianteProgresoId).stream()
+    public List<TryPracticeDto> getByEstudianteId(Long estudianteId) {
+        return tryPracticeRepository.findByEstudianteProgresoId(estudianteId).stream()
                 .map(TryPracticeMapper::mapToDto)
                 .collect(Collectors.toList());
     }

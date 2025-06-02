@@ -12,7 +12,7 @@ public interface StudentService {
 
     List<StudentDto> getAllStudents();
 
-    Optional<StudentDto> getStudentById(Long id);
+    StudentDto getStudentById(Long id);
 
     Optional<StudentDto> updateStudent(Long id, UpdateStudentDto dto);
 
