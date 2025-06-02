@@ -32,7 +32,7 @@ public class PythonExecutionServiceImpl implements PythonExecutionService {
     private int executionTimeout;
 
 
-     @Override
+    /*  @Override
      public CodeExecutionResult executeCode(CodeExecutionRequest request) {
         try {
             // Crear el proceso Docker con límites de recursos
@@ -216,8 +216,8 @@ public class PythonExecutionServiceImpl implements PythonExecutionService {
                 .build();
         }
     }
-     
-/*
+      */
+
     @Override
     public CodeExecutionResult executeCode(CodeExecutionRequest request) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -435,5 +435,5 @@ public class PythonExecutionServiceImpl implements PythonExecutionService {
                 .error(errorMessage)
                 .build();
     }
-*/
+
 }
