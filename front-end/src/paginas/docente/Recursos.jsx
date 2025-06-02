@@ -47,11 +47,9 @@ const Recursos = () => {
     show: false,
     message: "",
     type: "success",
-  });
-  // Estado para manejar los recursos
+  });  // Estado para manejar los recursos
   const [recursos, setRecursos] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [resources, setResources] = useState([]);
   
   // Error modal state

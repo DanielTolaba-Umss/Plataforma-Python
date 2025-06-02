@@ -13,9 +13,7 @@ const StudentList = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [studentToDelete, setStudentToDelete] = useState(null);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState(null);  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [uploadFile, setUploadFile] = useState(null);
