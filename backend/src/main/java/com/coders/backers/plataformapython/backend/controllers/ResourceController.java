@@ -43,18 +43,15 @@ public ResponseEntity<ResourceDto> uploadResource(
         String uploadDir = "uploads/videos";
         Path filePath = Paths.get(uploadDir, uniqueFilename);
 
-        // Asegúrate de que el directorio existe
         Files.createDirectories(filePath.getParent());
 
-        // Guardar archivo
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        // Guardar registro en la base de datos
         ResourceDto dto = new ResourceDto();
         dto.setTitle(title);
         dto.setContentId(contentId);
         dto.setTypeId(typeId);
-        dto.setUrl("/uploads/" + uniqueFilename); // URL accesible desde el frontend
+        dto.setUrl("/uploads/" + uniqueFilename); 
 
         ResourceDto saved = resourceService.create(dto);
 

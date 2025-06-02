@@ -34,6 +34,7 @@ const GestionLecciones = () => {
           nivelId,
           nivelLevel
         ); // Usar el endpoint correcto
+        console.log("🚀 ~ fetchLecciones ~ response:", response);
 
         if (response.status !== 200) {
           throw new Error("Error en la respuesta del servidor");
