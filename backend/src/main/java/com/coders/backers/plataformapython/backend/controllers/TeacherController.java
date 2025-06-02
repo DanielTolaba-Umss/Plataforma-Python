@@ -23,9 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
-
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/teachers")
@@ -35,19 +32,18 @@ public class TeacherController {
 
     @PostMapping
     public ResponseEntity<TeacherDto> createTeacher(@RequestBody CreateTeacherDto createTeacherDto) {
-        
+
         TeacherDto savedTeacher = teacherService.createTeacher(createTeacherDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTeacher);
     }
 
     @GetMapping
     public ResponseEntity<List<TeacherDto>> getAllTeachers(
-        @RequestParam(value = "active", required = false) Boolean active,
-        @RequestParam(value = "specialty", required = false) String specialty
-    ) {
-        
+            @RequestParam(value = "active", required = false) Boolean active,
+            @RequestParam(value = "specialty", required = false) String specialty) {
+
         List<TeacherDto> teachers;
-        
+
         if (specialty != null && !specialty.isEmpty()) {
             teachers = teacherService.searchTeachersBySpecialty(specialty);
         } else if (active != null) {
@@ -59,7 +55,7 @@ public class TeacherController {
         } else {
             teachers = teacherService.getAllTeachers();
         }
-        
+
         return ResponseEntity.ok(teachers);
     }
 
@@ -69,9 +65,9 @@ public class TeacherController {
         return ResponseEntity.ok(teacher);
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<TeacherDto> updateTeacher(@PathVariable Long id, @RequestBody UpdateTeacherDto updateTeacherDto) {
+    public ResponseEntity<TeacherDto> updateTeacher(@PathVariable Long id,
+            @RequestBody UpdateTeacherDto updateTeacherDto) {
         TeacherDto updatedTeacher = teacherService.updateTeacher(id, updateTeacherDto);
         return ResponseEntity.ok(updatedTeacher);
     }
@@ -81,18 +77,35 @@ public class TeacherController {
         TeacherDto activatedTeacher = teacherService.activateTeacher(id);
         return ResponseEntity.ok(activatedTeacher);
     }
-    
+
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<TeacherDto> deactivateTeacher(@PathVariable Long id) {
         TeacherDto deactivatedTeacher = teacherService.deactivateTeacher(id);
         return ResponseEntity.ok(deactivatedTeacher);
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTeacher(@PathVariable Long id) {
         teacherService.deleteTeacher(id);
         return ResponseEntity.noContent().build();
     }
-    
+
+    @GetMapping("/search")
+    public ResponseEntity<List<TeacherDto>> searchTeachers(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "specialty", required = false) String specialty) {
+        List<TeacherDto> teachers;
+
+        if (name != null && !name.isEmpty()) {
+            teachers = teacherService.searchTeachersByName(name);
+        } else if (email != null && !email.isEmpty()) {
+            teachers = teacherService.searchTeachersByEmail(email);
+        } else if (specialty != null && !specialty.isEmpty()) {
+            teachers = teacherService.searchTeachersBySpecialty(specialty);
+        } else {
+            teachers = teacherService.getAllTeachers();
+        }
+        return ResponseEntity.ok(teachers);
+    }
 }

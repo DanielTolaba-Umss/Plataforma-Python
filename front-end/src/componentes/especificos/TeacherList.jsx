@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../estilos/TeacherList.css";
 import DeleteModal from "../comunes/DeleteModal";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, X } from "lucide-react";
 import { teachersAPI } from "../../api/docentesService";
 import LoadingModal from "../comunes/LoadingModal";
 import ProcessModal from "../comunes/ProcessModal";
@@ -23,6 +23,7 @@ const TeacherList = () => {
     specialty: "",
     active: true, // por defecto activo
   });
+  const [errores, setErrores] = useState({});
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -37,6 +38,11 @@ const TeacherList = () => {
     });
   };
 
+  const validarPassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=]).{8,}$/;
+    return regex.test(password);
+  };
+
   // Dentro del componente
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -44,6 +50,7 @@ const TeacherList = () => {
       try {
         const response = await teachersAPI.obtenerTodosDocente();
         setTeachers(response.data);
+        console.log("Docentes obtenidos", response.data);
       } catch (error) {
         console.error("Error al obtener docentes:", error);
       } finally {
@@ -55,7 +62,34 @@ const TeacherList = () => {
   }, []);
 
   const handleChange = (e) => {
-    setNewTeacher({ ...newTeacher, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    let errorMsg = "";
+
+    if (name === "name" || name === "lastName") {
+      const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/;
+      if (!soloLetras.test(value)) {
+        errorMsg = "Solo se permiten letras.";
+      }
+    }
+
+    if (name === "phone") {
+      const soloNumeros = /^[0-9]*$/;
+      if (!soloNumeros.test(value)) {
+        errorMsg = "Solo se permiten números.";
+      } else if (value.length > 8) {
+        errorMsg = "Máximo 8 caracteres.";
+      }
+    }
+
+    if (name === "password") {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=]).{8,}$/;
+      if (value && !regex.test(value)) {
+        errorMsg = "La contraseña no cumple los requisitos.";
+      }
+    }
+
+    setErrores((prev) => ({ ...prev, [name]: errorMsg }));
+    setNewTeacher({ ...newTeacher, [name]: value });
   };
 
   const handleCreate = async () => {
@@ -66,18 +100,24 @@ const TeacherList = () => {
       return;
     }
 
+    if (!validarPassword(password)) {
+      alert(
+        "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un caracter especial (@#$%^&+=)"
+      );
+      return;
+    }
+
     try {
-      setProcessing(true); //Mostrar el modal process
+      setProcessing(true);
       const response = await teachersAPI.crearDocente(newTeacher);
       const docenteCreado = response.data;
-
       setTeachers((prev) => [...prev, docenteCreado]);
       toggleForm();
     } catch (error) {
       console.error("Error al crear docente:", error);
       alert("Hubo un error al crear el docente.");
     } finally {
-      setProcessing(false); // 👈 Ocultar el modal
+      setProcessing(false);
     }
   };
 
@@ -99,6 +139,13 @@ const TeacherList = () => {
       return;
     }
 
+    if (!validarPassword(password)) {
+      alert(
+        "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un caracter especial (@#$%^&+=)"
+      );
+      return;
+    }
+
     const actualizado = {
       name,
       lastName,
@@ -106,7 +153,7 @@ const TeacherList = () => {
       phone,
       password,
       specialty,
-      active, // <--- aquí está la clave
+      active,
     };
 
     try {
@@ -152,113 +199,113 @@ const TeacherList = () => {
         </div>
 
         {showForm && (
-          <form className="formulario-docente">
-            <div className="grid-formulario">
-              <div className="grupo-formulario">
-                <label htmlFor="name">Nombres</label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  value={newTeacher.name}
-                  onChange={handleChange}
-                />
+          <div className="teacher-modal-overlay">
+            <div className="teacher-modal">
+              <div className="teacher-modal-header">
+                <h3 className="teacher-modal-title">
+                  {editMode ? "Editar Docente" : "Nuevo Docente"}
+                </h3>
+                <button className="teacher-modal-close" onClick={toggleForm}>
+                  <X size={24} />
+                </button>
               </div>
+              <div className="modal-form-grid">
+                <div className="modal-form-full">
+                  <label htmlFor="name">Nombres</label>
+                  <input
+                    name="name"
+                    placeholder="Nombres"
+                    value={newTeacher.name}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                  {errores.name && <p className="error-text">{errores.name}</p>}
+                </div>
+                <div className="modal-form-full">
+                  <label htmlFor="lastName">Apellidos</label>
+                  <input
+                    name="lastName"
+                    placeholder="Apellidos"
+                    value={newTeacher.lastName}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                  {errores.lastName && (
+                    <p className="error-text">{errores.lastName}</p>
+                  )}{" "}
+                  {/* Cambiado */}
+                </div>
+                <div className="modal-form-full">
+                  <label htmlFor="email">Correo electrónico</label>
+                  <input
+                    name="email"
+                    type="email"
+                    placeholder="Correo electrónico"
+                    value={newTeacher.email}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phone">Teléfono</label>
+                  <input
+                    name="phone"
+                    placeholder="Teléfono"
+                    value={newTeacher.phone}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                  {errores.phone && (
+                    <p className="error-text">{errores.phone}</p>
+                  )}{" "}
+                  {/* Cambiado */}
+                </div>
+                <div>
+                  <label htmlFor="password">Contraseña</label>
+                  <input
+                    name="password"
+                    type="password"
+                    placeholder="Contraseña"
+                    value={newTeacher.password}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                  {/* Instrucción con estilo */}
+                  <p className="instruction-text">
+                    La contraseña debe tener al menos 8 caracteres, una
+                    mayúscula, una minúscula, un número y un carácter especial
+                    (@#$%^&+=)
+                  </p>
+                  {/* Error */}
+                  {errores.password && (
+                    <p className="error-text">{errores.password}</p>
+                  )}
+                </div>
 
-              <div className="grupo-formulario">
-                <label htmlFor="lastName">Apellidos</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  id="lastName"
-                  value={newTeacher.lastName}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="grupo-formulario">
-                <label htmlFor="email">Correo electrónico</label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={newTeacher.email}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="grupo-formulario">
-                <label htmlFor="phone">Teléfono</label>
-                <input
-                  type="text"
-                  name="phone"
-                  id="phone"
-                  value={newTeacher.phone}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="grupo-formulario">
-                <label htmlFor="password">Contraseña</label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  value={newTeacher.password}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="grupo-formulario">
-                <label htmlFor="specialty">Especialidad</label>
-                <input
-                  type="text"
-                  name="specialty"
-                  id="specialty"
-                  value={newTeacher.specialty}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div className="botones-formulario-docente">
-              {editMode ? (
-                <>
-                  <button
-                    type="button"
-                    className="btn-guardar-cambios"
-                    onClick={handleUpdate}
-                  >
-                    Guardar Cambios
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-cancelar-formulario"
-                    onClick={toggleForm}
-                  >
+                <div className="modal-form-full">
+                  <label htmlFor="specialty">Especialidad</label>
+                  <input
+                    name="specialty"
+                    placeholder="Especialidad"
+                    value={newTeacher.specialty}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                </div>
+                <div className="modal-action-buttons">
+                  <button onClick={toggleForm} className="btn-cancel">
                     Cancelar
                   </button>
-                </>
-              ) : (
-                <>
                   <button
-                    type="button"
-                    className="btn-crear-docente"
-                    onClick={handleCreate}
+                    onClick={editMode ? handleUpdate : handleCreate}
+                    className="btn-crear"
                   >
-                    Crear Docente
+                    {editMode ? "Guardar Cambios" : "Crear Docente"}
                   </button>
-                  <button
-                    type="button"
-                    className="btn-cancelar-formulario"
-                    onClick={toggleForm}
-                  >
-                    Cancelar
-                  </button>
-                </>
-              )}
+                </div>
+              </div>
             </div>
-          </form>
+          </div>
         )}
 
         <input
@@ -273,7 +320,7 @@ const TeacherList = () => {
               <th>Nombre</th>
               <th>Email</th>
               <th>Teléfono</th>
-              <th>Contraseña</th>
+              <th>Especialidad</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -285,7 +332,7 @@ const TeacherList = () => {
                 </td>
                 <td>{docente.email}</td>
                 <td>{docente.phone}</td>
-                <td>********</td>
+                <td>{docente.specialty}</td>
                 <td className="acciones-docente">
                   <button
                     className="boton-editar-docente"

@@ -6,6 +6,11 @@ export const cursosAPI = {
     eliminar: (id) => api.delete(`/courses/${id}`),
     desactivar: (id) => api.put(`/courses/${id}/deactivate`),
     activar: (id) => api.put(`/courses/${id}/activate`),
-    obtenerTodos: () => api.get('/courses'),
+    obtenerTodos: async () => {
+        console.log("Solicitando todos los cursos al backend");
+        const response = await api.get('/courses');
+        console.log("Respuesta de cursos:", response);
+        return response;
+    },
     crear: (datos) => api.post('/courses', datos),
 };

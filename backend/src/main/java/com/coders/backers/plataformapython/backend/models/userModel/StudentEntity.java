@@ -5,9 +5,12 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.*;
 import com.coders.backers.plataformapython.backend.enums.Role;
+import com.coders.backers.plataformapython.backend.models.CourseEntity;
 
 @Getter
 @Setter
@@ -22,10 +25,16 @@ public class StudentEntity extends UserEntity {
     private Date enrollmentDate;
     
     @Column(name = "created_at")
-    private Date createdAt;
-
-    @Column(name = "updated_at")
+    private Date createdAt;    @Column(name = "updated_at")
     private Date updatedAt;
+    
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "student_course",
+        joinColumns = @JoinColumn(name = "usuario_id"),
+        inverseJoinColumns = @JoinColumn(name = "curso_id")
+    )
+    private Set<CourseEntity> courses = new HashSet<>();
     
     
     public StudentEntity() {
