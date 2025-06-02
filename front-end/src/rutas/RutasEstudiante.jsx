@@ -5,6 +5,7 @@ import Cursos from "../paginas/estudiante/Cursos";
 import Lecciones from "../paginas/estudiante/Cursos/cursos/Lecciones";
 import PerfilEstudiante from "../paginas/estudiante/PerfilEstudiante";
 import Quiz from "../paginas/estudiante/Cursos/cursos/Quiz"; 
+import Prueba from "../paginas/estudiante/Prueba";
 // import "./App.css";
 
 const RutasEstudiante = () => {
@@ -14,6 +15,7 @@ const RutasEstudiante = () => {
       <Route path="/cursos" element={<Cursos />} />
       // En tu archivo de rutas principal (App.jsx o similar)
       <Route path="/cursos/:id/lecciones" element={<Lecciones />} />
+      <Route path="/cursos/:id/lecciones/Practica" element={<Prueba />} />
       <Route path="/perfil" element={<PerfilEstudiante />} />
       <Route path="/cursos/basico/quiz" element={<Quiz />} /> 
 
