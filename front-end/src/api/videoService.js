@@ -14,6 +14,7 @@ export const getResourceById = async (id) => {
 };
 
 export const createResource = async (resource) => {
+  console.log("🚀 ~ createResource ~ resource:", resource);
   const response = await axios.post(VIDEO_API_URL, resource);
   return response.data;
 };
@@ -29,6 +30,7 @@ export const deleteResource = async (id) => {
 
 export const uploadResourceFile = async (file, title, typeId, contentId) => {
   const formData = new FormData();
+  console.log("🚀 ~ uploadResourceFile ~ formData:", formData);
   formData.append("file", file);
   formData.append("title", title);
   formData.append("typeId", typeId);

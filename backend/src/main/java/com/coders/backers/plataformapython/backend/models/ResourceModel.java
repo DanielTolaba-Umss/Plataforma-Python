@@ -15,9 +15,13 @@ public class ResourceModel {
     @Column(name = "resource_id")
     private Long resourceId;
 
+    // @ManyToOne(optional = false)
+    // @JoinColumn(name = "content_id")
+    // private CourseEntity content;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "content_id")
-    private ContenidoModel content;
+    private LessonEntity content;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "type_id")
@@ -44,8 +48,8 @@ public class ResourceModel {
     public Long getResourceId() { return resourceId; }
     public void setResourceId(Long resourceId) { this.resourceId = resourceId; }
 
-    public ContenidoModel getContent() { return content; }
-    public void setContent(ContenidoModel content) { this.content = content; }
+    public LessonEntity getContent() { return content; }
+    public void setContent(LessonEntity content) { this.content = content; }
 
     public ResourceTypeModel getType() { return type; }
     public void setType(ResourceTypeModel type) { this.type = type; }
