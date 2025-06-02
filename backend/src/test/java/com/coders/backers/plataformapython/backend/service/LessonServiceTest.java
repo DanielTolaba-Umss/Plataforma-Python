@@ -136,7 +136,6 @@ public class LessonServiceTest {
         Long lessonId = 1L;
         LessonEntity lesson = new LessonEntity();
         lesson.setId(lessonId);
-
         when(lessonRepository.findById(lessonId)).thenReturn(Optional.of(lesson));
 
         // Act
@@ -144,5 +143,64 @@ public class LessonServiceTest {
 
         // Assert
         verify(lessonRepository).delete(lesson);
+    }
+    
+    @Test
+    void getLessonsByCourseIdAndLevel_ShouldReturnList() {
+        // Arrange
+        Long courseId = 1L;
+        String level = "BASIC";
+        CourseEntity course = new CourseEntity();
+        course.setId(courseId);
+        course.setLevel(level);
+        
+        LessonEntity lesson1 = new LessonEntity();
+        lesson1.setId(1L);
+        lesson1.setTitle("Lección Básica 1");
+        lesson1.setCourse(course);
+        
+        LessonEntity lesson2 = new LessonEntity();
+        lesson2.setId(2L);
+        lesson2.setTitle("Lección Básica 2");
+        lesson2.setCourse(course);
+        
+        when(courseRepository.existsById(courseId)).thenReturn(true);
+        when(lessonRepository.findByCourseIdAndCourseLevel(courseId, level)).thenReturn(Arrays.asList(lesson1, lesson2));
+        
+        // Act
+        List<LessonDto> results = lessonService.getLessonsByCourseIdAndLevel(courseId, level);
+        
+        // Assert
+        assertEquals(2, results.size());
+        assertEquals("Lección Básica 1", results.get(0).getTitle());
+        assertEquals("Lección Básica 2", results.get(1).getTitle());
+        verify(lessonRepository).findByCourseIdAndCourseLevel(courseId, level);
+    }
+    
+    @Test
+    void getActiveLessonsByCourseIdAndLevel_ShouldReturnActiveList() {
+        // Arrange
+        Long courseId = 1L;
+        String level = "INTERMEDIATE";
+        CourseEntity course = new CourseEntity();
+        course.setId(courseId);
+        course.setLevel(level);
+        
+        LessonEntity activeLesson = new LessonEntity();
+        activeLesson.setId(1L);
+        activeLesson.setTitle("Lección Intermedia Activa");
+        activeLesson.setCourse(course);
+        activeLesson.setActive(true);
+        
+        when(courseRepository.existsById(courseId)).thenReturn(true);
+        when(lessonRepository.findByCourseIdAndCourseLevelAndActive(courseId, level, true)).thenReturn(Arrays.asList(activeLesson));
+        
+        // Act
+        List<LessonDto> results = lessonService.getActiveLessonsByCourseIdAndLevel(courseId, level);
+        
+        // Assert
+        assertEquals(1, results.size());
+        assertEquals("Lección Intermedia Activa", results.get(0).getTitle());
+        verify(lessonRepository).findByCourseIdAndCourseLevelAndActive(courseId, level, true);
     }
 }

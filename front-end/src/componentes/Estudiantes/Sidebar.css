@@ -24,6 +24,7 @@
 }
 
 .sidebar-link {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -66,18 +67,36 @@
   transition: all 0.2s;
 }
 
-.button:hover {
-  background-color: #48888E;
-  color: #FFFFFF;
+.submenu{
+  margin-left: 0.3rem; 
+  padding-left: 0.5rem; 
+  border-left: 2px solid #FFD438; 
+  width: calc(100% - 1rem); 
 }
 
-.button-secondary {
-  background-color: #48888E;
-  color: #FFFFFF;
+.sidebar-sublink {
+  background-color: #0c0461fd;
+  color: #FFD438;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s; /* Solo transición de colores */
+  margin: 0.25rem 0;
+  width: 100%;
+  text-align: left;
+  display: block;
+  position: relative;
+  left: 0;
 }
 
-.button-secondary:hover {
-  background-color: #300898;
+
+.sidebar-sublink.active {
+  background-color: #FFD438 !important; 
+  color: #300898 !important;          
+  padding: 0.5rem 1rem; 
+  margin: 0.25rem 0;    
 }
 
 /* Cards */
@@ -104,9 +123,6 @@
   color: #300898;
 }
 
-.text-secondary {
-  color: #48888E;
-}
 
 .text-accent {
   color: #FFD438;
@@ -117,89 +133,9 @@
   background-color: #300898;
 }
 
-.bg-secondary {
-  background-color: #48888E;
-}
-
 .bg-accent {
   background-color: #FFD438;
 }
 
-.submenu {
-  padding-left: 20px;
-  margin-top: 5px;
-}
 
-.sidebar-sublink {
-  padding: 5px 0;
-  color: #ddd;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
 
-.sidebar-sublink:hover {
-  color: white;
-}
-
-.sidebar-link-expandable {
-  cursor: pointer;
-  justify-content: space-between;
-}
-
-.submenu {
-  display: flex;
-  flex-direction: column;
-  padding-left: 1.5rem;
-  margin-top: 0.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.sidebar-sublink {
-  color: #1f2937;
-  text-decoration: none;
-  padding: 0.4rem 0;
-  font-size: 0.9rem;
-  transition: color 0.2s;
-}
-
-.sidebar-sublink:hover {
-  color: #0f766e;
-  font-weight: 500;
-}
-
-.sidebar-sublink.active {
-  color: #0f766e;
-  font-weight: 700;
-}
-.sidebar-link-static {
-  cursor: default;
-}
-
-.submenu {
-  display: flex;
-  flex-direction: column;
-  padding-left: 2.5rem; /* Más a la derecha */
-  margin-top: 0.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.sidebar-sublink {
-  color: #1f2937;
-  text-decoration: none;
-  padding: 0.4rem 0;
-  font-size: 0.95rem;
-  border-radius: 0.5rem;
-  padding-left: 0.75rem;
-  transition: background 0.2s, color 0.2s;
-}
-
-.sidebar-sublink:hover {
-  background-color: #f0fdf4;
-  color: #0f766e;
-}
-
-.sidebar-sublink.active {
-  background-color: #ecfdf5;
-  color: #0f766e;
-  font-weight: 700;
-}
