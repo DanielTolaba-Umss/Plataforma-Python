@@ -1,11 +1,24 @@
 // Archivo: GestionLecciones.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Edit, Trash2, Plus, Eye, FileText, Video, BookOpen, X } from "lucide-react";
+import {
+  Edit,
+  Trash2,
+  Plus,
+  Eye,
+  FileText,
+  Video,
+  BookOpen,
+  X,
+} from "lucide-react";
 import styles from "/src/paginas/docente/estilos/GestionLecciones.module.css";
 import FormularioCrearLeccion from "./FormularioCrearLeccion";
 import FormularioEditarLeccion from "./FormularioEditarLeccion";
 import { leccionesAPI } from "../../../api/leccionService";
+
+import { convertToEmbedUrl } from "../../../utils/convertYoutubeUrl";
+import { environment } from "../../../environment/environment";
+import { getResourceByLesson } from "../../../api/videoService";
 
 const GestionLecciones = () => {
   const [lecciones, setLecciones] = useState([]);
@@ -16,14 +29,19 @@ const GestionLecciones = () => {
   const [leccionToEdit, setLeccionToEdit] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [leccionToDelete, setLeccionToDelete] = useState(null);
-  
+
+  const [videoUrl, setVideoUrl] = useState(null);
+
+  const esYoutube = (url) =>
+    url.includes("youtube.com") || url.includes("youtu.be");
+
   // Nuevos estados para el modal de vista previa
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [leccionPreview, setLeccionPreview] = useState(null);
   const [hoveredLeccion, setHoveredLeccion] = useState(null);
 
   const nivelId = localStorage.getItem("nivelId");
-  
+
   useEffect(() => {
     const fetchLecciones = async () => {
       const nivelLevel = localStorage.getItem("nivelLevel");
@@ -55,10 +73,9 @@ const GestionLecciones = () => {
           recursos: leccion.recursos || {
             videos: leccion.videos || [],
             pdfs: leccion.pdfs || [],
-            practicas: leccion.practicas || []
+            practicas: leccion.practicas || [],
           },
           contenido: leccion.contenido || "Contenido de la lección...",
-        
         }));
 
         console.log("Datos recibidos:", response.data);
@@ -81,9 +98,28 @@ const GestionLecciones = () => {
   };
 
   // Función para mostrar la vista previa
-  const handleShowPreview = (leccion) => {
+  const handleShowPreview = async (leccion) => {
     setLeccionPreview(leccion);
     setShowPreviewModal(true);
+
+    try {
+      const recursos = await getResourceByLesson(leccion.id);
+      console.log("🚀 ~ Recursos desde API:", recursos);
+
+      const video = recursos.find((r) => r.typeId === 3); // tipo video
+      if (video && video.url) {
+        const rawUrl = video.url;
+        const finalUrl = esYoutube(rawUrl)
+          ? convertToEmbedUrl(rawUrl)
+          : `${environment.apiUrl}${rawUrl}`;
+        setVideoUrl(finalUrl);
+      } else {
+        setVideoUrl(null);
+      }
+    } catch (error) {
+      console.error("Error al cargar recursos de lección:", error);
+      setVideoUrl(null);
+    }
   };
 
   const handleCreateLeccion = async (leccionData) => {
@@ -176,9 +212,11 @@ const GestionLecciones = () => {
 
       <div className={styles.coursesGrid}>
         {lecciones.map((leccion) => (
-          <div 
-            key={leccion.id} 
-            className={`${styles.courseCard} ${hoveredLeccion === leccion.id ? styles.courseCardHovered : ''}`}
+          <div
+            key={leccion.id}
+            className={`${styles.courseCard} ${
+              hoveredLeccion === leccion.id ? styles.courseCardHovered : ""
+            }`}
             onMouseEnter={() => setHoveredLeccion(leccion.id)}
             onMouseLeave={() => setHoveredLeccion(null)}
             onClick={() => handleShowPreview(leccion)}
@@ -186,14 +224,16 @@ const GestionLecciones = () => {
             <div className={styles.courseCardContent}>
               <h3 className={styles.courseTitle}>{leccion.title}</h3>
               <p className={styles.courseDescription}>{leccion.description}</p>
-              
+
               {hoveredLeccion === leccion.id && (
-                <div className={styles.previewOverlay}>
-                </div>
+                <div className={styles.previewOverlay}></div>
               )}
             </div>
-            
-            <div className={styles.actionsContainer} onClick={(e) => e.stopPropagation()}>
+
+            <div
+              className={styles.actionsContainer}
+              onClick={(e) => e.stopPropagation()}
+            >
               <button
                 className={styles.resourcesButton}
                 onClick={() => {
@@ -215,105 +255,115 @@ const GestionLecciones = () => {
                 className={`${styles.resourcesButton} ${styles.deleteButton}`}
                 onClick={() => {
                   setLeccionToDelete(leccion);
-                    setShowDeleteModal(true);
-                    }}
-                    >
-                    <Trash2 size={18} />
-                    </button>
-                  </div>
-                  </div>
-                  ))}
-                  </div>
+                  setShowDeleteModal(true);
+                }}
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
 
-                  {!showCreateForm && (
-                  <button
-                  onClick={() => setShowCreateForm(true)}
-                  className={styles.floatingButton}
-                  >
-                  <Plus />
-                  </button>
-                  )}
+      {!showCreateForm && (
+        <button
+          onClick={() => setShowCreateForm(true)}
+          className={styles.floatingButton}
+        >
+          <Plus />
+        </button>
+      )}
 
-                  {showCreateForm && (
-                  <FormularioCrearLeccion
-                  onClose={() => setShowCreateForm(false)}
-                  onSubmit={handleCreateLeccion}
-                  cursoId={nivelId}
-                  />
-                  )}
+      {showCreateForm && (
+        <FormularioCrearLeccion
+          onClose={() => setShowCreateForm(false)}
+          onSubmit={handleCreateLeccion}
+          cursoId={nivelId}
+        />
+      )}
 
-                  {showEditForm && leccionToEdit && (
-                  <FormularioEditarLeccion
-                  leccion={leccionToEdit}
-                  onClose={() => setShowEditForm(false)}
-                  onSubmit={handleEditLeccion}
-                  />
-                  )}
+      {showEditForm && leccionToEdit && (
+        <FormularioEditarLeccion
+          leccion={leccionToEdit}
+          onClose={() => setShowEditForm(false)}
+          onSubmit={handleEditLeccion}
+        />
+      )}
 
-                  {showDeleteModal && (
-                  <div className={styles.modalOverlay}>
-                  <div className={styles.modalContent}>
-                  <h2>Confirmar eliminación</h2>
-                  <p>
-                    ¿Estás seguro que deseas eliminar la lección "{leccionToDelete?.title}"?
-                  </p>
-                  <div className={styles.modalActions}>
-                    <button
-                    className={`${styles.modalButton} ${styles.confirmButton}`}
-                    onClick={handleDeleteLeccion}
-                    >
-                    Eliminar
-                    </button>
-                    <button
-                    className={`${styles.modalButton} ${styles.cancelButton}`}
-                    onClick={() => setShowDeleteModal(false)}
-                    >
-                    Cancelar
-                    </button>
-                  </div>
-                  </div>
-                  </div>
-                  )}
+      {showDeleteModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h2>Confirmar eliminación</h2>
+            <p>
+              ¿Estás seguro que deseas eliminar la lección "
+              {leccionToDelete?.title}"?
+            </p>
+            <div className={styles.modalActions}>
+              <button
+                className={`${styles.modalButton} ${styles.confirmButton}`}
+                onClick={handleDeleteLeccion}
+              >
+                Eliminar
+              </button>
+              <button
+                className={`${styles.modalButton} ${styles.cancelButton}`}
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-                  {/* Modal de Vista Previa */}
-                  {showPreviewModal && leccionPreview && (
-                  <div className={styles.modalOverlay}>
-                  <div className={`${styles.modalContent} ${styles.previewModal}`}>
-                  
-                  
-                  <div className={styles.previewHeader}>
-                    <h2 className={styles.previewTitle}>{leccionPreview.title}</h2>
-                    <span className={styles.previewDuration}>{leccionPreview.duracion}</span>
-                  </div>
-                  
+      {/* Modal de Vista Previa */}
+      {showPreviewModal && leccionPreview && (
+        <div className={styles.modalOverlay}>
+          <div className={`${styles.modalContent} ${styles.previewModal}`}>
+            <div className={styles.previewHeader}>
+              <h2 className={styles.previewTitle}>{leccionPreview.title}</h2>
+              <span className={styles.previewDuration}>
+                {leccionPreview.duracion}
+              </span>
+            </div>
 
-                  <div className={styles.previewContent}>
-                    <h3>Contenido de la lección</h3>
-                    <p>{leccionPreview.description}</p>
-                  </div>
+            <div className={styles.previewContent}>
+              <h3>Contenido de la lección</h3>
+              <p>{leccionPreview.description}</p>
+            </div>
 
-                  <div className={styles.previewResources}>
-                    <h3>Recursos disponibles</h3>
-                    <div className={styles.resourcesGrid}>
-                    {/* Videos */}
+            <div className={styles.previewResources}>
+              <h3>Recursos disponibles</h3>
+              <div className={styles.resourcesGrid}>
+                {/* Videos */}
                 <div className={styles.resourceType}>
                   <div className={styles.resourceTypeHeader}>
                     <Video size={20} />
-                    <span>Videos ({leccionPreview.recursos?.videos?.length || 1})</span>
+                    <span>
+                      Videos ({leccionPreview.recursos?.videos?.length || 1})
+                    </span>
                   </div>
                   <div className={styles.resourceItems}>
-                    {leccionPreview.recursos?.videos?.length > 0 
-                      ? leccionPreview.recursos.videos.map((video, index) => (
-                          <div key={index} className={styles.resourceItem}>
-                            <Video size={16} />
-                            <span>{video.titulo || `Video ${index + 1}`}</span>
-                          </div>
-                        ))
-                      : <div className={styles.resourceItem}>
-                          <Video size={16} />
-                          <span>Video explicativo</span>
-                        </div>
-                    }
+                    {videoUrl && (
+                      <div className={styles.videoContainer}>
+                        {esYoutube(videoUrl) ? (
+                          <iframe
+                            width="100%"
+                            height="315"
+                            src={videoUrl}
+                            title="Visualizador de Video"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          ></iframe>
+                        ) : (
+                          <video width="100%" height="315" controls>
+                            <source src={videoUrl} type="video/mp4" />
+                            Tu navegador no soporta el tag de video.
+                          </video>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -321,21 +371,24 @@ const GestionLecciones = () => {
                 <div className={styles.resourceType}>
                   <div className={styles.resourceTypeHeader}>
                     <FileText size={20} />
-                    <span>Documentos ({leccionPreview.recursos?.pdfs?.length || 1})</span>
+                    <span>
+                      Documentos ({leccionPreview.recursos?.pdfs?.length || 1})
+                    </span>
                   </div>
                   <div className={styles.resourceItems}>
-                    {leccionPreview.recursos?.pdfs?.length > 0 
-                      ? leccionPreview.recursos.pdfs.map((pdf, index) => (
-                          <div key={index} className={styles.resourceItem}>
-                            <FileText size={16} />
-                            <span>{pdf.titulo || `Documento ${index + 1}`}</span>
-                          </div>
-                        ))
-                      : <div className={styles.resourceItem}>
+                    {leccionPreview.recursos?.pdfs?.length > 0 ? (
+                      leccionPreview.recursos.pdfs.map((pdf, index) => (
+                        <div key={index} className={styles.resourceItem}>
                           <FileText size={16} />
-                          <span>Material de apoyo.pdf</span>
+                          <span>{pdf.titulo || `Documento ${index + 1}`}</span>
                         </div>
-                    }
+                      ))
+                    ) : (
+                      <div className={styles.resourceItem}>
+                        <FileText size={16} />
+                        <span>Material de apoyo.pdf</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -343,21 +396,29 @@ const GestionLecciones = () => {
                 <div className={styles.resourceType}>
                   <div className={styles.resourceTypeHeader}>
                     <BookOpen size={20} />
-                    <span>Prácticas ({leccionPreview.recursos?.practicas?.length || 1})</span>
+                    <span>
+                      Prácticas (
+                      {leccionPreview.recursos?.practicas?.length || 1})
+                    </span>
                   </div>
                   <div className={styles.resourceItems}>
-                    {leccionPreview.recursos?.practicas?.length > 0 
-                      ? leccionPreview.recursos.practicas.map((practica, index) => (
+                    {leccionPreview.recursos?.practicas?.length > 0 ? (
+                      leccionPreview.recursos.practicas.map(
+                        (practica, index) => (
                           <div key={index} className={styles.resourceItem}>
                             <BookOpen size={16} />
-                            <span>{practica.titulo || `Práctica ${index + 1}`}</span>
+                            <span>
+                              {practica.titulo || `Práctica ${index + 1}`}
+                            </span>
                           </div>
-                        ))
-                      : <div className={styles.resourceItem}>
-                          <BookOpen size={16} />
-                          <span>Ejercicios prácticos</span>
-                        </div>
-                    }
+                        )
+                      )
+                    ) : (
+                      <div className={styles.resourceItem}>
+                        <BookOpen size={16} />
+                        <span>Ejercicios prácticos</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -367,7 +428,9 @@ const GestionLecciones = () => {
               <button
                 className={styles.primaryButton}
                 onClick={() => {
-                  navigate(`/gestion-curso/lecciones/${leccionPreview.id}/recursos`);
+                  navigate(
+                    `/gestion-curso/lecciones/${leccionPreview.id}/recursos`
+                  );
                   setShowPreviewModal(false);
                 }}
               >
