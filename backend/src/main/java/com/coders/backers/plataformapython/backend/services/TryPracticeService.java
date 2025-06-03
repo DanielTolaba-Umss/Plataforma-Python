@@ -10,6 +10,6 @@ public interface TryPracticeService {
 
     TryPracticeDto getTryPracticeById(Long id);
     List<TryPracticeDto> getAllTryPractices();
-    List<TryPracticeDto> getByEstudianteId(Long estudianteId);
+    List<TryPracticeDto> getByStudentId(Long studentId);
     List<TryPracticeDto> getByPracticeId(Long practiceId);
 }

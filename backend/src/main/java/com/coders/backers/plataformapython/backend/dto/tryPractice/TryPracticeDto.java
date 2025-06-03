@@ -3,6 +3,7 @@ package com.coders.backers.plataformapython.backend.dto.tryPractice;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,5 +17,5 @@ public class TryPracticeDto {
     private Boolean [] testResults;
     private boolean approved;
     private String feedback;
-    private Date createAt;
+    private LocalDateTime createAt;
 }

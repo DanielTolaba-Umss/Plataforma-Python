@@ -33,7 +33,7 @@ public class TryPracticeController {
 
     @GetMapping("/by-estudiante/{studentId}")
     public ResponseEntity<List<TryPracticeDto>> getByEstudianteProgreso(@PathVariable Long studentId) {
-        return ResponseEntity.ok(tryPracticeService.getByEstudianteId(studentId));
+        return ResponseEntity.ok(tryPracticeService.getByStudentId(studentId));
     }
 
     @GetMapping("/by-practice/{practiceId}")

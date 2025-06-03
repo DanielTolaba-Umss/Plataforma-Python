@@ -3,6 +3,10 @@ FROM python:3.10-slim
 # Configurar un usuario no privilegiado
 RUN useradd -m -s /bin/bash sandbox
 
+ENV PYTHONIOENCODING=utf-8
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
 # Crear directorio de trabajo
 WORKDIR /sandbox
 
@@ -15,6 +19,7 @@ USER sandbox
 
 # Establecer límites de recursos
 ENV PYTHONMEMORY=128m
+
 
 # Comando por defecto
 ENTRYPOINT ["python", "execute.py"]

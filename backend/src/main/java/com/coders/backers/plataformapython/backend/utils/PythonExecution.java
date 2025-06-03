@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -11,8 +12,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.coders.backers.plataformapython.backend.dto.tryPractice.python.CodeExecutionResult;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Component
 public class PythonExecution {
     private final ObjectMapper objectMapper;
 
@@ -32,7 +37,7 @@ public class PythonExecution {
     private int executionTimeout;
     private static final String DOCKER_IMAGE = "python-sandbox";
     
-    public CodeExecutionResult executeCode(String code) {
+    public CodeExecutionResult executeCode(String code, String input) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Process process = null;
 
@@ -41,7 +46,7 @@ public class PythonExecution {
 
             Process containerProcess = process;
             Future<CodeExecutionResult> future = executor
-                    .submit(() -> executeCodeInContainer(containerProcess, code));
+                    .submit(() -> executeCodeInContainer(containerProcess, code, input));
 
             return getResultWithTimeout(future, process);
         } catch (Exception e) {
@@ -64,9 +69,9 @@ public class PythonExecution {
         return pb.start();
     }
 
-    private CodeExecutionResult executeCodeInContainer(Process process, String code) {
+    private CodeExecutionResult executeCodeInContainer(Process process, String code, String input) {
         try {
-            sendCodeToContainer(process, code);
+            sendCodeToContainer(process, code, input);
 
             boolean completed = process.waitFor(5, TimeUnit.SECONDS);
             if (!completed) {
@@ -79,6 +84,7 @@ public class PythonExecution {
 
             if (!errorOutput.isEmpty()) {
                 log.warn("Error del contenedor Python: {}", errorOutput);
+                return buildErrorResult(errorOutput);
             }
 
             return processContainerResponse(output, code);
@@ -88,14 +94,38 @@ public class PythonExecution {
         }
     }
 
-    private void sendCodeToContainer(Process process, String code) {
+    private void sendCodeToContainer(Process process, String code, String input) {
         try (OutputStreamWriter writer = new OutputStreamWriter(process.getOutputStream())) {
             if (code == null || code.trim().isEmpty()) {
                 log.error("El código recibido está vacío");
             }
 
+           String wrappedCode = String.format("""
+            import json
+            
+            # Código del estudiante
+            %s
+            
+            # Ejecución del test
+            try:
+                # Evaluamos la entrada directamente
+                resultado = %s
+                print(json.dumps({
+                    'success': True,
+                    'output': str(resultado),
+                    'error': ''
+                }))
+            except Exception as e:
+                print(json.dumps({
+                    'success': False,
+                    'output': '',
+                    'error': str(e)
+                }))
+
+            """, code, input);
+
             Map<String, String> jsonMap = new HashMap<>();
-            jsonMap.put("code", code);
+            jsonMap.put("code", wrappedCode);
             String jsonCode = objectMapper.writeValueAsString(jsonMap);
             log.info("Enviando al contenedor: {}", jsonCode);
 
@@ -107,38 +137,29 @@ public class PythonExecution {
     }
 
     private String readProcessOutput(Process process) {
-        StringBuilder outputBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(process.getInputStream()))) {
+                new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+            StringBuilder output = new StringBuilder();
             String line;
-            log.info("Comenzando a leer salida del proceso...");
-
             while ((line = reader.readLine()) != null) {
-                outputBuilder.append(line).append("\n");
+                output.append(line).append("\n");
                 log.debug("Línea leída: {}", line);
             }
-
-            log.info("Finalizada lectura de salida del proceso");
-        } catch (Exception e) {
-            log.error("Error leyendo la salida del contenedor", e);
+            return output.toString().trim();
+        } catch (IOException e) {
+            log.error("Error leyendo la salida del proceso", e);
+            throw new RuntimeException("Error leyendo la salida", e);
         }
-
-        return outputBuilder.toString().trim();
     }
 
     private String readProcessError(Process process) {
-        StringBuilder errorBuilder = new StringBuilder();
-        try (BufferedReader errorReader = new BufferedReader(
-                new InputStreamReader(process.getErrorStream()))) {
-            String line;
-            while ((line = errorReader.readLine()) != null) {
-                errorBuilder.append(line).append("\n");
-            }
-        } catch (Exception e) {
-            log.error("Error leyendo el stream de error", e);
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8))) {
+            return reader.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            log.error("Error leyendo el error del proceso", e);
+            throw new RuntimeException("Error leyendo el error", e);
         }
-
-        return errorBuilder.toString().trim();
     }
 
     private CodeExecutionResult processContainerResponse(String output, String code) {

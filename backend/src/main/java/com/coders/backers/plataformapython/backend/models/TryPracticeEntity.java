@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "try_practice")
@@ -32,8 +33,8 @@ public class TryPracticeEntity {
 
     private String feedback;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Date createAt;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createAt;
 
     public TryPracticeEntity(String code, Long studentId, Long practiceId) {
         this.code = code;
