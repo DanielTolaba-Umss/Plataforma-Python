@@ -7,8 +7,12 @@ import com.coders.backers.plataformapython.backend.dto.tryPractice.*;
 import com.coders.backers.plataformapython.backend.dto.tryPractice.python.CodeExecutionRequest;
 import com.coders.backers.plataformapython.backend.dto.tryPractice.python.CodeExecutionResult;
 import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
+import com.coders.backers.plataformapython.backend.mapper.PracticeMapper;
+import com.coders.backers.plataformapython.backend.mapper.StudentMapper;
 import com.coders.backers.plataformapython.backend.mapper.TryPracticeMapper;
+import com.coders.backers.plataformapython.backend.models.PracticeEntity;
 import com.coders.backers.plataformapython.backend.models.TryPracticeEntity;
+import com.coders.backers.plataformapython.backend.models.userModel.StudentEntity;
 import com.coders.backers.plataformapython.backend.repository.TryPracticeRepository;
 import com.coders.backers.plataformapython.backend.services.PracticeService;
 import com.coders.backers.plataformapython.backend.services.StudentService;
@@ -32,6 +36,7 @@ public class TryPracticeServiceImpl implements TryPracticeService {
     private final PracticeService practiceService;
     private final StudentService studentService;
     private final TestCaseService testCaseService;
+    private final TryPracticeMapper tryPracticeMapper;
 
     @Override
     public TryPracticeDto createTryPractice(CodeExecutionRequest code) {
@@ -46,27 +51,32 @@ public class TryPracticeServiceImpl implements TryPracticeService {
         String feedback = "";
 
         try {
-            StudentDto student = studentService.getStudentById(studentId);
-            if (student == null) {
+            StudentDto studentDto = studentService.getStudentById(studentId);
+            StudentEntity student = StudentMapper.mapToEntity(studentDto);
+            if (studentDto == null) {
                 throw new ResourceNotFoundException("Student not found with id: " + studentId);
             }
-            PracticeDto practice = practiceService.getPracticeById(practiceId);
-            if (practice == null) {
+            
+            PracticeDto practiceDto = practiceService.getPracticeById(practiceId);
+            PracticeEntity practice = PracticeMapper.mapToEntity(practiceDto);
+            if (practiceDto == null) {
                 throw new ResourceNotFoundException("Practice not found with id: " + practiceId);
             }
 
-            List<TryPracticeDto> previousAttempts = getByStudentId(studentId).stream()
-                .filter(attempt -> attempt.getPracticeId().equals(practiceId))
-                .collect(Collectors.toList());
+            boolean hasApprovedAttempt = getByStudentId(studentId).stream()
+                .filter(tryPractice -> tryPractice.getPractice().getId().equals(practiceId))
+                .anyMatch(tryPractice -> tryPractice.getApproved());
 
-            if (previousAttempts.size() >= practice.getIntentosMax()) {
-                throw new RuntimeException("Maximum attempts reached for this practice");
+            if (hasApprovedAttempt) {
+                throw new IllegalStateException("Ya existe un intento aprobado para esta práctica");
             }
+
 
             List<TestCaseDto> testCases = testCaseService.getByPractice(practiceId);
             if (testCases.isEmpty()) {
                 throw new ResourceNotFoundException("No test cases found for practice with id: " + practiceId);
             }
+
             Boolean[] testResults = new Boolean[testCases.size()];
 
             for (int i = 0; i < testCases.size(); i++) {
@@ -95,16 +105,21 @@ public class TryPracticeServiceImpl implements TryPracticeService {
                 }
             }
 
-            TryPracticeEntity entity = new TryPracticeEntity();
-            entity.setCode(codeReceived);
-            entity.setStudentId(studentId);
-            entity.setPracticeId(practiceId);
-            entity.setTestResults(testResults);
-            entity.setApproved(allTestsPassed);
-            entity.setFeedback(feedback);
-            entity.setCreateAt(LocalDateTime.now());
+            // Mapear StudentEntity y PracticeEntity desde los DTOs
+            
 
-            return TryPracticeMapper.mapToDto(tryPracticeRepository.save(entity));
+             TryPracticeEntity entity = new TryPracticeEntity();
+                entity.setCode(codeReceived);
+                entity.setStudent(student);
+                entity.setPractice(practice);
+                entity.setTestResults(testResults);
+                entity.setApproved(allTestsPassed);
+                entity.setFeedback(feedback);
+                entity.setCreateAt(LocalDateTime.now());
+            
+            TryPracticeEntity savedEntity = tryPracticeRepository.save(entity);
+
+            return TryPracticeMapper.mapToDto(savedEntity);
 
         } catch (Exception e) {
             throw new RuntimeException("Error processing practice attempt: " + e.getMessage(), e);
