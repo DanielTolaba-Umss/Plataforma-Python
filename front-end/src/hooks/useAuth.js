@@ -22,8 +22,6 @@ export const useAuth = () => {
             setUser(userData);
             navigate('/dashboard');
             return userData;
-        } catch (error) {
-            throw error;
         } finally {
             setLoading(false);
         }

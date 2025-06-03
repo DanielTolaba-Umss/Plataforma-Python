@@ -9,25 +9,33 @@ import com.coders.backers.plataformapython.backend.dto.teacher.UpdateTeacherDto;
 public interface TeacherService {
     // Create
     TeacherDto createTeacher(CreateTeacherDto createTeacherDto);
-    
-    //Update
+
+    // Update
     TeacherDto updateTeacher(Long id, UpdateTeacherDto updateTeacherDto);
+
     TeacherDto deactivateTeacher(Long id);
+
     TeacherDto activateTeacher(Long id);
-    
+
     // Read
     List<TeacherDto> getAllTeachers();
+
     List<TeacherDto> getAllActiveTeachers();
+
     List<TeacherDto> getAllInactiveTeachers();
+
     TeacherDto getTeacherById(Long id);
-    //TeacherDto getTeacherByEmail(String email);
-    //TeacherDto getTeacherBySpecialty(String specialty);
-    
+    // TeacherDto getTeacherByEmail(String email);
+    // TeacherDto getTeacherBySpecialty(String specialty);
+
     // Delete
     void deleteTeacher(Long id);
 
     // Search
     List<TeacherDto> searchTeachersBySpecialty(String specialty);
 
+    List<TeacherDto> searchTeachersByName(String name);
+
+    List<TeacherDto> searchTeachersByEmail(String email);
 
 }

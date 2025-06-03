@@ -40,16 +40,20 @@ public class LessonController {
         LessonDto lessonDto = lessonService.getLessonById(id);
         return ResponseEntity.ok(lessonDto);
     }
-    
-    @GetMapping
+      @GetMapping
     public ResponseEntity<List<LessonDto>> getAllLessons(
             @RequestParam(value = "active", required = false) Boolean active,
             @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "courseId", required = false) Long courseId) {
+            @RequestParam(value = "courseId", required = false) Long courseId,
+            @RequestParam(value = "level", required = false) String level) {
         
         List<LessonDto> lessons;
         
-        if (courseId != null && active != null) {
+        if (courseId != null && level != null && active != null && active) {
+            lessons = lessonService.getActiveLessonsByCourseIdAndLevel(courseId, level);
+        } else if (courseId != null && level != null) {
+            lessons = lessonService.getLessonsByCourseIdAndLevel(courseId, level);
+        } else if (courseId != null && active != null && active) {
             lessons = lessonService.getActiveLessonsByCourseId(courseId);
         } else if (courseId != null) {
             lessons = lessonService.getLessonsByCourseId(courseId);
@@ -59,6 +63,23 @@ public class LessonController {
             lessons = lessonService.getActiveLessons();
         } else {
             lessons = lessonService.getAllLessons();
+        }
+        
+        return ResponseEntity.ok(lessons);
+    }
+    
+    @GetMapping("/course/{courseId}/level/{level}")
+    public ResponseEntity<List<LessonDto>> getLessonsByCourseAndLevel(
+            @PathVariable Long courseId, 
+            @PathVariable String level,
+            @RequestParam(value = "active", required = false) Boolean active) {
+        
+        List<LessonDto> lessons;
+        
+        if (active != null && active) {
+            lessons = lessonService.getActiveLessonsByCourseIdAndLevel(courseId, level);
+        } else {
+            lessons = lessonService.getLessonsByCourseIdAndLevel(courseId, level);
         }
         
         return ResponseEntity.ok(lessons);

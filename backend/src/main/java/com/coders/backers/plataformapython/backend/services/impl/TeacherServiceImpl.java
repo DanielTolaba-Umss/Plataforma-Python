@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
-
 import com.coders.backers.plataformapython.backend.services.TeacherService;
 import com.coders.backers.plataformapython.backend.dto.teacher.CreateTeacherDto;
 import com.coders.backers.plataformapython.backend.dto.teacher.TeacherDto;
@@ -18,22 +17,25 @@ import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundExc
 import com.coders.backers.plataformapython.backend.mapper.TeacherMapper;
 import com.coders.backers.plataformapython.backend.models.userModel.TeacherEntity;
 import com.coders.backers.plataformapython.backend.repository.TeacherRepository;
-
+import com.coders.backers.plataformapython.backend.utils.UserValidations;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class TeacherServiceImpl implements TeacherService {
-  
+
     private final TeacherRepository teacherRepository;
 
     @Override
     public TeacherDto createTeacher(CreateTeacherDto createTeacherDto) {
+        UserValidations.validateTeacher(
+                createTeacherDto.getName(),
+                createTeacherDto.getLastName(),
+                createTeacherDto.getPhone(),
+                createTeacherDto.getPassword());
 
         TeacherEntity entity = TeacherMapper.mapFromCreateDto(createTeacherDto);
-        
         TeacherEntity savedEntity = teacherRepository.save(entity);
-
         return TeacherMapper.mapToDto(savedEntity);
     }
 
@@ -42,15 +44,15 @@ public class TeacherServiceImpl implements TeacherService {
         List<TeacherEntity> teachers = teacherRepository.findAll();
         return teachers.stream().map(teacher -> {
             TeacherDto teacherDto = TeacherMapper.mapToDto(teacher);
-                return teacherDto;
+            return teacherDto;
         }).collect(Collectors.toList());
     }
 
     @Override
     public void deleteTeacher(Long id) {
         TeacherEntity teacher = teacherRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
-        
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
+
         teacherRepository.delete(teacher);
     }
 
@@ -59,7 +61,7 @@ public class TeacherServiceImpl implements TeacherService {
         List<TeacherEntity> teachers = teacherRepository.findByActive(true);
         return teachers.stream().map(teacher -> {
             TeacherDto teacherDto = TeacherMapper.mapToDto(teacher);
-                return teacherDto;
+            return teacherDto;
         }).collect(Collectors.toList());
     }
 
@@ -68,13 +70,20 @@ public class TeacherServiceImpl implements TeacherService {
         List<TeacherEntity> teachers = teacherRepository.findBySpecialty(specialty);
         return teachers.stream().map(teacher -> {
             TeacherDto teacherDto = TeacherMapper.mapToDto(teacher);
-                return teacherDto;
+            return teacherDto;
         }).collect(Collectors.toList());
     }
 
     @Override
     public TeacherDto updateTeacher(Long id, UpdateTeacherDto updateTeacherDto) {
-        TeacherEntity teacher = teacherRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
+        TeacherEntity teacher = teacherRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
+
+        UserValidations.validateTeacher(
+                updateTeacherDto.getName(),
+                updateTeacherDto.getLastName(),
+                updateTeacherDto.getPhone(),
+                updateTeacherDto.getPassword());
 
         TeacherEntity updatedTeacher = TeacherMapper.mapFromUpdateDto(updateTeacherDto);
         updatedTeacher.setId(teacher.getId());
@@ -89,8 +98,8 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public TeacherDto deactivateTeacher(Long id) {
         TeacherEntity teacher = teacherRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
-        teacher.setActive(false); 
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
+        teacher.setActive(false);
         teacher.setUpdatedAt(Date.valueOf(LocalDate.now()));
         teacherRepository.save(teacher);
         return TeacherMapper.mapToDto(teacher);
@@ -99,8 +108,8 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public TeacherDto activateTeacher(Long id) {
         TeacherEntity teacher = teacherRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
-        teacher.setActive(true); 
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
+        teacher.setActive(true);
         teacher.setUpdatedAt(Date.valueOf(LocalDate.now()));
         teacherRepository.save(teacher);
         return TeacherMapper.mapToDto(teacher);
@@ -111,14 +120,32 @@ public class TeacherServiceImpl implements TeacherService {
         List<TeacherEntity> teachers = teacherRepository.findByActive(false);
         return teachers.stream().map(teacher -> {
             TeacherDto teacherDto = TeacherMapper.mapToDto(teacher);
-                return teacherDto;
+            return teacherDto;
         }).collect(Collectors.toList());
     }
 
     @Override
     public TeacherDto getTeacherById(Long id) {
         TeacherEntity teacher = teacherRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher not found with id: " + id));
         return TeacherMapper.mapToDto(teacher);
+    }
+
+    @Override
+    public List<TeacherDto> searchTeachersByName(String name) {
+        List<TeacherEntity> teachers = teacherRepository.findByName(name);
+        return teachers.stream().map(teacher -> {
+            TeacherDto teacherDto = TeacherMapper.mapToDto(teacher);
+            return teacherDto;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TeacherDto> searchTeachersByEmail(String email) {
+        List<TeacherEntity> teachers = teacherRepository.findByEmail(email);
+        return teachers.stream().map(teacher -> {
+            TeacherDto teacherDto = TeacherMapper.mapToDto(teacher);
+            return teacherDto;
+        }).collect(Collectors.toList());
     }
 }
