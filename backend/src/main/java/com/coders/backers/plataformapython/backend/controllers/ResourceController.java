@@ -1,6 +1,7 @@
 package com.coders.backers.plataformapython.backend.controllers;
 
 import com.coders.backers.plataformapython.backend.dto.resources.ResourceDto;
+import com.coders.backers.plataformapython.backend.models.ResourceModel;
 import com.coders.backers.plataformapython.backend.services.ResourceService;
 import com.coders.backers.plataformapython.backend.services.impl.FileStorageService;
 
@@ -31,38 +32,37 @@ public class ResourceController {
     }
 
     @PostMapping("/upload")
-public ResponseEntity<ResourceDto> uploadResource(
-        @RequestParam("file") MultipartFile file,
-        @RequestParam("title") String title,
-        @RequestParam("contentId") Long contentId,
-        @RequestParam("typeId") Long typeId) {
+    public ResponseEntity<ResourceDto> uploadResource(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("title") String title,
+            @RequestParam("contentId") Long contentId,
+            @RequestParam("typeId") Long typeId) {
 
-    try {
-        String originalFilename = file.getOriginalFilename();
-        String uniqueFilename = UUID.randomUUID() + "_" + originalFilename;
-        String uploadDir = "uploads/videos";
-        Path filePath = Paths.get(uploadDir, uniqueFilename);
+        try {
+            String originalFilename = file.getOriginalFilename();
+            String uniqueFilename = UUID.randomUUID() + "_" + originalFilename;
+            String uploadDir = "uploads/videos";
+            Path filePath = Paths.get(uploadDir, uniqueFilename);
 
-        Files.createDirectories(filePath.getParent());
+            Files.createDirectories(filePath.getParent());
 
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        ResourceDto dto = new ResourceDto();
-        dto.setTitle(title);
-        dto.setContentId(contentId);
-        dto.setTypeId(typeId);
-        dto.setUrl("/uploads/" + uniqueFilename); 
+            ResourceDto dto = new ResourceDto();
+            dto.setTitle(title);
+            dto.setContentId(contentId);
+            dto.setTypeId(typeId);
+            dto.setUrl("/uploads/" + uniqueFilename); 
 
-        ResourceDto saved = resourceService.create(dto);
+            ResourceDto saved = resourceService.create(dto);
 
-        return ResponseEntity.ok(saved);
+            return ResponseEntity.ok(saved);
 
-    } catch (IOException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
-}
-
 
     @PostMapping
     public ResponseEntity<ResourceDto> create(@RequestBody ResourceDto dto) {
@@ -77,6 +77,12 @@ public ResponseEntity<ResourceDto> uploadResource(
     @GetMapping
     public ResponseEntity<List<ResourceDto>> getAll() {
         return ResponseEntity.ok(resourceService.getAll());
+    }
+
+    @GetMapping("/by-lesson/{leccion_id}")
+    public ResponseEntity<List<ResourceDto>> getResourcesByLesson(@PathVariable Long leccion_id) {
+        List<ResourceDto> resources = resourceService.findByLessonId(leccion_id);
+        return ResponseEntity.ok(resources);
     }
 
     @PutMapping("/{id}")
