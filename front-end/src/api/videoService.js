@@ -5,6 +5,16 @@ const VIDEO_API_URL = `${API_URL}/resources`;
 
 export const getAllResources = async () => {
   const response = await axios.get(VIDEO_API_URL);
+  console.log("🚀 ~ getAllResources ~ response:", response);
+  return response.data;
+};
+
+//recurso por leccion
+
+export const getResourceByLesson = async (lessonId) => {
+  console.log("🚀 ~ getResourceByLesson ~ lessonId:", lessonId);
+  const response = await axios.get(`${VIDEO_API_URL}/by-lesson/${lessonId}`);
+  console.log("🚀 ~ getResourceByLesson ~ response:", response);
   return response.data;
 };
 
