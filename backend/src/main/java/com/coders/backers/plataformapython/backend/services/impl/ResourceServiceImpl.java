@@ -2,9 +2,13 @@ package com.coders.backers.plataformapython.backend.services.impl;
 
 import com.coders.backers.plataformapython.backend.mapper.ResourceMapper;
 import com.coders.backers.plataformapython.backend.models.ContenidoModel;
+import com.coders.backers.plataformapython.backend.models.CourseEntity;
+import com.coders.backers.plataformapython.backend.models.LessonEntity;
 import com.coders.backers.plataformapython.backend.models.ResourceTypeModel;
 import com.coders.backers.plataformapython.backend.models.ResourceModel;
 import com.coders.backers.plataformapython.backend.repository.ContenidoRepository;
+import com.coders.backers.plataformapython.backend.repository.CourseRepository;
+import com.coders.backers.plataformapython.backend.repository.LessonRepository;
 import com.coders.backers.plataformapython.backend.repository.ResourceTypeRepository;
 import com.coders.backers.plataformapython.backend.repository.ResourceRepository;
 import com.coders.backers.plataformapython.backend.services.ResourceService;
@@ -18,18 +22,19 @@ import java.util.stream.Collectors;
 public class ResourceServiceImpl implements ResourceService {
 
     private final ResourceRepository repository;
-    private final ContenidoRepository contenidoRepository;
+   // private final ContenidoRepository contenidoRepository;
+   private final LessonRepository lessonRepository;
     private final ResourceTypeRepository typeRepository;
 
-    public ResourceServiceImpl(ResourceRepository repository, ContenidoRepository contenidoRepository, ResourceTypeRepository typeRepository) {
+    public ResourceServiceImpl(ResourceRepository repository, LessonRepository courseRepository, ResourceTypeRepository typeRepository) {
         this.repository = repository;
-        this.contenidoRepository = contenidoRepository;
+        this.lessonRepository = courseRepository;
         this.typeRepository = typeRepository;
     }
 
     @Override
     public ResourceDto create(ResourceDto dto) {
-        ContenidoModel content = contenidoRepository.findById(dto.getContentId())
+        LessonEntity content = lessonRepository.findById(dto.getContentId())
             .orElseThrow(() -> new ResourceNotFoundException("Content not found"));
 
         ResourceTypeModel type = typeRepository.findById(dto.getTypeId())
@@ -37,7 +42,6 @@ public class ResourceServiceImpl implements ResourceService {
 
         ResourceModel model = ResourceMapper.toModel(dto, content, type);
 
-        // NUEVO: establece tipo de origen (URL o FILE)
         model.setSourceType(dto.getSourceType());
         model.setSource(dto.getSource());
 
@@ -63,7 +67,7 @@ public class ResourceServiceImpl implements ResourceService {
         ResourceModel existing = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
 
-        ContenidoModel content = contenidoRepository.findById(dto.getContentId())
+        LessonEntity content = lessonRepository.findById(dto.getContentId())
             .orElseThrow(() -> new ResourceNotFoundException("Content not found"));
 
         ResourceTypeModel type = typeRepository.findById(dto.getTypeId())
@@ -74,7 +78,6 @@ public class ResourceServiceImpl implements ResourceService {
         existing.setUrl(dto.getUrl());
         existing.setTitle(dto.getTitle());
 
-        // NUEVO: actualiza tipo de fuente y fuente
         existing.setSourceType(dto.getSourceType());
         existing.setSource(dto.getSource());
 
@@ -87,6 +90,14 @@ public class ResourceServiceImpl implements ResourceService {
             throw new ResourceNotFoundException("Resource not found");
         }
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<ResourceDto> findByLessonId(Long leccion_id) {
+        List<ResourceModel> resources = repository.findByContent_Id(leccion_id);
+        return resources.stream()
+                .map(ResourceMapper::toDto) 
+                .toList();
     }
 }
 

@@ -49,7 +49,7 @@ const LeccionesNivel = () => {
           <div
             key={leccion.id}
             className="leccion-card"
-            onClick={() => navigate(`/cursos/${id}/lecciones/Practica`)}
+            onClick={() => navigate(`/cursos/${leccion.id}/lecciones/Practica`)}
             style={{ cursor: "pointer" }}
           >
             <h3 className="leccion-title">{leccion.title}</h3>

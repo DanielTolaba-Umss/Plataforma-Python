@@ -1,6 +1,7 @@
 package com.coders.backers.plataformapython.backend.controllers;
 
 import com.coders.backers.plataformapython.backend.dto.resources.ResourceDto;
+import com.coders.backers.plataformapython.backend.models.ResourceModel;
 import com.coders.backers.plataformapython.backend.services.ResourceService;
 import com.coders.backers.plataformapython.backend.services.impl.FileStorageService;
 
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,41 +33,46 @@ public class ResourceController {
         this.fileStorageService = fileStorageService;
     }
 
-    @PostMapping("/upload")
-public ResponseEntity<ResourceDto> uploadResource(
-        @RequestParam("file") MultipartFile file,
-        @RequestParam("title") String title,
-        @RequestParam("contentId") Long contentId,
-        @RequestParam("typeId") Long typeId) {
+  @PostMapping("/upload")
+    public ResponseEntity<ResourceDto> uploadResource(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("title") String title,
+            @RequestParam("contentId") Long contentId,
+            @RequestParam("typeId") Long typeId) {
 
-    try {
-        String originalFilename = file.getOriginalFilename();
-        String uniqueFilename = UUID.randomUUID() + "_" + originalFilename;
-        String uploadDir = "uploads/videos";
-        Path filePath = Paths.get(uploadDir, uniqueFilename);
+        try {
+            String originalFilename = file.getOriginalFilename();
 
-        // Asegúrate de que el directorio existe
-        Files.createDirectories(filePath.getParent());
+            String sanitizedFilename = originalFilename != null
+                    ? originalFilename.replaceAll("\\s+", "_")
+                    : "archivo.mp4";
 
-        // Guardar archivo
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        // Guardar registro en la base de datos
-        ResourceDto dto = new ResourceDto();
-        dto.setTitle(title);
-        dto.setContentId(contentId);
-        dto.setTypeId(typeId);
-        dto.setUrl("/uploads/" + uniqueFilename); // URL accesible desde el frontend
+            String uniqueFilename = UUID.randomUUID() + "_" + sanitizedFilename;
 
-        ResourceDto saved = resourceService.create(dto);
+            String uploadDir = "uploads/videos";
+            Path filePath = Paths.get(uploadDir, uniqueFilename);
+            Files.createDirectories(filePath.getParent());
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        return ResponseEntity.ok(saved);
+            String encodedFilename = URLEncoder.encode(uniqueFilename, StandardCharsets.UTF_8);
+            String url = "/uploads/videos/" + encodedFilename;
 
-    } catch (IOException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            ResourceDto dto = new ResourceDto();
+            dto.setTitle(title);
+            dto.setContentId(contentId);
+            dto.setTypeId(typeId);
+            dto.setUrl(url);
+
+            ResourceDto saved = resourceService.create(dto);
+
+            return ResponseEntity.ok(saved);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
-}
 
 
     @PostMapping
@@ -80,6 +88,12 @@ public ResponseEntity<ResourceDto> uploadResource(
     @GetMapping
     public ResponseEntity<List<ResourceDto>> getAll() {
         return ResponseEntity.ok(resourceService.getAll());
+    }
+
+    @GetMapping("/by-lesson/{leccion_id}")
+    public ResponseEntity<List<ResourceDto>> getResourcesByLesson(@PathVariable Long leccion_id) {
+        List<ResourceDto> resources = resourceService.findByLessonId(leccion_id);
+        return ResponseEntity.ok(resources);
     }
 
     @PutMapping("/{id}")

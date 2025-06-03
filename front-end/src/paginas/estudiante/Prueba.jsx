@@ -1,10 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "/src/paginas/estudiante/estilos/Prueba.css";
 import Editor from "./Editor"; // 🔥 Editor separado
 import VisorPDF from "./VisorPDF"; // 🔥 VisorPDF separado
+import { useParams } from "react-router-dom";
+
+import { environment } from "../../environment/environment";
+
+import { getResourceByLesson } from "../../api/videoService";
+import { convertToEmbedUrl } from "../../utils/convertYoutubeUrl";
 
 const Prueba = () => {
+  const { id } = useParams();
   const [vistaActual, setVistaActual] = useState("pdf");
+  const [videoUrl, setVideoUrl] = useState(null);
+
+  const esYoutube = (url) =>
+    url.includes("youtube.com") || url.includes("youtu.be");
+
+  useEffect(() => {
+    const getVideo = async () => {
+      try {
+        const leccion = await getResourceByLesson(id);
+        console.log("🚀 ~ useEffect ~ leccion:", leccion);
+        let embedUrl = leccion[0].url;
+
+        if (esYoutube(embedUrl)) {
+          embedUrl = convertToEmbedUrl(leccion[0].url);
+        } else {
+          embedUrl = `${environment.apiUrl}${leccion[0].url}`;
+        }
+        console.log("🚀 ~ getVideo ~ embedUrl:", embedUrl);
+
+        if (embedUrl) {
+          setVideoUrl(embedUrl);
+        }
+      } catch (error) {
+        console.error("Error al cargar la lección:", error);
+      }
+    };
+    getVideo();
+  }, []);
 
   return (
     <div className="prueba-container">
@@ -19,16 +54,28 @@ const Prueba = () => {
 
         <section className="video-section">
           <div className="video-card">
-            <iframe
-              width="100%"
-              height="315"
-              src="https://www.youtube.com/embed/4f3GpJZtvns?start=6"
-              title="Visualizador de Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
+            {videoUrl ? (
+              esYoutube(videoUrl) ? (
+                <iframe
+                  width="100%"
+                  height="315"
+                  src={videoUrl}
+                  title="Visualizador de Video"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                <video width="100%" height="315" controls>
+                  <source src={videoUrl} type="video/mp4" />
+                  Tu navegador no soporta el tag de video.
+                </video>
+              )
+            ) : (
+              <p>Cargando video...</p>
+            )}
           </div>
+
           <div
             className="transcriptor"
             role="region"
