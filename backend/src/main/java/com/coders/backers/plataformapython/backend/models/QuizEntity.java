@@ -38,6 +38,6 @@ public class QuizEntity {
     private boolean active;
 
     @ManyToOne
-    @JoinColumn(name = "contenido_id", nullable = false)
-    private ContenidoModel contenido;
+    @JoinColumn(name = "course_id", nullable = false)
+    private CourseEntity course;
 }
