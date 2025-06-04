@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,7 +33,7 @@ public class ResourceController {
         this.fileStorageService = fileStorageService;
     }
 
-    @PostMapping("/upload")
+  @PostMapping("/upload")
     public ResponseEntity<ResourceDto> uploadResource(
             @RequestParam("file") MultipartFile file,
             @RequestParam("title") String title,
@@ -40,19 +42,27 @@ public class ResourceController {
 
         try {
             String originalFilename = file.getOriginalFilename();
-            String uniqueFilename = UUID.randomUUID() + "_" + originalFilename;
+
+            String sanitizedFilename = originalFilename != null
+                    ? originalFilename.replaceAll("\\s+", "_")
+                    : "archivo.mp4";
+
+
+            String uniqueFilename = UUID.randomUUID() + "_" + sanitizedFilename;
+
             String uploadDir = "uploads/videos";
             Path filePath = Paths.get(uploadDir, uniqueFilename);
-
             Files.createDirectories(filePath.getParent());
-
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            String encodedFilename = URLEncoder.encode(uniqueFilename, StandardCharsets.UTF_8);
+            String url = "/uploads/videos/" + encodedFilename;
 
             ResourceDto dto = new ResourceDto();
             dto.setTitle(title);
             dto.setContentId(contentId);
             dto.setTypeId(typeId);
-            dto.setUrl("/uploads/" + uniqueFilename); 
+            dto.setUrl(url);
 
             ResourceDto saved = resourceService.create(dto);
 
@@ -63,6 +73,7 @@ public class ResourceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @PostMapping
     public ResponseEntity<ResourceDto> create(@RequestBody ResourceDto dto) {
