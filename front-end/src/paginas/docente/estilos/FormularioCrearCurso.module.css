@@ -1,0 +1,113 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  
+  .modalContent {
+    background-color: white;
+    width: 100%;
+    max-width: 24rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    border: 1px solid #306998;
+    border-Top: 4px solid #ffd438;
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #E5E5E5;
+  }
+  
+  .modalTitle {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #070707;
+  }
+  
+  .closeButton {
+    color: #6b7280;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .closeButton:hover {
+    color: #300898;
+    background-color: #E5E5E5;
+  }
+  
+  .closeIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .formGroup {
+    margin-bottom: 1rem;
+  }
+  
+  .label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #010101;
+    margin-bottom: 0.5rem;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: #0f0e0e;
+  }
+  
+  .textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    min-height: 5rem;
+  }
+  
+  .textarea:focus {
+    outline: none;
+    border-color: #0b0b0b; /* Borde amarillo al focus */
+  }
+  
+  .submitButton {
+    background-color: #306998;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    margin-top: 0.5rem;
+  }
+  
+  .submitButton:hover {
+    background-color: #300898;
+  }
