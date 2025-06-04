@@ -134,7 +134,7 @@ public class ResourceController {
         ResourceDto dto = new ResourceDto();
         dto.setTitle(title);
         dto.setContentId(contentId);
-        dto.setTypeId(typeId); // Este ID debe corresponder al tipo "PDF"
+        dto.setTypeId(typeId);
         dto.setUrl(url);
 
         ResourceDto saved = resourceService.create(dto);
@@ -156,18 +156,14 @@ public ResponseEntity<ResourceDto> updatePdf(
         @RequestParam("typeId") Long typeId) {
 
     try {
-        // Buscar el recurso actual
         ResourceDto existing = resourceService.getById(id);
         if (existing == null) {
             return ResponseEntity.notFound().build();
         }
-
-        // Eliminar archivo anterior si existe
         String oldPath = existing.getUrl().replace("/uploads/pdfs/", "uploads/pdfs/");
         Path oldFilePath = Paths.get(oldPath);
         Files.deleteIfExists(oldFilePath);
 
-        // Guardar nuevo archivo
         String originalFilename = file.getOriginalFilename();
         String sanitizedFilename = originalFilename != null ? originalFilename.replaceAll("\\s+", "_") : "documento.pdf";
         String uniqueFilename = UUID.randomUUID() + "_" + sanitizedFilename;
@@ -177,7 +173,6 @@ public ResponseEntity<ResourceDto> updatePdf(
         Files.createDirectories(newFilePath.getParent());
         Files.copy(file.getInputStream(), newFilePath, StandardCopyOption.REPLACE_EXISTING);
 
-        // Actualizar información
         String encodedFilename = URLEncoder.encode(uniqueFilename, StandardCharsets.UTF_8);
         String url = "/uploads/pdfs/" + encodedFilename;
 
@@ -202,16 +197,11 @@ public ResponseEntity<Void> deletePdf(@PathVariable Long id) {
         if (resource == null) {
             return ResponseEntity.notFound().build();
         }
-
-        // Eliminar archivo del sistema de archivos
         String filePathStr = resource.getUrl().replace("/uploads/pdfs/", "uploads/pdfs/");
         Path filePath = Paths.get(filePathStr);
         Files.deleteIfExists(filePath);
-
-        // Eliminar recurso de la base de datos
         resourceService.delete(id);
         return ResponseEntity.noContent().build();
-
     } catch (IOException e) {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
