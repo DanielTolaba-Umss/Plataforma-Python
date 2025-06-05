@@ -71,7 +71,7 @@ const Sidebar = () => {
                 }`}
                 onClick={() => handleNivelClick(nivel)}
               >
-                {nivel.title}
+                {nivel.level}
               </button>
             ))}
           </div>
