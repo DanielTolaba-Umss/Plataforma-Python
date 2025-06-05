@@ -25,11 +25,9 @@ const Recursos = () => {
 
   // Error state
   const [error, setError] = useState(null);
-
   // PDF form data
   const [pdfData, setPdfData] = useState({
     nombre: "",
-    descripcion: "",
     archivo: null,
     derechosAutor: false,
   });
@@ -231,12 +229,10 @@ const Recursos = () => {
   // Handle drag over
   const handleDragOver = (e) => {
     e.preventDefault();
-  };
-  // Reset PDF form
+  };  // Reset PDF form
   const resetPdfForm = () => {
     setPdfData({
       nombre: "",
-      descripcion: "",
       archivo: null,
       derechosAutor: false,
     });
@@ -275,7 +271,6 @@ const Recursos = () => {
   const handleEditarPdf = (recurso) => {
     setPdfData({
       nombre: recurso.title || recurso.name || recurso.nombre,
-      descripcion: recurso.description || recurso.descripcion || "",
       archivo: null, // No mostramos el archivo existente
       derechosAutor: false, // Reset checkbox for security
     });
@@ -488,19 +483,14 @@ const Recursos = () => {
         ) : (
           <>
             <div className="tabla-container">
-              <div className="recursos-table">
-                <div className="recursos-table-header">
+              <div className="recursos-table">                <div className="recursos-table-header">
                   <div>Nombre</div>
-                  <div>Descripción</div>
                   <div>Tipo</div>
                   <div>Acciones</div>
                 </div>                {pdfRecursos.length > 0 ? (
                   pdfRecursos.map((recurso) => (
                     <div key={recurso.resourceId} className="recursos-table-row">
                       <div>{recurso.title || recurso.name || recurso.nombre}</div>
-                      <div>
-                        {recurso.description || recurso.descripcion || "-"}
-                      </div>
                       <div>PDF</div>
                       <div className="action-buttons">
                         <button
@@ -521,11 +511,10 @@ const Recursos = () => {
                         </button>
                       </div>
                     </div>
-                  ))
-                ) : (
+                  ))                ) : (
                   <div className="recursos-table-row">
                     <div
-                      style={{ textAlign: "center", gridColumn: "1 / span 4" }}
+                      style={{ textAlign: "center", gridColumn: "1 / span 3" }}
                     >
                       {loading ? "Cargando..." : "No hay PDFs disponibles"}
                     </div>
@@ -641,8 +630,7 @@ const Recursos = () => {
                 {modalMode === "crear" ? "Subir PDF" : "Editar PDF"}
               </h3>
             </div>
-            <form onSubmit={handleSubmitPdf}>
-              <div className="recursos-modal-form">
+            <form onSubmit={handleSubmitPdf}>              <div className="recursos-modal-form">
                 <div className="modal-form-full">
                   <input
                     type="text"
@@ -653,17 +641,6 @@ const Recursos = () => {
                     className="input-field"
                     required
                   />
-                </div>
-
-                <div className="modal-form-full">
-                  <textarea
-                    name="descripcion"
-                    placeholder="Descripción del PDF"
-                    value={pdfData.descripcion}
-                    onChange={handlePdfChange}
-                    className="input-field textarea"
-                    rows="3"
-                  ></textarea>
                 </div>
 
                 <div
