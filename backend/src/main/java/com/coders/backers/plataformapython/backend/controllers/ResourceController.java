@@ -5,7 +5,11 @@ import com.coders.backers.plataformapython.backend.models.ResourceModel;
 import com.coders.backers.plataformapython.backend.services.ResourceService;
 import com.coders.backers.plataformapython.backend.services.impl.FileStorageService;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +37,7 @@ public class ResourceController {
         this.fileStorageService = fileStorageService;
     }
 
-@PostMapping("/upload")
+    @PostMapping("/upload")
     public ResponseEntity<ResourceDto> uploadResource(
             @RequestParam("file") MultipartFile file,
             @RequestParam("title") String title,
@@ -208,4 +212,23 @@ public ResponseEntity<Void> deletePdf(@PathVariable Long id) {
     }
 }
 
+    @GetMapping("/pdf/{filename}")
+    public ResponseEntity<Resource> servePdf(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get("uploads/pdfs").resolve(filename);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

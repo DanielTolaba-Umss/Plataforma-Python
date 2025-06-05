@@ -57,46 +57,29 @@ const Recursos = () => {
   // Error modal state
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  // Filtrar recursos de tipo PDF y Video
+  const pdfRecursos = resources.filter((recurso) => recurso.typeId === 2); // Asumiendo typeId 2 para PDFs
+  const videoRecursos = resources.filter((recurso) => recurso.typeId === 3); // Asumiendo typeId 3 para Videos
 
-  // Filtrar solo los recursos de tipo PDF
-  const pdfRecursos = recursos.filter(
-    (recurso) => recurso.name || recurso.nombre
-  );
-
-  // Cargar PDFs al montar el componente
-  useEffect(() => {
-    const fetchPdfs = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const pdfsData = await pdfApi.getAll();
-        console.log("PDFs cargados:", pdfsData);
-        setRecursos(pdfsData);
-      } catch (error) {
-        setError("Error al cargar los PDFs: " + error.message);
-        console.error("Error al cargar PDFs:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPdfs();
-  }, []);
-
+  // Cargar recursos al montar el componente
   useEffect(() => {
     const fetchResources = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const data = await getResourceByLesson(courseId);
         setResources(data);
+        console.log("Recursos cargados:", data);
       } catch (error) {
-        console.error("Error fetching resources:", error);
+        setError("Error al cargar los recursos: " + error.message);
+        console.error("Error al cargar recursos:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchResources();
-  }, []);
+  }, [courseId]);
   // Mostrar notificación
   const showNotification = (message, type = "success") => {
     setNotification({
@@ -261,14 +244,15 @@ const Recursos = () => {
     setModalMode("crear");
     setEditId(null);
   };
-
   // Reset Video form
   const resetVideoForm = () => {
     setVideoData({
-      titulo: "",
-      tipoSubida: "url",
-      url: "",
+      tipoSubida: "archivo", // o "url"
       archivo: null,
+      url: "",
+      title: "",
+      typeId: 3, // ID del tipo de recurso (ej: video)
+      contentId: courseId, // ID del contenido al que pertenece
     });
     setShowVideoModal(false);
     setModalMode("crear");
@@ -287,16 +271,15 @@ const Recursos = () => {
     resetVideoForm();
     setModalMode("crear");
     setShowVideoModal(true);
-  };
-  // Abrir modal para editar un PDF existente
+  };  // Abrir modal para editar un PDF existente
   const handleEditarPdf = (recurso) => {
     setPdfData({
-      nombre: recurso.name || recurso.nombre,
+      nombre: recurso.title || recurso.name || recurso.nombre,
       descripcion: recurso.description || recurso.descripcion || "",
       archivo: null, // No mostramos el archivo existente
       derechosAutor: false, // Reset checkbox for security
     });
-    setEditId(recurso.id);
+    setEditId(recurso.resourceId);
     setModalMode("editar");
     setShowPdfModal(true);
   };
@@ -312,22 +295,17 @@ const Recursos = () => {
       return;
     }
 
-    console.log("Recurso a eliminar:", resourceToDelete);
+    console.log("Recurso a eliminar:", resourceToDelete);    // Determinar el tipo de recurso basándose en el typeId
+    const isPdf = resourceToDelete.typeId === 2;
+    const isVideo = resourceToDelete.typeId === 3;    console.log("Es PDF:", isPdf, "Es Video:", isVideo);
 
-    // Determinar el tipo de recurso basándose en si tiene las propiedades de PDF o Video
-    const isPdf = resourceToDelete.name || resourceToDelete.nombre;
-    const isVideo = resourceToDelete.url || resourceToDelete.resourceId;
-
-    console.log("Es PDF:", isPdf, "Es Video:", isVideo);
-
-    if (isPdf && !isVideo) {
+    if (isPdf) {
       // Es un PDF
       try {
-        setLoading(true);
-        console.log("Eliminando PDF con ID:", resourceToDelete.id);
-        await pdfApi.delete(resourceToDelete.id);
-        setRecursos(
-          recursos.filter((recurso) => recurso.id !== resourceToDelete.id)
+        setLoading(true);console.log("Eliminando PDF con ID:", resourceToDelete.resourceId);
+        await pdfApi.delete(resourceToDelete.resourceId);
+        setResources(
+          resources.filter((recurso) => recurso.resourceId !== resourceToDelete.resourceId)
         );
         showNotification("El PDF ha sido eliminado correctamente");
         setShowDeleteModal(false);
@@ -345,10 +323,9 @@ const Recursos = () => {
       try {
         setLoading(true);
         const videoId = resourceToDelete.resourceId || resourceToDelete.id;
-        console.log("Eliminando video con ID:", videoId);
-        await deleteResource(videoId);
+        console.log("Eliminando video con ID:", videoId);        await deleteResource(videoId);
         setResources(
-          resources.filter((resource) => resource.id !== resourceToDelete.id)
+          resources.filter((resource) => resource.resourceId !== resourceToDelete.resourceId)
         );
         showNotification("El video ha sido eliminado correctamente");
         setShowDeleteModal(false);
@@ -376,34 +353,32 @@ const Recursos = () => {
         "Debe confirmar que tiene los derechos de autor para distribuir este documento."
       );
       return;
-    }
-
-    try {
+    }    try {
       setLoading(true);
       setError(null);
 
       // Crear FormData para enviar el archivo
       const formData = new FormData();
-      formData.append("name", pdfData.nombre);
-      formData.append("description", pdfData.descripcion);
+      formData.append("title", pdfData.nombre);
       formData.append("file", pdfData.archivo);
+      formData.append("contentId", courseId);
+      formData.append("typeId", 2); // ID para PDFs (asumiendo que 2 es para PDFs)
 
-      let result;
       if (modalMode === "crear") {
         // Crear nuevo PDF
-        result = await pdfApi.upload(formData);
-        setRecursos([...recursos, result]);
+        const result = await pdfApi.upload(formData);
         console.log("Recurso creado:", result);
         showNotification("El recurso ha sido subido correctamente");
       } else {
         // Actualizar PDF existente
-        result = await pdfApi.update(editId, formData);
-        setRecursos(
-          recursos.map((recurso) => (recurso.id === editId ? result : recurso))
-        );
+        const result = await pdfApi.update(editId, formData);
         console.log("recurso actualizado:", result);
         showNotification("El recurso ha sido actualizado correctamente");
       }
+
+      // Refresh resources list
+      const updatedResources = await getResourceByLesson(courseId);
+      setResources(updatedResources);
 
       // Cerrar modal y resetear formulario
       resetPdfForm();
@@ -420,41 +395,44 @@ const Recursos = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      setError(null);
-
-      const { titulo, tipoSubida, url, archivo } = videoData;
+      setError(null);      const { title, tipoSubida, url, archivo } = videoData;
 
       if (tipoSubida === "url") {
         // Crear recurso con URL
         const nuevoRecurso = {
           url,
-          title: titulo,
+          title: title,
           typeId: 3,
           contentId: courseId,
-        };
-
-        const response = await createResource(nuevoRecurso);
+        };const response = await createResource(nuevoRecurso);
         console.log("Video por URL guardado:", response);
         showNotification("El video por URL ha sido guardado correctamente");
+        
+        // Refresh resources list
+        const updatedResources = await getResourceByLesson(courseId);
+        setResources(updatedResources);
       } else {
         // Subir archivo .mp4
         if (!archivo) {
           showError("No se seleccionó un archivo de video.");
-          return;
-        }
+          return;        }
 
-        const title = titulo;
+        const titleValue = title;
         const typeId = 3;
         const contentId = courseId;
 
         const response = await uploadResourceFile(
           archivo,
-          title,
+          titleValue,
           typeId,
           contentId
         );
         console.log("Video por archivo subido:", response);
         showNotification("El video ha sido subido correctamente");
+        
+        // Refresh resources list
+        const updatedResources = await getResourceByLesson(courseId);
+        setResources(updatedResources);
       }
 
       // Cerrar modal y resetear formulario
@@ -516,12 +494,10 @@ const Recursos = () => {
                   <div>Descripción</div>
                   <div>Tipo</div>
                   <div>Acciones</div>
-                </div>
-
-                {pdfRecursos.length > 0 ? (
+                </div>                {pdfRecursos.length > 0 ? (
                   pdfRecursos.map((recurso) => (
-                    <div key={recurso.id} className="recursos-table-row">
-                      <div>{recurso.name || recurso.nombre}</div>
+                    <div key={recurso.resourceId} className="recursos-table-row">
+                      <div>{recurso.title || recurso.name || recurso.nombre}</div>
                       <div>
                         {recurso.description || recurso.descripcion || "-"}
                       </div>
@@ -565,10 +541,8 @@ const Recursos = () => {
                   <div>Vista previa/enlace</div>
                   <div>Tipo</div>
                   <div>Acciones</div>
-                </div>
-
-                {resources.length > 0 ? (
-                  resources.map((resource) => (
+                </div>                {videoRecursos.length > 0 ? (
+                  videoRecursos.map((resource) => (
                     <div
                       key={resource.resourceId}
                       className="recursos-table-row"
@@ -578,7 +552,7 @@ const Recursos = () => {
 
                       {/* Vista previa */}
                       <div>
-                        {resource.url.endsWith(".mp4") ? (
+                        {resource.url && resource.url.endsWith(".mp4") ? (
                           <video width="160" controls>
                             <source src={resource.url} type="video/mp4" />
                             Tu navegador no soporta el video.
@@ -596,7 +570,7 @@ const Recursos = () => {
                       </div>
 
                       {/* Tipo */}
-                      <div>{resource.url.endsWith(".mp4") ? "MP4" : "URL"}</div>
+                      <div>{resource.url && resource.url.endsWith(".mp4") ? "MP4" : "URL"}</div>
 
                       {/* Acciones */}
                       <div className="action-buttons">
@@ -797,12 +771,11 @@ const Recursos = () => {
             </div>
             <form onSubmit={handleSubmitVideo}>
               <div className="recursos-modal-form">
-                <div className="modal-form-full">
-                  <input
+                <div className="modal-form-full">                  <input
                     type="text"
-                    name="titulo"
+                    name="title"
                     placeholder="Título del Video"
-                    value={videoData.titulo}
+                    value={videoData.title}
                     onChange={handleVideoChange}
                     className="input-field"
                     required
@@ -901,9 +874,8 @@ const Recursos = () => {
                 <div className="modal-action-buttons">
                   <button
                     type="submit"
-                    className="btn-subir"
-                    disabled={
-                      !videoData.titulo ||
+                    className="btn-subir"                    disabled={
+                      !videoData.title ||
                       (videoData.tipoSubida === "url" && !videoData.url) ||
                       (videoData.tipoSubida === "archivo" &&
                         !videoData.archivo) ||
@@ -931,11 +903,10 @@ const Recursos = () => {
       {showDeleteModal && (
         <div className="recursos-modal-overlay">
           <div className="recursos-modal-content">
-            <h3>Confirmar eliminación</h3>
-            <p>
+            <h3>Confirmar eliminación</h3>            <p>
               ¿Estás seguro de que deseas eliminar el Recurso?{" "}
               <strong>
-                {resourceToDelete?.name || resourceToDelete?.nombre}
+                {resourceToDelete?.title || resourceToDelete?.name || resourceToDelete?.nombre}
               </strong>
               ?
             </p>
