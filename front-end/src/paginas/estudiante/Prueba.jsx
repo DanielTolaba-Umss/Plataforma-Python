@@ -10,21 +10,19 @@ import { getResourceByLesson } from "../../api/videoService";
 import { convertToEmbedUrl } from "../../utils/convertYoutubeUrl";
 
 const Prueba = () => {
-  const { id } = useParams();
-  const [vistaActual, setVistaActual] = useState("pdf");
+  const { id } = useParams();  const [vistaActual, setVistaActual] = useState("pdf");
   const [videoUrl, setVideoUrl] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
-  const [recursos, setRecursos] = useState([]);
 
   const esYoutube = (url) =>
     url.includes("youtube.com") || url.includes("youtu.be");
 
   useEffect(() => {
     const getResources = async () => {
-      try {
-        const leccion = await getResourceByLesson(id);
+      try {        const leccion = await getResourceByLesson(id);
         console.log("🚀 ~ useEffect ~ recursos de lección:", leccion);
-        setRecursos(leccion);        // Buscar video (typeId = 3)
+        
+        // Buscar video (typeId = 3)
         const video = leccion.find((recurso) => recurso.typeId === 3);
         if (video && video.url) {
           let embedUrl = video.url;

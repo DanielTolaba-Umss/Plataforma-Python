@@ -46,9 +46,7 @@ const Recursos = () => {
   const [notification, setNotification] = useState({
     show: false,
     message: "",
-    type: "success",
-  }); // Estado para manejar los recursos
-  const [recursos, setRecursos] = useState([]);
+    type: "success",  }); // Estado para manejar los recursos
   const [loading, setLoading] = useState(false);
   const [resources, setResources] = useState([]);
 
