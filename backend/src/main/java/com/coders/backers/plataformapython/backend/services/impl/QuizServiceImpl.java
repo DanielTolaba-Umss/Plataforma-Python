@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 public class QuizServiceImpl implements QuizService {
 
     private final QuizRepository quizRepository;
-    private final ContenidoRepository contentRepository;
+    private final CourseRepository courseRepository;
 
     @Override
     public QuizDto createQuiz(CreateQuizDto dto) {
-        ContenidoModel content = contentRepository.findById(dto.getContenidoId())
-                .orElseThrow(() -> new RuntimeException("Contenido no encontrado"));
-        QuizEntity quiz = QuizMapper.fromCreateDto(dto, content);
+        CourseEntity cours = courseRepository.findById(dto.getCourseId())
+                .orElseThrow(() -> new RuntimeException("Nivel no encontrado"));
+        QuizEntity quiz = QuizMapper.fromCreateDto(dto, cours);
         return QuizMapper.toDto(quizRepository.save(quiz));
     }
 
@@ -30,9 +30,9 @@ public class QuizServiceImpl implements QuizService {
     public QuizDto updateQuiz(Long id, UpdateQuizDto dto) {
         QuizEntity quiz = quizRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Quiz no encontrado"));
-        ContenidoModel content = contentRepository.findById(dto.getContenidoId())
-                .orElseThrow(() -> new RuntimeException("Contenido no encontrado"));
-        QuizMapper.updateEntityFromDto(dto, quiz, content);
+        CourseEntity cours = courseRepository.findById(dto.getCourseId())
+                .orElseThrow(() -> new RuntimeException("Nivel no encontrado"));
+        QuizMapper.updateEntityFromDto(dto, quiz, cours);
         return QuizMapper.toDto(quizRepository.save(quiz));
     }
 
