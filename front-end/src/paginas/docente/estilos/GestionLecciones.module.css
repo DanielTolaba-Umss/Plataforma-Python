@@ -104,9 +104,7 @@
 }
 
 .floatingButton {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
+ 
   background-color: #306998;
   color: white;
   padding: 1rem;
@@ -335,16 +333,36 @@
   outline: none;
   border-color: #ffd438;
 }
-.code-area {
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
+.floatingButtonsContainer {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1000;
 }
-
-.textarea {
-  min-height: 100px;
-  resize: vertical;
+.quizzButton {
+  
+  background-color: #306998;
+  color: white;
+  padding: 1rem;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: bold;
+  font-size: 1rem;
+}
+.dualButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
 }

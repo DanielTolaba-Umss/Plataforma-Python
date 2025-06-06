@@ -196,13 +196,21 @@ const GestionLecciones = () => {
         ))}
       </div>
       {!showCreateForm && (
-        <button
-          onClick={() => setShowCreateForm(true)}
-          className={styles.floatingButton}
-        >
-          <Plus />
-        </button>
-      )}
+  <div className={styles.floatingButtonsContainer}>
+    <button
+      onClick={() => navigate('/gestion-curso/lecciones/:courseId/examenes-y-quizzes')}
+      className={styles.quizzButton}
+    >
+      Examenes y Quizzes
+    </button>
+    <button
+      onClick={() => setShowCreateForm(true)}
+      className={styles.floatingButton}
+    >
+      <Plus />
+    </button>
+  </div>
+)}
 
       {showCreateForm && (
         <FormularioCrearLeccion
