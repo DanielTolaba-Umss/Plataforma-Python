@@ -82,7 +82,7 @@
     padding: 0.9rem 1rem;
     font-weight: 600;
     display: grid;
-    grid-template-columns: 1.5fr 1.5fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
     border-bottom: 1px solid #f1f1f1;
 }
 
@@ -90,7 +90,7 @@
     background-color: white;
     padding: 0.9rem 1rem;
     display: grid;
-    grid-template-columns: 1.5fr 1.5fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
     border-bottom: 1px solid #f1f1f1;
 }
 
@@ -124,6 +124,22 @@
     background-color: #300898;
     transform: translateY(-2px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.recursos-button.disabled,
+.recursos-button:disabled {
+    background-color: #9ca3af;
+    color: #6b7280;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recursos-button.disabled:hover,
+.recursos-button:disabled:hover {
+    background-color: #9ca3af;
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .action-buttons {
@@ -181,7 +197,7 @@
     padding: 2rem;
     border-radius: 8px;
     width: 90%;
-    max-width: 500px;
+    max-width: 600px;
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -218,10 +234,23 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
+    width: 100%;
 }
 
 .modal-form-full {
     grid-column: 1 / -1;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Estilo específico para el file drop area dentro del modal */
+.modal-form-full .file-drop-area {
+  padding: 3rem 0;
+  margin: 1rem 0;
+  min-height: 180px;
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box;
 }
 
 .input-field {
@@ -320,12 +349,19 @@
 .file-drop-area {
     border: 2px dashed #d1d5db;
     border-radius: 0.375rem;
-    padding: 2rem 1rem;
+    padding: 3rem 0;
     text-align: center;
     cursor: pointer;
     transition: border-color 0.3s, background-color 0.3s;
-    margin-bottom: 1rem;
+    margin: 1rem 0;
     position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .file-drop-area:hover {
@@ -372,7 +408,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem;
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: rgba(48, 105, 152, 0.05);
+    border-radius: 0.375rem;
+    margin-top: 1rem;
 }
 
 .file-name {
