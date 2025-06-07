@@ -605,65 +605,65 @@ const StudentList = () => {
               </button>
             </div>
             {loading ? (
-              <p>Cargando estudiantes...</p>
-            ) : error ? (
+              <p>Cargando estudiantes...</p>            ) : error ? (
               <p className="error-message">{error}</p>
             ) : (
-              <table className="tabla-estudiantes">
-                {" "}
-                <thead>
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>{" "}
-                <tbody>
-                  {filteredStudents.length > 0 ? (
-                    filteredStudents.map((e) => (
-                      <tr key={e.id}>
-                        <td>
-                          {e.nombres} {e.apellidos}
-                        </td>
-                        <td>{e.email}</td>
-                        <td>{e.telefono}</td>{" "}
-                        <td className="acciones">
-                          <button
-                            className="accion editar"
-                            onClick={() => handleEdit(e)}
-                            title="Editar"
-                          >
-                            <Pencil size={18} />
-                          </button>
-                          <button
-                            className="accion eliminar"
-                            onClick={() => openDeleteModal(e)}
-                            title="Eliminar"
-                          >
-                            <Trash size={18} />
-                          </button>
+              <div className="table-scroll-wrapper">
+                <table className="tabla-estudiantes">
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Email</th>
+                      <th>Teléfono</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredStudents.length > 0 ? (
+                      filteredStudents.map((e) => (
+                        <tr key={e.id}>
+                          <td>
+                            {e.nombres} {e.apellidos}
+                          </td>
+                          <td>{e.email}</td>
+                          <td>{e.telefono}</td>
+                          <td className="acciones">
+                            <button
+                              className="accion editar"
+                              onClick={() => handleEdit(e)}
+                              title="Editar"
+                            >
+                              <Pencil size={18} />
+                            </button>
+                            <button
+                              className="accion eliminar"
+                              onClick={() => openDeleteModal(e)}
+                              title="Eliminar"
+                            >
+                              <Trash size={18} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="4"
+                          style={{
+                            textAlign: "center",
+                            padding: "2rem",
+                            color: "#6b7280",
+                          }}
+                        >
+                          {searchTerm
+                            ? `No se encontraron estudiantes que coincidan con "${searchTerm}"`
+                            : "No hay estudiantes registrados"}
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="4"
-                        style={{
-                          textAlign: "center",
-                          padding: "2rem",
-                          color: "#6b7280",
-                        }}
-                      >
-                        {searchTerm
-                          ? `No se encontraron estudiantes que coincidan con "${searchTerm}"`
-                          : "No hay estudiantes registrados"}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             )}
           </>        )}{" "}
       </div>

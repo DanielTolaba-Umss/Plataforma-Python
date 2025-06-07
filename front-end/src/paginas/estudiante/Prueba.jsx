@@ -10,36 +10,46 @@ import { getResourceByLesson } from "../../api/videoService";
 import { convertToEmbedUrl } from "../../utils/convertYoutubeUrl";
 
 const Prueba = () => {
-  const { id } = useParams();
-  const [vistaActual, setVistaActual] = useState("pdf");
+  const { id } = useParams();  const [vistaActual, setVistaActual] = useState("pdf");
   const [videoUrl, setVideoUrl] = useState(null);
+  const [pdfUrl, setPdfUrl] = useState(null);
 
   const esYoutube = (url) =>
     url.includes("youtube.com") || url.includes("youtu.be");
 
   useEffect(() => {
-    const getVideo = async () => {
-      try {
-        const leccion = await getResourceByLesson(id);
-        console.log("🚀 ~ useEffect ~ leccion:", leccion);
-        let embedUrl = leccion[0].url;
-
-        if (esYoutube(embedUrl)) {
-          embedUrl = convertToEmbedUrl(leccion[0].url);
-        } else {
-          embedUrl = `${environment.apiUrl}${leccion[0].url}`;
-        }
-        console.log("🚀 ~ getVideo ~ embedUrl:", embedUrl);
-
-        if (embedUrl) {
+    const getResources = async () => {
+      try {        const leccion = await getResourceByLesson(id);
+        console.log("🚀 ~ useEffect ~ recursos de lección:", leccion);
+        
+        // Buscar video (typeId = 3)
+        const video = leccion.find((recurso) => recurso.typeId === 3);
+        if (video && video.url) {
+          let embedUrl = video.url;
+          if (esYoutube(embedUrl)) {
+            embedUrl = convertToEmbedUrl(video.url);
+          } else {
+            // Para videos locales, usar la URL base de archivos estáticos
+            embedUrl = `${environment.staticUrl}${video.url}`;
+          }
+          console.log("🚀 ~ getResources ~ Video URL:", embedUrl);
           setVideoUrl(embedUrl);
+        }        // Buscar PDF (typeId = 2)
+        const pdf = leccion.find((recurso) => recurso.typeId === 2);
+        if (pdf && pdf.url) {
+          // Extraer el nombre del archivo del URL
+          const filename = pdf.url.split('/').pop();
+          // Usar el endpoint específico para PDFs
+          const pdfUrlComplete = `${environment.apiUrl}/resources/pdf/${filename}`;
+          console.log("🚀 ~ getResources ~ PDF URL:", pdfUrlComplete);
+          setPdfUrl(pdfUrlComplete);
         }
       } catch (error) {
-        console.error("Error al cargar la lección:", error);
+        console.error("Error al cargar los recursos de la lección:", error);
       }
     };
-    getVideo();
-  }, []);
+    getResources();
+  }, [id]);
 
   return (
     <div className="prueba-container">
@@ -105,11 +115,27 @@ const Prueba = () => {
             Práctica
           </span>
         </div>
-      </div>
-
-      {/* 🔥 Mostrar solo uno según la vista */}
+      </div>      {/* 🔥 Mostrar solo uno según la vista */}
       {vistaActual === "pdf" && (
-        <VisorPDF src="/src/assets/pythonbookPrueba.pdf" /> // Cambiar ruta del PDF
+        <div>
+          {pdfUrl ? (
+            <VisorPDF src={pdfUrl} />
+          ) : (
+            <div className="visor-pdf">
+              <h4>Visor de PDF</h4>
+              <div style={{ 
+                padding: "2rem", 
+                textAlign: "center", 
+                backgroundColor: "#f8f9fa", 
+                borderRadius: "8px",
+                margin: "1rem 0"
+              }}>
+                <p>No hay PDF disponible para esta lección.</p>
+                <small>El docente aún no ha subido material de apoyo en PDF.</small>
+              </div>
+            </div>
+          )}
+        </div>
       )}
 
       {vistaActual === "practica" && (
