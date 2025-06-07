@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { quizzesAPI } from "../../../api/quizzes";
-import styles from "/src/paginas/docente/estilos/GestionLecciones.module.css";
-import { useParams } from 'react-router-dom';
+import { questionsAPI } from '../../../api/question';
+import styles from "/src/paginas/docente/estilos/CrearQuiz.module.css";
 
 const CrearQuizz = () => {
   const navigate = useNavigate();
@@ -30,6 +30,7 @@ const CrearQuizz = () => {
   });
 
   const [newOption, setNewOption] = useState('');
+
   const handleQuizChange = (e) => {
     const { name, value, type, checked } = e.target;
     setQuizData({
@@ -39,41 +40,81 @@ const CrearQuizz = () => {
   };
 
   const handleQuestionChange = (e) => {
-    const { name, value } = e.target;
-    setCurrentQuestion({
-      ...currentQuestion,
-      [name]: value
-    });
-  };
+  const { name, value } = e.target;
+
+  setCurrentQuestion(prev => ({
+    ...prev,
+    [name]: name === 'puntos' ? parseInt(value) || 0 : value
+  }));
+};
 
   const handleAddOption = () => {
     if (newOption.trim()) {
-      setCurrentQuestion({
-        ...currentQuestion,
-        opciones: [...currentQuestion.opciones, newOption]
-      });
+      setCurrentQuestion(prev => ({
+        ...prev,
+        opciones: [...prev.opciones, newOption]
+      }));
       setNewOption('');
     }
   };
 
   const handleAddQuestion = () => {
-    if (currentQuestion.texto_pregunta.trim() && 
-        (currentQuestion.tipo_pregunta !== 'opcion_multiple' || 
-         currentQuestion.opciones.length > 0)) {
-      setQuizData({
-        ...quizData,
-        preguntas: [...quizData.preguntas, currentQuestion]
-      });
-      setCurrentQuestion({
-        texto_pregunta: '',
-        tipo_pregunta: 'opcion_multiple',
-        puntos: 1,
-        opciones: [],
-        respuesta_correcta: '',
-        explicacion: ''
-      });
+  const { texto_pregunta, tipo_pregunta, puntos, opciones, respuesta_correcta } = currentQuestion;
+
+  if (!texto_pregunta.trim()) {
+    alert("La pregunta no puede estar vacía.");
+    return;
+  }
+
+  if (puntos <= 0) {
+    alert("Los puntos deben ser mayores a 0.");
+    return;
+  }
+
+  if (tipo_pregunta === 'opcion_multiple') {
+    if (opciones.length < 2) {
+      alert("Debe haber al menos dos opciones para preguntas de opción múltiple.");
+      return;
     }
+
+    if (!respuesta_correcta.trim()) {
+      alert("Debe seleccionar una respuesta correcta.");
+      return;
+    }
+
+    if (!opciones.includes(respuesta_correcta)) {
+      alert("La respuesta correcta no está entre las opciones.");
+      return;
+    }
+  }
+
+  if (tipo_pregunta === 'verdadero_falso' && !['Verdadero', 'Falso'].includes(respuesta_correcta)) {
+    alert("Seleccione 'Verdadero' o 'Falso' como respuesta.");
+    return;
+  }
+
+  const preguntaValida = {
+    ...currentQuestion,
+    texto_pregunta: texto_pregunta.trim(),
+    puntos: parseInt(puntos),
+    opciones: tipo_pregunta === 'opcion_multiple' ? opciones : [],
+    respuesta_correcta: respuesta_correcta.trim()
   };
+
+  setQuizData(prev => ({
+    ...prev,
+    preguntas: [...prev.preguntas, preguntaValida]
+  }));
+
+  setCurrentQuestion({
+    texto_pregunta: '',
+    tipo_pregunta: 'opcion_multiple',
+    puntos: 1,
+    opciones: [],
+    respuesta_correcta: '',
+    explicacion: ''
+  });
+};
 
   const validateQuiz = () => {
     if (!quizData.titulo.trim()) {
@@ -99,21 +140,19 @@ const CrearQuizz = () => {
   };
 
   const handleSubmit = async (e) => {
-      console.log("Se presionó Guardar Quizz"); // Este log DEBE aparecer en consola
     e.preventDefault();
     if (!validateQuiz()) return;
     
     setIsSubmitting(true);
     
     try {
-      console.log("Preguntas actuales:", quizData.preguntas);
       const quizToSend = {
         titulo: quizData.titulo,
         descripcion: quizData.descripcion,
         duracionMinutos: quizData.duracionMinutos,
         intentosPermitidos: quizData.intentosPermitidos,
         puntuacionAprobacion: quizData.puntuacionAprobacion,
-        es_aleatorio: quizData.aleatorio,
+        aleatorio: quizData.aleatorio,
         esta_activo: quizData.active,
         courseId: quizData.courseId,
         preguntas: quizData.preguntas.map(pregunta => ({
@@ -130,7 +169,7 @@ const CrearQuizz = () => {
       
       if (response.status === 201) {
         alert('Quiz guardado exitosamente');
-        navigate('/docente/examenes-y-quizzes');
+        navigate(`/gestion-curso/lecciones/${nivelId}/examenes-y-quizzes/`);
       } else {
         throw new Error(response.data?.message || 'Error al guardar el quiz');
       }
@@ -149,34 +188,32 @@ const CrearQuizz = () => {
       
       alert(errorMessage);
       console.error('Error detallado:', error);
+      console.log("Quiz a enviar:", quizToSend);
+
     } finally {
       setIsSubmitting(false);
     }
   };
+
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
+    <div className={styles.coursesContainer}>
+      <header className={styles.coursesHeader}>
         <div className="container py-3 d-flex justify-content-between align-items-center">
           <h1 className="fw-bold text-dark mb-4" style={{ fontSize: "1.875rem" }}>
             Crear Nuevo Quiz
           </h1>
           <div className="admin-profile d-flex align-items-center gap-2">
-            <span className="fw-semibold">Docente</span>
-            <div
-              className="admin-avatar bg-success text-white rounded-circle d-flex justify-content-center align-items-center"
-              style={{ width: "40px", height: "40px" }}
-            >
-              GC
-            </div>
           </div>
         </div>
       </header>
+
       <main className={styles.mainContent}>
-        <div className={styles.formContainer}>
-          <form onSubmit={handleSubmit} className={styles.quizForm}>
+        <div className={styles.courseCard}>
+          <form onSubmit={handleSubmit} className={styles.quizForm} noValidate>
             <div className={styles.formGroup}>
-              <label>Título del Quiz *</label>
+              <label htmlFor="titulo">Título del Quiz *</label>
               <input
+                id="titulo"
                 type="text"
                 name="titulo"
                 value={quizData.titulo}
@@ -185,9 +222,11 @@ const CrearQuizz = () => {
                 className={styles.formInput}
               />
             </div>
+
             <div className={styles.formGroup}>
-              <label>Descripción</label>
+              <label htmlFor="descripcion">Descripción</label>
               <textarea
+                id="descripcion"
                 name="descripcion"
                 value={quizData.descripcion}
                 onChange={handleQuizChange}
@@ -198,8 +237,9 @@ const CrearQuizz = () => {
 
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
-                <label>Duración (minutos) *</label>
+                <label htmlFor="duracionMinutos">Duración (minutos) *</label>
                 <input
+                  id="duracionMinutos"
                   type="number"
                   name="duracionMinutos"
                   value={quizData.duracionMinutos}
@@ -211,8 +251,9 @@ const CrearQuizz = () => {
               </div>
 
               <div className={styles.formGroup}>
-                <label>Intentos Permitidos *</label>
+                <label htmlFor="intentosPermitidos">Intentos Permitidos *</label>
                 <input
+                  id="intentosPermitidos"
                   type="number"
                   name="intentosPermitidos"
                   value={quizData.intentosPermitidos}
@@ -226,8 +267,9 @@ const CrearQuizz = () => {
 
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
-                <label>Puntuación para Aprobar (%) *</label>
+                <label htmlFor="puntuacionAprobacion">Puntuación para Aprobar (%) *</label>
                 <input
+                  id="puntuacionAprobacion"
                   type="number"
                   name="puntuacionAprobacion"
                   value={quizData.puntuacionAprobacion}
@@ -238,27 +280,15 @@ const CrearQuizz = () => {
                   className={styles.formInput}
                 />
               </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.checkboxLabel}>
-                  <input
-                    type="checkbox"
-                    name="aleatorio"
-                    checked={quizData.aleatorio}
-                    onChange={handleQuizChange}
-                    className={styles.formCheckbox}
-                  />
-                  Preguntas en orden aleatorio
-                </label>
-              </div>
             </div>
 
             <h2 className={styles.sectionTitle}>Preguntas del Quiz</h2>
-
+            
             <div className={styles.questionForm}>
               <div className={styles.formGroup}>
-                <label>Texto de la Pregunta *</label>
+                <label htmlFor="texto_pregunta">Texto de la Pregunta *</label>
                 <textarea
+                  id="texto_pregunta"
                   name="texto_pregunta"
                   value={currentQuestion.texto_pregunta}
                   onChange={handleQuestionChange}
@@ -270,8 +300,9 @@ const CrearQuizz = () => {
 
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
-                  <label>Tipo de Pregunta *</label>
+                  <label htmlFor="tipo_pregunta">Tipo de Pregunta *</label>
                   <select
+                    id="tipo_pregunta"
                     name="tipo_pregunta"
                     value={currentQuestion.tipo_pregunta}
                     onChange={handleQuestionChange}
@@ -284,62 +315,69 @@ const CrearQuizz = () => {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label>Puntos *</label>
+                  <label htmlFor="puntos">Puntos *</label>
                   <input
+                    id="puntos"
                     type="number"
                     name="puntos"
                     value={currentQuestion.puntos}
                     onChange={handleQuestionChange}
                     min="1"
-                    required
                     className={styles.formInput}
                   />
                 </div>
               </div>
 
               {currentQuestion.tipo_pregunta === 'opcion_multiple' && (
-                <div className={styles.formGroup}>
-                  <label>Opciones *</label>
-                  <div className={styles.optionsContainer}>
-                    {currentQuestion.opciones.map((opcion, index) => (
-                      <div key={index} className={styles.optionItem}>
-                        <input
-                          type="radio"
-                          name="respuesta_correcta"
-                          value={opcion}
-                          checked={currentQuestion.respuesta_correcta === opcion}
-                          onChange={() => setCurrentQuestion({
-                            ...currentQuestion,
-                            respuesta_correcta: opcion
-                          })}
-                          className={styles.optionRadio}
-                        />
-                        <span>{opcion}</span>
-                      </div>
-                    ))}
-                    <div className={styles.addOptionContainer}>
+                <>
+                  <div className={styles.formGroup}>
+                    <label>Opciones</label>
+                    <ul className={styles.optionsList}>
+                      {currentQuestion.opciones.map((opcion, idx) => (
+                        <li key={idx} className={styles.optionItem}>
+                          {opcion}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className={styles.addOption}>
                       <input
                         type="text"
                         value={newOption}
-                        onChange={(e) => setNewOption(e.target.value)}
-                        placeholder="Nueva opción"
-                        className={styles.optionInput}
+                        onChange={e => setNewOption(e.target.value)}
+                        placeholder="Agregar nueva opción"
+                        className={styles.formInput}
                       />
-                      <button
-                        type="button"
-                        onClick={handleAddOption}
-                        className={styles.addOptionButton}
-                      >
-                        Agregar Opción
+                      <button type="button" onClick={handleAddOption} className={styles.submitButton}>
+                        +
                       </button>
                     </div>
                   </div>
-                </div>
+
+                  <div className={styles.formGroup}>
+                    <label htmlFor="respuesta_correcta">Respuesta Correcta *</label>
+                    <select
+                      id="respuesta_correcta"
+                      name="respuesta_correcta"
+                      value={currentQuestion.respuesta_correcta}
+                      onChange={handleQuestionChange}
+                      className={styles.formSelect}
+                      required
+                    >
+                      <option value="">-- Seleccione la respuesta correcta --</option>
+                      {currentQuestion.opciones.map((opcion, idx) => (
+                        <option key={idx} value={opcion}>
+                          {opcion}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </>
               )}
 
               <div className={styles.formGroup}>
-                <label>Explicación (Opcional)</label>
+                <label htmlFor="explicacion">Explicación (opcional)</label>
                 <textarea
+                  id="explicacion"
                   name="explicacion"
                   value={currentQuestion.explicacion}
                   onChange={handleQuestionChange}
@@ -351,53 +389,44 @@ const CrearQuizz = () => {
               <button
                 type="button"
                 onClick={handleAddQuestion}
-                className={styles.addQuestionButton}
-                disabled={!currentQuestion.texto_pregunta.trim() ||
-                          (currentQuestion.tipo_pregunta === 'opcion_multiple' &&
-                           currentQuestion.opciones.length === 0)}
+                className={styles.submitButton}
+                disabled={!currentQuestion.texto_pregunta.trim()}
               >
-                Agregar Pregunta
+                Guardar Pregunta
               </button>
+              <div className={styles.formGroup}>
+  <label>
+    <input
+      type="checkbox"
+      name="aleatorio"
+      checked={quizData.aleatorio}
+      onChange={handleQuizChange}
+      className={styles.formCheckbox}
+    />
+    Preguntas aleatorias
+  </label>
+</div>
+
             </div>
 
-            {quizData.preguntas.length > 0 && (
-              <div className={styles.questionsList}>
-                <h3>Preguntas agregadas ({quizData.preguntas.length})</h3>
-                <ul>
-                  {quizData.preguntas.map((pregunta, index) => (
-                    <li key={index} className={styles.questionItem}>
-                      <div className={styles.questionHeader}>
-                        <span>{pregunta.texto_pregunta}</span>
-                        <span>{pregunta.puntos} punto{pregunta.puntos !== 1 ? 's' : ''}</span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <hr className={styles.separator} />
 
-            <div className={styles.formActions}>
-              <button
-                type="button"
-                onClick={() => navigate('/docente/examenes-y-quizzes')}
-                className={`${styles.modalButton} ${styles.cancelButton}`}
-                disabled={isSubmitting}
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                className={`${styles.modalButton} ${styles.confirmButton}`}
-                //disabled={isSubmitting || !quizData.titulo.trim() || quizData.preguntas.length === 0}
-              >
-                {isSubmitting ? (
-                  <>
-                    <span className={styles.loadingSpinner}></span>
-                    Guardando...
-                  </>
-                ) : 'Guardar Quiz'}
-              </button>
+            <div className={styles.quizSummary}>
+              <h3>Preguntas agregadas:</h3>
+              <ul className={styles.questionList}>
+                {quizData.preguntas.map((preg, index) => (
+                  <li key={index} className={styles.questionListItem}>
+                    {index + 1}. {preg.texto_pregunta} ({preg.tipo_pregunta}, {preg.puntos} pts)
+                  </li>
+                ))}
+              </ul>
             </div>
+
+             <div className={styles.formGroup} style={{ textAlign: 'center', marginTop: '2rem' }}>
+  <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+    {isSubmitting ? 'Guardando...' : 'Guardar Quiz'}
+  </button>
+</div>
           </form>
         </div>
       </main>

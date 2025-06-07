@@ -17,7 +17,7 @@ const RutasEstudiante = () => {
       <Route path="/cursos/:id/lecciones" element={<Lecciones />} />
       <Route path="/cursos/:id/lecciones/Practica" element={<Prueba />} />
       <Route path="/perfil" element={<PerfilEstudiante />} />
-      <Route path="/cursos/basico/quiz" element={<Quiz />} /> 
+      <Route path="/cursos/:courseId/lecciones/quiz" element={<Quiz />} /> 
 
     </Routes>
   );
