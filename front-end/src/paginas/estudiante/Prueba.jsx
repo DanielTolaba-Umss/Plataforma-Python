@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "/src/paginas/estudiante/estilos/Prueba.css";
 import Editor from "./Editor"; // 🔥 Editor separado
 import VisorPDF from "./VisorPDF"; // 🔥 VisorPDF separado
+import LiveTranscription from "../../componentes/LiveTranscription"; // 🔥 Componente de transcripción en vivo
 import { useParams } from "react-router-dom";
 
 import { environment } from "../../environment/environment";
@@ -84,18 +85,12 @@ const Prueba = () => {
             ) : (
               <p>Cargando video...</p>
             )}
-          </div>
-
-          <div
+          </div>          <div
             className="transcriptor"
             role="region"
             aria-label="Transcriptor del video"
           >
-            <h3>TRANSCRIPTOR</h3>
-            <p>
-              El transcriptor aparecerá aquí cuando el video esté
-              reproduciéndose...
-            </p>
+            <LiveTranscription />
           </div>
         </section>
       </div>
