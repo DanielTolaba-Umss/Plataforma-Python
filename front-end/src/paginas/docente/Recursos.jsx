@@ -9,7 +9,7 @@ import { practiceAPI } from "../../api/practice";
 import {
   createResource,
   uploadResourceFile,
-  getAllResources,
+  getResourceByLesson,
   deleteResource,
 } from "../../api/videoService";
 
@@ -91,7 +91,7 @@ const Recursos = () => {
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const data = await getAllResources();
+        const data = await getResourceByLesson(courseId);
         setResources(data);
       } catch (error) {
         console.error("Error fetching resources:", error);

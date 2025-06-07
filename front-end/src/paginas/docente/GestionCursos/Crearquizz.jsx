@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { quizzesAPI } from "../../../api/quizzes";
-import styles from '/src/paginas/docente/estilos/GestionCurso.module.css';
+import styles from "/src/paginas/docente/estilos/GestionLecciones.module.css";
 import { useParams } from 'react-router-dom';
 
 const CrearQuizz = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-//const [contenidos, setContenidos] = useState([]);
-//const { contenidoId } = useParams();
+  const nivelId = localStorage.getItem("nivelId");
   const [quizData, setQuizData] = useState({
     titulo: '',
     descripcion: '',
@@ -17,7 +16,7 @@ const CrearQuizz = () => {
     puntuacionAprobacion: 70,
     aleatorio: false,
     active: true,
-    //contenidoId: contenidoId, 
+    courseId: nivelId, 
     preguntas: []
   });
 
@@ -111,12 +110,12 @@ const CrearQuizz = () => {
       const quizToSend = {
         titulo: quizData.titulo,
         descripcion: quizData.descripcion,
-        duracion_minutos: quizData.duracionMinutos,
-        intentos_permitidos: quizData.intentosPermitidos,
-        puntuacion_aprobacion: quizData.puntuacionAprobacion,
+        duracionMinutos: quizData.duracionMinutos,
+        intentosPermitidos: quizData.intentosPermitidos,
+        puntuacionAprobacion: quizData.puntuacionAprobacion,
         es_aleatorio: quizData.aleatorio,
         esta_activo: quizData.active,
-        //contenido_id: quizData.contenidoId,
+        courseId: quizData.courseId,
         preguntas: quizData.preguntas.map(pregunta => ({
           texto_pregunta: pregunta.texto_pregunta,
           tipo_pregunta: pregunta.tipo_pregunta,
@@ -154,7 +153,6 @@ const CrearQuizz = () => {
       setIsSubmitting(false);
     }
   };
-
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -187,7 +185,6 @@ const CrearQuizz = () => {
                 className={styles.formInput}
               />
             </div>
-
             <div className={styles.formGroup}>
               <label>Descripción</label>
               <textarea
@@ -391,7 +388,7 @@ const CrearQuizz = () => {
               <button
                 type="submit"
                 className={`${styles.modalButton} ${styles.confirmButton}`}
-                disabled={isSubmitting || !quizData.titulo.trim() || quizData.preguntas.length === 0}
+                //disabled={isSubmitting || !quizData.titulo.trim() || quizData.preguntas.length === 0}
               >
                 {isSubmitting ? (
                   <>

@@ -91,5 +91,13 @@ public class ResourceServiceImpl implements ResourceService {
         }
         repository.deleteById(id);
     }
+
+    @Override
+    public List<ResourceDto> findByLessonId(Long leccion_id) {
+        List<ResourceModel> resources = repository.findByContent_Id(leccion_id);
+        return resources.stream()
+                .map(ResourceMapper::toDto) 
+                .toList();
+    }
 }
 

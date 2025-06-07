@@ -31,7 +31,7 @@ const ExamenesyQuizzes = () => {
   return (
     <div className={styles.coursesContainer}>
       <div className={styles.coursesHeader}>
-        <h2 className={styles.coursesTitle}>Exámenes y Quizzes</h2>
+        <h2 className={styles.coursesTitle}>Quizzes</h2>
         <button
           onClick={() => navigate("/gestion-curso")}
           className={styles.backButton}
@@ -49,20 +49,11 @@ const ExamenesyQuizzes = () => {
   </p>
   <div className={styles.dualButtons}>
     <button
-      onClick={() => navigate("/crear-examen")}
+      onClick={() => navigate("/gestion-curso/lecciones/courseId/examenes-y-quizzes/crear-quizz")}
       className={styles.floatingButton}
-    >
-      <Plus /> Crear examen
-    </button>
-    <button
-      onClick={() => navigate("/crear-quizz")}
-      className={styles.floatingButton}
-    >
-      <Plus /> Crear quiz
-    </button>
+    ><Plus/>Crear quiz</button>
   </div>
 </div>
-
       ) : (
         <>
           <div className={styles.coursesGrid}>
@@ -84,14 +75,7 @@ const ExamenesyQuizzes = () => {
               </div>
             ))}
           </div>
-
           <div className={styles.floatingButtonsContainer}>
-            <button
-              onClick={() => navigate("/crear-examen")}
-              className={styles.floatingButton}
-            >
-              <Plus />
-            </button>
           </div>
         </>
       )}
