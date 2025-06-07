@@ -39,7 +39,6 @@ const GestionLecciones = () => {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [leccionPreview, setLeccionPreview] = useState(null);
   const [hoveredLeccion, setHoveredLeccion] = useState(null);
-
   const nivelId = localStorage.getItem("nivelId");
 
   useEffect(() => {
@@ -266,14 +265,19 @@ const GestionLecciones = () => {
       </div>
 
       {!showCreateForm && (
+      <div className={styles.floatingButtonsContainer}>
+        <button
+         onClick={() =>navigate(`/gestion-curso/lecciones/${nivelId}/examenes-y-quizzes/`)}
+                 className={styles.quizzButton}
+                 >Quizzes</button>
         <button
           onClick={() => setShowCreateForm(true)}
-          className={styles.floatingButton}
-        >
-          <Plus />
-        </button>
-      )}
-
+      className={styles.floatingButton}
+         >
+        <Plus />
+       </button>
+        </div>
+    )}
       {showCreateForm && (
         <FormularioCrearLeccion
           onClose={() => setShowCreateForm(false)}

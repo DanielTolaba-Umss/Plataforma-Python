@@ -58,7 +58,12 @@ const LeccionesNivel = () => {
         ))}
       </div>
       <div className="curso-footer-buttons">
-        <button className="footer-button">Quiz</button>
+      <button
+      className="footer-button"
+    onClick={() => navigate(`/cursos/${id}/lecciones/quiz`)}
+    >
+        Quiz
+      </button>
       </div>
     </div>
   );

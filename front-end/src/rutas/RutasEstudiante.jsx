@@ -4,6 +4,7 @@ import Dashboard from "../paginas/estudiante/Dashboard";
 import Cursos from "../paginas/estudiante/Cursos";
 import Lecciones from "../paginas/estudiante/Cursos/cursos/Lecciones";
 import PerfilEstudiante from "../paginas/estudiante/PerfilEstudiante";
+import Quiz from "../paginas/estudiante/Cursos/cursos/Quiz"; 
 import Prueba from "../paginas/estudiante/Prueba";
 // import "./App.css";
 
@@ -16,6 +17,8 @@ const RutasEstudiante = () => {
       <Route path="/cursos/:id/lecciones" element={<Lecciones />} />
       <Route path="/cursos/:id/lecciones/Practica" element={<Prueba />} />
       <Route path="/perfil" element={<PerfilEstudiante />} />
+      <Route path="/cursos/:courseId/lecciones/quiz" element={<Quiz />} /> 
+
     </Routes>
   );
 };
