@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './LiveTranscription.css';
-import './LiveTranscription.css';
 
 const LiveTranscription = () => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [interimTranscript, setInterimTranscript] = useState('');
   const [isSupported, setIsSupported] = useState(false);
-  const [language, setLanguage] = useState('es-ES');  const [savedTranscripts, setSavedTranscripts] = useState([]);
+  const [language, setLanguage] = useState('es-ES');
   
   const recognitionRef = useRef(null);
   const transcriptRef = useRef('');
@@ -99,16 +98,9 @@ const LiveTranscription = () => {
               console.log('Error al reiniciar reconocimiento:', error);
             }
           }, 100);
-        }
-      };
+        }      };
     }
-    
-    // Cargar transcripciones guardadas
-    const saved = localStorage.getItem('transcriptions');
-    if (saved) {
-      setSavedTranscripts(JSON.parse(saved));
-    }
-  }, [language]);  const startListening = async () => {
+  }, [language, isListening]);const startListening = async () => {
     if (recognitionRef.current && !isListening) {
       try {
         // Verificar permisos de micrófono primero
