@@ -126,6 +126,77 @@
   border-radius: 2px;
 }
 
+/* 🔥 Estilos para Acordeones */
+.contenido-acordeon {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.acordeon-item {
+  margin-bottom: 15px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.acordeon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.acordeon-header:hover {
+  background-color: #e9ecef;
+}
+
+.acordeon-header.activo {
+  background-color: #1a73e8;
+  color: white;
+}
+
+.acordeon-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: inherit;
+}
+
+.acordeon-flecha {
+  font-size: 16px;
+  transition: transform 0.3s ease;
+  color: #6c757d;
+}
+
+.acordeon-header.activo .acordeon-flecha {
+  color: white;
+}
+
+.acordeon-flecha.abierta {
+  transform: rotate(180deg);
+}
+
+.acordeon-contenido {
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.acordeon-contenido.cerrado {
+  max-height: 0;
+  padding: 0 20px;
+}
+
+.acordeon-contenido.abierto {
+  max-height: 2000px; /* Altura máxima generosa para el contenido */
+  padding: 20px;
+}
+
 /* 🔥 Instrucciones adaptadas */
 .instrucciones {
   max-width: 1200px;
@@ -214,4 +285,45 @@
   max-width: 1050px; /* 🔥 Límite máximo para evitar que sobresalga */
   /* height: 600px; */
   border: none;
+}
+
+/* 🔥 Estilos responsivos para acordeones */
+@media (max-width: 768px) {
+  .contenido-acordeon {
+    padding: 0 10px;
+  }
+  
+  .acordeon-header {
+    padding: 15px;
+  }
+  
+  .acordeon-header h3 {
+    font-size: 16px;
+  }
+  
+  .acordeon-contenido.abierto {
+    padding: 15px;
+  }
+  
+  .acordeon-contenido.cerrado {
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .acordeon-header {
+    padding: 12px;
+  }
+  
+  .acordeon-header h3 {
+    font-size: 14px;
+  }
+  
+  .acordeon-contenido.abierto {
+    padding: 12px;
+  }
+  
+  .acordeon-contenido.cerrado {
+    padding: 0 12px;
+  }
 }

@@ -11,12 +11,28 @@ import { getResourceByLesson } from "../../api/videoService";
 import { convertToEmbedUrl } from "../../utils/convertYoutubeUrl";
 
 const Prueba = () => {
-  const { id } = useParams();  const [vistaActual, setVistaActual] = useState("pdf");
+  const { id } = useParams();
+  const [pdfAbierto, setPdfAbierto] = useState(false);
+  const [practicaAbierta, setPracticaAbierta] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
 
   const esYoutube = (url) =>
     url.includes("youtube.com") || url.includes("youtu.be");
+
+  const togglePdf = () => {
+    setPdfAbierto(!pdfAbierto);
+    if (!pdfAbierto) {
+      setPracticaAbierta(false); // Cerrar práctica si se abre PDF
+    }
+  };
+
+  const togglePractica = () => {
+    setPracticaAbierta(!practicaAbierta);
+    if (!practicaAbierta) {
+      setPdfAbierto(false); // Cerrar PDF si se abre práctica
+    }
+  };
 
   useEffect(() => {
     const getResources = async () => {
@@ -93,52 +109,58 @@ const Prueba = () => {
             <LiveTranscription />
           </div>
         </section>
-      </div>
-
-      <div className="acciones">
-        <div className="tabs-central">
-          <span
-            className={`tab ${vistaActual === "pdf" ? "activo" : ""}`}
-            onClick={() => setVistaActual("pdf")}
+      </div>      <div className="contenido-acordeon">
+        {/* Acordeón PDF */}
+        <div className="acordeon-item">
+          <div 
+            className={`acordeon-header ${pdfAbierto ? 'activo' : ''}`}
+            onClick={togglePdf}
           >
-            PDF
-          </span>
-          <span
-            className={`tab ${vistaActual === "practica" ? "activo" : ""}`}
-            onClick={() => setVistaActual("practica")}
-          >
-            Práctica
-          </span>
-        </div>
-      </div>      {/* 🔥 Mostrar solo uno según la vista */}
-      {vistaActual === "pdf" && (
-        <div>
-          {pdfUrl ? (
-            <VisorPDF src={pdfUrl} />
-          ) : (
-            <div className="visor-pdf">
-              <h4>Visor de PDF</h4>
-              <div style={{ 
-                padding: "2rem", 
-                textAlign: "center", 
-                backgroundColor: "#f8f9fa", 
-                borderRadius: "8px",
-                margin: "1rem 0"
-              }}>
-                <p>No hay PDF disponible para esta lección.</p>
-                <small>El docente aún no ha subido material de apoyo en PDF.</small>
+            <h3>📄 Material PDF</h3>
+            <span className={`acordeon-flecha ${pdfAbierto ? 'abierta' : ''}`}>
+              ▼
+            </span>
+          </div>
+          <div className={`acordeon-contenido ${pdfAbierto ? 'abierto' : 'cerrado'}`}>
+            {pdfUrl ? (
+              <VisorPDF src={pdfUrl} />
+            ) : (
+              <div className="visor-pdf">
+                <h4>Visor de PDF</h4>
+                <div style={{ 
+                  padding: "2rem", 
+                  textAlign: "center", 
+                  backgroundColor: "#f8f9fa", 
+                  borderRadius: "8px",
+                  margin: "1rem 0"
+                }}>
+                  <p>No hay PDF disponible para esta lección.</p>
+                  <small>El docente aún no ha subido material de apoyo en PDF.</small>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      )}
 
-      {vistaActual === "practica" && (
-        <Editor
-          titulo="Instrucciones de la práctica:"
-          descripcion="Escribir un programa que pregunte el nombre del usuario en la consola y después de que el usuario lo introduzca muestre por pantalla la cadena ¡Hola nombre!, donde nombre es el nombre que el usuario haya introducido."
-        />
-      )}
+        {/* Acordeón Práctica */}
+        <div className="acordeon-item">
+          <div 
+            className={`acordeon-header ${practicaAbierta ? 'activo' : ''}`}
+            onClick={togglePractica}
+          >
+            <h3>💻 Práctica</h3>
+            <span className={`acordeon-flecha ${practicaAbierta ? 'abierta' : ''}`}>
+              ▼
+            </span>
+          </div>
+          <div className={`acordeon-contenido ${practicaAbierta ? 'abierto' : 'cerrado'}`}>
+            <Editor
+              titulo="Instrucciones de la práctica:"
+              descripcion="Escribir un programa que pregunte el nombre del usuario en la consola y después de que el usuario lo introduzca muestre por pantalla la cadena ¡Hola nombre!, donde nombre es el nombre que el usuario haya introducido."
+            />
+          </div>
+        </div>
+      </div>
 
       <footer className="progreso-footer">
         <div className="progreso-barra">
