@@ -1,8 +1,7 @@
 /* Contenedor principal - compacto para estar al lado del video */
 .transcription-container {
   width: 100%;
-  max-width: 400px;
-  height: 500px;
+  height: 100%; /* Ocupar toda la altura del contenedor padre (315px) */
   background: #f8f9fa;
   border: 1px solid #e9ecef;
   border-radius: 12px;
@@ -11,6 +10,7 @@
   flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 /* Header compacto */
@@ -92,8 +92,7 @@
   overflow-y: auto;
   margin-bottom: 12px;
   position: relative;
-  min-height: 300px;
-  max-height: 350px;
+  /* Eliminamos min-height y max-height para que use el espacio disponible */
 }
 
 .transcript-display::-webkit-scrollbar {
@@ -251,34 +250,34 @@
   font-size: 14px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Responsive - aunque este componente estará oculto en móviles */
+@media (max-width: 767px) {
   .transcription-container {
-    max-width: 100%;
-    height: 400px;
+    display: none; /* Se oculta en móviles desde el CSS padre */
   }
-  
-  .transcript-display {
-    min-height: 250px;
-    max-height: 280px;
+}
+
+@media (min-width: 768px) {
+  .transcription-container {
+    height: 100%; /* Mantener altura del contenedor padre */
   }
   
   .transcription-header h4 {
-    font-size: 14px;
+    font-size: 16px;
   }
   
   .controls {
-    gap: 6px;
+    gap: 8px;
   }
   
   .language-select {
-    font-size: 11px;
-    padding: 3px 6px;
+    font-size: 12px;
+    padding: 4px 8px;
   }
   
   .mic-button {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
   }
 }

@@ -51,7 +51,33 @@
   border-radius: 12px;
   color: #000;
   border: none;
-  min-height: 400px;
+  height: 315px; /* Misma altura que el video */
+  min-height: 315px;
+  max-height: 315px;
+  overflow: hidden; /* Para que el contenido interno maneje el scroll */
+}
+
+/* Ocultar transcriptor en móviles (pantallas menores a 768px) */
+@media (max-width: 767px) {
+  .video-section {
+    flex-direction: column;
+  }
+  
+  .transcriptor {
+    display: none;
+  }
+  
+  .video-card {
+    flex: 1;
+    width: 100%;
+  }
+}
+
+/* Mostrar transcriptor en tablets y desktop (768px en adelante) */
+@media (min-width: 768px) {
+  .transcriptor {
+    display: block;
+  }
 }
 
 .acciones {
