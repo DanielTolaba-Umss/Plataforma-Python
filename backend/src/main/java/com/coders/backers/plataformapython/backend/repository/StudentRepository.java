@@ -20,4 +20,5 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Long> {
     List<StudentEntity> findByLastNameContainingIgnoreCase(String lastName);
 
     List<StudentEntity> findByEnrollmentDateBetween(java.sql.Date start, java.sql.Date end);
+
 }
