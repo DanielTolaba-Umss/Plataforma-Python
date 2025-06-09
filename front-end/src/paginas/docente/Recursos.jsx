@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../docente/estilos/Recursos.css";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Edit, Trash, X, Upload, CheckCircle2 } from "lucide-react";
 import { pdfApi } from "../../api/pdfService";
 import ErrorModal from "../../componentes/comunes/ErrorModal";
@@ -14,6 +14,7 @@ import {
 
 const Recursos = () => {
   const { courseId } = useParams();
+  const navigate = useNavigate();
   console.log("🚀 ~ Recursos ~ courseId:", courseId);
   // Modal states
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -464,14 +465,20 @@ const Recursos = () => {
           <CheckCircle2 size={20} />
           <span>{notification.message}</span>
         </div>
-      )}
-
-      {/* Error Modal */}
+      )}      {/* Error Modal */}
       {showErrorModal && (
         <ErrorModal message={errorMessage} onClose={closeErrorModal} />
       )}
 
-      <h2 className="recursos-title">RECURSOS</h2>
+      <div className="recursos-header">
+        <h2 className="recursos-title">RECURSOS</h2>
+        <button
+          onClick={() => navigate(`/gestion-curso/lecciones/${courseId}`)}
+          className="recursos-back-button"
+        >
+          Volver a lecciones
+        </button>
+      </div>
       <div className="recursos-content-wrapper">
         {loading ? (
           <div className="loading-container">
@@ -519,20 +526,20 @@ const Recursos = () => {
                   </div>
                 )}
               </div>
-            </div>
-
-            <div className="tabla-container">
+            </div>            <div className="tabla-container">
               <div className="recursos-table">
-                <div className="recursos-table-header">
+                <div className="videos-table-header">
                   <div>Titulo</div>
                   <div>Vista previa/enlace</div>
                   <div>Tipo</div>
                   <div>Acciones</div>
-                </div>                {videoRecursos.length > 0 ? (
+                </div>
+
+                {videoRecursos.length > 0 ? (
                   videoRecursos.map((resource) => (
                     <div
                       key={resource.resourceId}
-                      className="recursos-table-row"
+                      className="videos-table-row"
                     >
                       {/* Título */}
                       <div>{resource.title}</div>
@@ -549,7 +556,6 @@ const Recursos = () => {
                             href={resource.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-500 underline"
                           >
                             Abrir el enlace
                           </a>
@@ -581,7 +587,7 @@ const Recursos = () => {
                     </div>
                   ))
                 ) : (
-                  <div className="recursos-table-row">
+                  <div className="videos-table-row">
                     <div
                       style={{ textAlign: "center", gridColumn: "1 / span 4" }}
                     >

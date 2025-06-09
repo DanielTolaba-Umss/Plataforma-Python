@@ -1,0 +1,283 @@
+/* Contenedor principal - compacto para estar al lado del video */
+.transcription-container {
+  width: 100%;
+  height: 100%; /* Ocupar toda la altura del contenedor padre (315px) */
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+/* Header compacto */
+.transcription-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.transcription-header h4 {
+  margin: 0;
+  color: #495057;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.language-select {
+  padding: 4px 8px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  background: white;
+  font-size: 12px;
+  color: #495057;
+}
+
+.language-select:disabled {
+  background: #e9ecef;
+  color: #6c757d;
+}
+
+/* Botón de micrófono */
+.mic-button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mic-button:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+
+.mic-button.listening {
+  background: #dc3545;
+  animation: pulse-red 1.5s infinite;
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+}
+
+/* Área de transcripción con scroll */
+.transcript-display {
+  flex: 1;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 12px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+  position: relative;
+  /* Eliminamos min-height y max-height para que use el espacio disponible */
+}
+
+.transcript-display::-webkit-scrollbar {
+  width: 6px;
+}
+
+.transcript-display::-webkit-scrollbar-track {
+  background: #f1f3f4;
+  border-radius: 3px;
+}
+
+.transcript-display::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.transcript-display::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.transcript-content {
+  line-height: 1.6;
+  font-size: 14px;
+  color: #495057;
+  word-wrap: break-word;
+}
+
+.final-text {
+  color: #212529;
+}
+
+.interim-text {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.cursor {
+  animation: blink 1s infinite;
+  color: #007bff;
+  font-weight: bold;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Indicador de escucha */
+.listening-indicator {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 123, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  color: #007bff;
+}
+
+.pulse {
+  width: 8px;
+  height: 8px;
+  background: #007bff;
+  border-radius: 50%;
+  animation: pulse-blue 1.5s infinite;
+}
+
+@keyframes pulse-blue {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Placeholder */
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #6c757d;
+  font-style: italic;
+  text-align: center;
+  font-size: 13px;
+}
+
+/* Acciones */
+.transcript-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.action-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  background: white;
+  color: #495057;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+  transform: translateY(-1px);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.clear-btn:hover:not(:disabled) {
+  background: #fff5f5;
+  border-color: #fbb6ce;
+  color: #c53030;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: #f0fff4;
+  border-color: #9ae6b4;
+  color: #2d7738;
+}
+
+.copy-btn:hover:not(:disabled) {
+  background: #ebf8ff;
+  border-color: #90cdf4;
+  color: #2c5282;
+}
+
+/* Error message */
+.error-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #dc3545;
+}
+
+.error-message h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.error-message p {
+  margin: 8px 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+/* Responsive - aunque este componente estará oculto en móviles */
+@media (max-width: 767px) {
+  .transcription-container {
+    display: none; /* Se oculta en móviles desde el CSS padre */
+  }
+}
+
+@media (min-width: 768px) {
+  .transcription-container {
+    height: 100%; /* Mantener altura del contenedor padre */
+  }
+  
+  .transcription-header h4 {
+    font-size: 16px;
+  }
+  
+  .controls {
+    gap: 8px;
+  }
+  
+  .language-select {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  
+  .mic-button {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+}
