@@ -92,19 +92,23 @@ const CrearQuizz = () => {
     alert("Seleccione 'Verdadero' o 'Falso' como respuesta.");
     return;
   }
-
-  const preguntaValida = {
+   const preguntaValida = {
     ...currentQuestion,
     texto_pregunta: texto_pregunta.trim(),
     puntos: parseInt(puntos),
-    opciones: tipo_pregunta === 'opcion_multiple' ? opciones : [],
+    opciones: currentQuestion.opciones,
     respuesta_correcta: respuesta_correcta.trim()
   };
 
-  setQuizData(prev => ({
+  setQuizData(prev => {
+  const updated = {
     ...prev,
     preguntas: [...prev.preguntas, preguntaValida]
-  }));
+  };
+  console.log("Preguntas actualizadas:", updated.preguntas);
+  return updated;
+});
+
 
   setCurrentQuestion({
     texto_pregunta: '',
@@ -119,11 +123,13 @@ const CrearQuizz = () => {
   const validateQuiz = () => {
     if (!quizData.titulo.trim()) {
       alert('El título del quiz es requerido');
+      console.log("Validación falló: título vacío");
       return false;
     }
     
     if (quizData.preguntas.length === 0) {
       alert('Debe agregar al menos una pregunta');
+      console.log("Validación falló: sin preguntas");
       return false;
     }
     
@@ -140,60 +146,79 @@ const CrearQuizz = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateQuiz()) return;
-    
-    setIsSubmitting(true);
-    
-    try {
-      const quizToSend = {
-        titulo: quizData.titulo,
-        descripcion: quizData.descripcion,
-        duracionMinutos: quizData.duracionMinutos,
-        intentosPermitidos: quizData.intentosPermitidos,
-        puntuacionAprobacion: quizData.puntuacionAprobacion,
-        aleatorio: quizData.aleatorio,
-        esta_activo: quizData.active,
-        courseId: quizData.courseId,
-        preguntas: quizData.preguntas.map(pregunta => ({
-          texto_pregunta: pregunta.texto_pregunta,
-          tipo_pregunta: pregunta.tipo_pregunta,
-          puntos: pregunta.puntos,
-          opciones: pregunta.opciones,
-          respuesta_correcta: pregunta.respuesta_correcta,
-          explicacion: pregunta.explicacion
-        }))
-      };
+  e.preventDefault();
+  console.log("Submit presionado");
+  if (!validateQuiz()) return;
 
-      const response = await quizzesAPI.crear(quizToSend);
-      
-      if (response.status === 201) {
-        alert('Quiz guardado exitosamente');
-        navigate(`/gestion-curso/lecciones/${nivelId}/examenes-y-quizzes/`);
-      } else {
-        throw new Error(response.data?.message || 'Error al guardar el quiz');
-      }
-    } catch (error) {
-      let errorMessage = 'Error al guardar el quiz';
-      
-      if (error.response) {
-        if (error.response.status === 400) {
-          errorMessage = 'Datos inválidos: ' + (error.response.data?.errors?.join(', ') || 'verifique los campos');
-        } else if (error.response.status === 401) {
-          errorMessage = 'No autorizado - por favor inicie sesión nuevamente';
-        } else if (error.response.status === 500) {
-          errorMessage = 'Error en el servidor - por favor intente más tarde';
-        }
-      }
-      
-      alert(errorMessage);
-      console.error('Error detallado:', error);
-      console.log("Quiz a enviar:", quizToSend);
+  setIsSubmitting(true);
 
-    } finally {
-      setIsSubmitting(false);
+  try {
+    const quizToSend = {
+      titulo: quizData.titulo,
+      descripcion: quizData.descripcion,
+      duracionMinutos: quizData.duracionMinutos,
+      intentosPermitidos: quizData.intentosPermitidos,
+      puntuacionAprobacion: quizData.puntuacionAprobacion,
+      aleatorio: quizData.aleatorio,
+      esta_activo: quizData.active,
+      courseId: quizData.courseId,
+    };
+
+    const quizResponse = await quizzesAPI.crear(quizToSend);
+
+    if (quizResponse.status !== 201) {
+      throw new Error(quizResponse.data?.message || 'Error al crear el quiz');
     }
-  };
+
+    const quizId = quizResponse.data.id;
+    
+ await Promise.all(
+  quizData.preguntas.map((pregunta) => {
+    let opcionesArray = [];
+
+    if (Array.isArray(pregunta.opciones)) {
+      opcionesArray = pregunta.opciones;
+    } else if (typeof pregunta.opciones === 'string') {
+      try {
+        opcionesArray = JSON.parse(pregunta.opciones);
+      } catch (e) {
+        opcionesArray = [];
+      }
+    } else if (typeof pregunta.opciones === 'object' && pregunta.opciones !== null) {
+      opcionesArray = Object.values(pregunta.opciones);
+    }
+
+    return questionsAPI.crearPregunta({
+      ...pregunta,
+      opciones: opcionesArray, // ✅ enviar como array JSON válido
+      quizId,
+    });
+  })
+);
+
+
+    alert('Quiz y preguntas guardados exitosamente');
+    navigate(`/gestion-curso/lecciones/${nivelId}/examenes-y-quizzes/`);
+
+  } catch (error) {
+    let errorMessage = 'Error al guardar el quiz';
+
+    if (error.response) {
+      if (error.response.status === 400) {
+        errorMessage = 'Datos inválidos: ' + (error.response.data?.errors?.join(', ') || 'verifique los campos');
+      } else if (error.response.status === 401) {
+        errorMessage = 'No autorizado - por favor inicie sesión nuevamente';
+      } else if (error.response.status === 500) {
+        errorMessage = 'Error en el servidor - por favor intente más tarde';
+      }
+    }
+
+    alert(errorMessage);
+    console.error('Error detallado:', error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <div className={styles.coursesContainer}>
