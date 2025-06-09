@@ -22,4 +22,6 @@ public class TestCaseEntity {
 
     private String entrada;
     private String salida;
+    @Column(name="entrada_test_case")
+    private String entradaTestCase;
 }

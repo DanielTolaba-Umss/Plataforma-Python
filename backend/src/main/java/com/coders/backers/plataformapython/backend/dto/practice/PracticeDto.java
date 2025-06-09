@@ -1,5 +1,7 @@
 package com.coders.backers.plataformapython.backend.dto.practice;
 
+import com.coders.backers.plataformapython.backend.dto.lesson.LessonDto;
+
 import lombok.*;
 
 @Getter
@@ -13,5 +15,5 @@ public class PracticeDto {
     private String solucionReferencia;
     private String restricciones;
     private Integer intentosMax;
-    private Long leccionId;
+    private LessonDto leccion;
 }

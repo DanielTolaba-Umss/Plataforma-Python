@@ -6,11 +6,11 @@ import com.coders.backers.plataformapython.backend.models.*;
 public class TestCaseMapper {
 
     public static TestCaseEntity fromCreateDto(CreateTestCaseDto dto, PracticeEntity practice) {
-        return new TestCaseEntity(null, practice, dto.getEntrada(), dto.getSalida());
+        return new TestCaseEntity(null, practice, dto.getEntrada(), dto.getSalida(),dto.getEntradaTestCase());
     }
 
     public static TestCaseDto toDto(TestCaseEntity e) {
-        return new TestCaseDto(e.getId(), e.getPractice().getId(), e.getEntrada(), e.getSalida());
+        return new TestCaseDto(e.getId(), e.getPractice().getId(), e.getEntrada(), e.getSalida(),e.getEntradaTestCase());
     }
 
     public static void updateEntity(UpdateTestCaseDto dto, TestCaseEntity e) {
