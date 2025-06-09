@@ -1,6 +1,7 @@
 export const environment = {
     production: false,
     apiUrl: 'http://localhost:8080/api',
+    staticUrl: 'http://localhost:8080',
     authUrl: 'http://localhost:8080/auth',
     timeoutMs: 5000,
     modules: {

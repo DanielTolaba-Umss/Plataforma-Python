@@ -49,7 +49,7 @@ const LeccionesNivel = () => {
           <div
             key={leccion.id}
             className="leccion-card"
-            onClick={() => navigate(`/cursos/${id}/lecciones/Practica`)}
+            onClick={() => navigate(`/cursos/${leccion.id}/lecciones/Practica`)}
             style={{ cursor: "pointer" }}
           >
             <h3 className="leccion-title">{leccion.title}</h3>
@@ -58,7 +58,12 @@ const LeccionesNivel = () => {
         ))}
       </div>
       <div className="curso-footer-buttons">
-        <button className="footer-button">Quiz</button>
+      <button
+      className="footer-button"
+    onClick={() => navigate(`/cursos/${id}/lecciones/quiz`)}
+    >
+        Quiz
+      </button>
       </div>
     </div>
   );
