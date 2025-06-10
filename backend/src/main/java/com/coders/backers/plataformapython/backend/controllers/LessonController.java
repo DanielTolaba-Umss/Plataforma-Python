@@ -40,7 +40,7 @@ public class LessonController {
         LessonDto lessonDto = lessonService.getLessonById(id);
         return ResponseEntity.ok(lessonDto);
     }
-      @GetMapping
+    @GetMapping
     public ResponseEntity<List<LessonDto>> getAllLessons(
             @RequestParam(value = "active", required = false) Boolean active,
             @RequestParam(value = "title", required = false) String title,

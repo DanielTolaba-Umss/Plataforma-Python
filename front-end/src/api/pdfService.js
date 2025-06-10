@@ -1,11 +1,11 @@
 import { API_URL } from "./configuracion";
 
-const PDF_API_URL = `${API_URL}/pdfs`;
+const PDF_API_URL = `${API_URL}/resources`;
 
 export const pdfApi = {  // Subir un nuevo PDF
   upload: async (formData) => {
     try {
-      const response = await fetch(`${PDF_API_URL}/upload`, {
+      const response = await fetch(`${PDF_API_URL}/upload-pdf`, {
         method: "POST",
         body: formData, // FormData con archivo, nombre y descripción
       });
@@ -20,8 +20,7 @@ export const pdfApi = {  // Subir un nuevo PDF
       console.error("Error en pdfApi.upload:", error);
       throw error;
     }
-  },
-  // Obtener todos los PDFs
+  },  // Obtener todos los PDFs
   getAll: async () => {
     try {
       const response = await fetch(PDF_API_URL, {
@@ -60,11 +59,10 @@ export const pdfApi = {  // Subir un nuevo PDF
       console.error("Error en pdfApi.getById:", error);
       throw error;
     }
-  },
-  // Actualizar un PDF
+  },  // Actualizar un PDF
   update: async (id, formData) => {
     try {
-      const response = await fetch(`${PDF_API_URL}/${id}`, {
+      const response = await fetch(`${PDF_API_URL}/upload-pdf/${id}`, {
         method: "PUT",
         body: formData, // FormData con archivo, nombre y descripción
       });
@@ -79,11 +77,10 @@ export const pdfApi = {  // Subir un nuevo PDF
       console.error("Error en pdfApi.update:", error);
       throw error;
     }
-  },
-  // Eliminar un PDF
+  },  // Eliminar un PDF
   delete: async (id) => {
     try {
-      const response = await fetch(`${PDF_API_URL}/${id}`, {
+      const response = await fetch(`${PDF_API_URL}/delete-pdf/${id}`, {
         method: "DELETE",
       });
 

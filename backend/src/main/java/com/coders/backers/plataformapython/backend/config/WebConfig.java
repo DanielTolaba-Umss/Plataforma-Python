@@ -8,15 +8,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
-
-    @Override
+public class WebConfig implements WebMvcConfigurer {    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Ruta absoluta a la carpeta /uploads
         Path uploadDir = Paths.get("uploads");
         String uploadPath = uploadDir.toFile().getAbsolutePath();
 
+        // Configurar manejo de archivos estáticos
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + uploadPath + "/");
+                .addResourceLocations("file:" + uploadPath + "/")
+                .setCachePeriod(3600)
+                .resourceChain(true);
     }
 }
