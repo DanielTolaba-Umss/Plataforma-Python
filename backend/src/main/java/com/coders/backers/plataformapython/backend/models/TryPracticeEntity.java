@@ -3,7 +3,9 @@ package com.coders.backers.plataformapython.backend.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+
+import com.coders.backers.plataformapython.backend.models.userModel.StudentEntity;
 
 @Entity
 @Table(name = "try_practice")
@@ -12,30 +14,37 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TryPracticeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "intento_id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "estudiante_progreso_id", nullable = false)
-    private Long estudianteProgresoId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", nullable = false)
+    private StudentEntity student;
 
-    @Column(name = "practice_id", nullable = false)
-    private Long practiceId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "practice_id", nullable = false)
+    private PracticeEntity practice;
 
-    @Column(name = "codigoenviado", columnDefinition = "TEXT")
-    private String codigoEnviado;
+    @Column(name = "code", columnDefinition = "TEXT", nullable = false)
+    private String code;
 
-    @Column(name = "resultados_pruebas", columnDefinition = "TEXT")
-    private String resultadosPruebas;
+    @Column(name = "test_results", columnDefinition = "TEXT")
+    private String testResults;
 
-    @Column(name = "aprobado")
-    private boolean aprobado;
+    @Column(name = "approved", nullable = false)
+    private Boolean approved = false;
 
-    @Column(name = "retroalimentacion")
-    private String retroalimentacion;
+    @Column(name = "feedback", columnDefinition = "TEXT")
+    private String feedback;
 
-    @Column(name = "fecha_intento")
-    private Date fechaIntento;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createAt;
+
+    public TryPracticeEntity(String code, StudentEntity student, PracticeEntity practice) {
+        this.code = code;
+        this.student = student;
+        this.practice = practice;
+    }
 }
