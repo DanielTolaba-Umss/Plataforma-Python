@@ -62,11 +62,11 @@
   .video-section {
     flex-direction: column;
   }
-  
+
   .transcriptor {
     display: none;
   }
-  
+
   .video-card {
     flex: 1;
     width: 100%;
@@ -292,19 +292,19 @@
   .contenido-acordeon {
     padding: 0 10px;
   }
-  
+
   .acordeon-header {
     padding: 15px;
   }
-  
+
   .acordeon-header h3 {
     font-size: 16px;
   }
-  
+
   .acordeon-contenido.abierto {
     padding: 15px;
   }
-  
+
   .acordeon-contenido.cerrado {
     padding: 0 15px;
   }
@@ -314,16 +314,25 @@
   .acordeon-header {
     padding: 12px;
   }
-  
+
   .acordeon-header h3 {
     font-size: 14px;
   }
-  
+
   .acordeon-contenido.abierto {
     padding: 12px;
   }
-  
+
   .acordeon-contenido.cerrado {
     padding: 0 12px;
   }
+}
+
+.retroalimentacion {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-left: 5px solid #007bff;
+  background-color: #f0f8ff;
+  border-radius: 4px;
+  font-weight: 500;
 }
