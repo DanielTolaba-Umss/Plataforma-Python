@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors; 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +37,6 @@ public class TryPracticeServiceImpl implements TryPracticeService {
     private final PracticeService practiceService;
     private final StudentService studentService;
     private final TestCaseService testCaseService;
-    private final TryPracticeMapper tryPracticeMapper;
 
     @Override
     public TryPracticeDto createTryPractice(CodeExecutionRequest code) {
@@ -160,5 +160,44 @@ public class TryPracticeServiceImpl implements TryPracticeService {
         return tryPracticeRepository.findByPracticeId(practiceId).stream()
                 .map(TryPracticeMapper::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+
+    public static Boolean[] parseTestResults(String testResultsJson) {
+        if (testResultsJson == null || testResultsJson.trim().isEmpty()) {
+            return new Boolean[0];
+        }
+
+        try {
+            if (testResultsJson.trim().startsWith("[") && testResultsJson.trim().endsWith("]")) {
+                String trimmed = testResultsJson.trim();
+
+                if (!trimmed.contains("{") && (trimmed.contains("true") || trimmed.contains("false"))) {
+                    String[] values = trimmed
+                            .substring(1, trimmed.length() - 1)
+                            .split(",");
+
+                    Boolean[] results = new Boolean[values.length];
+                    for (int i = 0; i < values.length; i++) {
+                        results[i] = Boolean.valueOf(values[i].trim());
+                    }
+                    return results;
+                } else if (trimmed.contains("{")) {
+                    com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                    List<Map<String, Object>> testDetails = mapper.readValue(
+                            trimmed,
+                            mapper.getTypeFactory().constructCollectionType(List.class, Map.class));
+
+                    Boolean[] results = new Boolean[testDetails.size()];
+                    for (int i = 0; i < testDetails.size(); i++) {
+                        results[i] = (Boolean) testDetails.get(i).get("success");
+                    }
+                    return results;
+                }
+            }
+            return new Boolean[0];
+        } catch (Exception e) {
+            return new Boolean[0];
+        }
     }
 }
