@@ -81,20 +81,28 @@ public class TryPracticeServiceImpl implements TryPracticeService {
 
             for (int i = 0; i < testCases.size(); i++) {
                 TestCaseDto testCase = testCases.get(i);
-                CodeExecutionResult result = pythonExecution.executeCode(codeReceived, testCase.getEntrada());
-                    /* 
-                     * {
-                        "code": "def suma_lista(numeros):\n    suma = 0\n    for num in numeros:\n        suma += num\n    return suma",
-                        "studentId": 1,
-                        "practiceId": 1
-                        }
-                     */
+                CodeExecutionResult result = pythonExecution.executeCode(
+                    codeReceived, 
+                    testCase.getEntrada(),
+                    testCase.getSalida()
+                );
                 
-                testResults[i] = result.isSuccess() && 
-                            result.getOutput().trim().equals(testCase.getSalida().trim());
-                feedback += "[Test case " + (i + 1) + ": " 
-                                + (result.getError()) +  "\n"
-                                + "Received: " + result.getOutput() + "\n]";
+                testResults[i] = result.isSuccess();
+                feedback += String.format(
+                    "Test Case %d:\n" +
+                    "  Entrada: %s\n" +
+                    "  Esperado: %s\n" +
+                    "  Recibido: %s\n" +
+                    "  Estado: %s\n" +
+                    "  %s\n\n",
+                    i + 1,
+                    testCase.getEntrada(),
+                    testCase.getSalida(),
+                    result.getOutput() != null ? result.getOutput().trim() : "Sin salida",
+                    result.isSuccess() ? "✓ PASÓ" : "✗ FALLÓ",
+                    result.getError() != null && !result.getError().isEmpty() ? 
+                        "Error: " + result.getError() : ""
+                );
             }
 
             boolean allTestsPassed = true;
