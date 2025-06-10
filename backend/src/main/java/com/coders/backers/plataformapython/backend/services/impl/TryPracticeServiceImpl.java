@@ -56,7 +56,7 @@ public class TryPracticeServiceImpl implements TryPracticeService {
             if (studentDto == null) {
                 throw new ResourceNotFoundException("Student not found with id: " + studentId);
             }
-            
+
             PracticeDto practiceDto = practiceService.getPracticeById(practiceId);
             PracticeEntity practice = PracticeMapper.mapToEntity(practiceDto);
             if (practiceDto == null) {
@@ -64,71 +64,66 @@ public class TryPracticeServiceImpl implements TryPracticeService {
             }
 
             boolean hasApprovedAttempt = getByStudentId(studentId).stream()
-                .filter(tryPractice -> tryPractice.getPractice().getId().equals(practiceId))
-                .anyMatch(tryPractice -> tryPractice.getApproved());
+                    .filter(tryPractice -> tryPractice.getPractice().getId().equals(practiceId))
+                    .anyMatch(tryPractice -> tryPractice.getApproved());
 
             if (hasApprovedAttempt) {
                 throw new IllegalStateException("Ya existe un intento aprobado para esta práctica");
             }
-
-
             List<TestCaseDto> testCases = testCaseService.getByPractice(practiceId);
             if (testCases.isEmpty()) {
                 throw new ResourceNotFoundException("No test cases found for practice with id: " + practiceId);
             }
 
-            Boolean[] testResults = new Boolean[testCases.size()];
+            StringBuilder testResultsJson = new StringBuilder("[");
+            boolean allTestsPassed = true;
 
             for (int i = 0; i < testCases.size(); i++) {
                 TestCaseDto testCase = testCases.get(i);
                 CodeExecutionResult result = pythonExecution.executeCode(
-                    codeReceived, 
-                    testCase.getEntrada(),
-                    testCase.getSalida()
-                );
-                
-                testResults[i] = result.isSuccess();
-                feedback += String.format(
-                    "Test Case %d:\n" +
-                    "  Entrada: %s\n" +
-                    "  Esperado: %s\n" +
-                    "  Recibido: %s\n" +
-                    "  Estado: %s\n" +
-                    "  %s\n\n",
-                    i + 1,
-                    testCase.getEntrada(),
-                    testCase.getSalida(),
-                    result.getOutput() != null ? result.getOutput().trim() : "Sin salida",
-                    result.isSuccess() ? "✓ PASÓ" : "✗ FALLÓ",
-                    result.getError() != null && !result.getError().isEmpty() ? 
-                        "Error: " + result.getError() : ""
-                );
-            }
+                        codeReceived,
+                        testCase.getEntrada(),
+                        testCase.getSalida());
 
-            boolean allTestsPassed = true;
-            for (Boolean resultt : testResults) {
-                if (Boolean.FALSE.equals(resultt)) {
+                boolean success = result.isSuccess();
+                if (!success) {
                     allTestsPassed = false;
-                    break;
                 }
+
+                testResultsJson.append(success);
+                if (i < testCases.size() - 1) {
+                    testResultsJson.append(",");
+                }
+
+                feedback += String.format(
+                        "Test Case %d:\n" +
+                                "  Entrada: %s\n" +
+                                "  Esperado: %s\n" +
+                                "  Recibido: %s\n" +
+                                "  Estado: %s\n" +
+                                "  %s\n\n",
+                        i + 1,
+                        testCase.getEntrada(),
+                        testCase.getSalida(),
+                        result.getOutput() != null ? result.getOutput().trim() : "Sin salida",
+                        success ? "✓ PASÓ" : "✗ FALLÓ",
+                        result.getError() != null && !result.getError().isEmpty() ? "Error: " + result.getError() : "");
             }
 
-            // Mapear StudentEntity y PracticeEntity desde los DTOs
-            
+            testResultsJson.append("]");
 
-             TryPracticeEntity entity = new TryPracticeEntity();
-                entity.setCode(codeReceived);
-                entity.setStudent(student);
-                entity.setPractice(practice);
-                entity.setTestResults(testResults);
-                entity.setApproved(allTestsPassed);
-                entity.setFeedback(feedback);
-                entity.setCreateAt(LocalDateTime.now());
-            
+            TryPracticeEntity entity = new TryPracticeEntity();
+            entity.setCode(codeReceived);
+            entity.setStudent(student);
+            entity.setPractice(practice);
+            entity.setTestResults(testResultsJson.toString());
+            entity.setApproved(allTestsPassed);
+            entity.setFeedback(feedback);
+            entity.setCreateAt(LocalDateTime.now());
+
             TryPracticeEntity savedEntity = tryPracticeRepository.save(entity);
 
             return TryPracticeMapper.mapToDto(savedEntity);
-
         } catch (Exception e) {
             throw new RuntimeException("Error processing practice attempt: " + e.getMessage(), e);
         }

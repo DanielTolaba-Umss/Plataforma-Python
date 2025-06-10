@@ -31,7 +31,7 @@ public class TryPracticeEntity {
     private String code;
 
     @Column(name = "test_results", columnDefinition = "TEXT")
-    private Boolean [] testResults;
+    private String testResults;
 
     @Column(name = "approved", nullable = false)
     private Boolean approved = false;

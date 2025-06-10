@@ -16,7 +16,7 @@ public class TryPracticeDto {
     private StudentDto student;
     private PracticeDto practice;
     private String code;
-    private Boolean [] testResults;
+    private String testResults;
     private Boolean approved;
     private String feedback;
     private LocalDateTime createAt;
