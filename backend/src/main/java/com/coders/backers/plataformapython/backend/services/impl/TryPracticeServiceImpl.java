@@ -18,6 +18,7 @@ import com.coders.backers.plataformapython.backend.services.PracticeService;
 import com.coders.backers.plataformapython.backend.services.StudentService;
 import com.coders.backers.plataformapython.backend.services.TestCaseService;
 import com.coders.backers.plataformapython.backend.services.TryPracticeService;
+import com.coders.backers.plataformapython.backend.utils.CodeRestrictionValidator;
 import com.coders.backers.plataformapython.backend.utils.PythonExecution;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors; 
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class TryPracticeServiceImpl implements TryPracticeService {
@@ -37,6 +39,7 @@ public class TryPracticeServiceImpl implements TryPracticeService {
     private final PracticeService practiceService;
     private final StudentService studentService;
     private final TestCaseService testCaseService;
+    private final CodeRestrictionValidator codeRestrictionValidator;
 
     @Override
     public TryPracticeDto createTryPractice(CodeExecutionRequest code) {
@@ -70,9 +73,52 @@ public class TryPracticeServiceImpl implements TryPracticeService {
             if (hasApprovedAttempt) {
                 throw new IllegalStateException("Ya existe un intento aprobado para esta práctica");
             }
+
             List<TestCaseDto> testCases = testCaseService.getByPractice(practiceId);
             if (testCases.isEmpty()) {
                 throw new ResourceNotFoundException("No test cases found for practice with id: " + practiceId);
+            }
+
+            String initialCode = practiceDto.getCodigoInicial();
+            if (!codeRestrictionValidator.validateStartingCode(codeReceived, initialCode)) {
+                TryPracticeEntity entity = new TryPracticeEntity();
+                entity.setCode(codeReceived);
+                entity.setStudent(student);
+                entity.setPractice(practice);
+                entity.setTestResults("[false]");
+                entity.setApproved(false);
+                entity.setFeedback(
+                        "El código debe comenzar con la plantilla proporcionada. Por favor, no modifiques la estructura base del ejercicio.");
+                entity.setCreateAt(LocalDateTime.now());
+
+                TryPracticeEntity savedEntity = tryPracticeRepository.save(entity);
+                return TryPracticeMapper.mapToDto(savedEntity);
+            }
+
+            List<String> restrictionViolations = codeRestrictionValidator.validateCode(
+                    codeReceived,
+                    practiceDto.getRestricciones());
+
+            if (!restrictionViolations.isEmpty()) {
+                TryPracticeEntity entity = new TryPracticeEntity();
+                entity.setCode(codeReceived);
+                entity.setStudent(student);
+                entity.setPractice(practice);
+                entity.setTestResults("[false]");
+                entity.setApproved(false);
+
+                StringBuilder violationsFeedback = new StringBuilder(
+                        "Tu código no cumple con las siguientes restricciones:\n\n");
+                for (String violation : restrictionViolations) {
+                    violationsFeedback.append("- ").append(violation).append("\n");
+                }
+                violationsFeedback.append("\nPor favor, modifica tu código para cumplir con todas las restricciones.");
+
+                entity.setFeedback(violationsFeedback.toString());
+                entity.setCreateAt(LocalDateTime.now());
+
+                TryPracticeEntity savedEntity = tryPracticeRepository.save(entity);
+                return TryPracticeMapper.mapToDto(savedEntity);
             }
 
             StringBuilder testResultsJson = new StringBuilder("[");
@@ -156,7 +202,6 @@ public class TryPracticeServiceImpl implements TryPracticeService {
                 .map(TryPracticeMapper::mapToDto)
                 .collect(Collectors.toList());
     }
-
 
     public static Boolean[] parseTestResults(String testResultsJson) {
         if (testResultsJson == null || testResultsJson.trim().isEmpty()) {
