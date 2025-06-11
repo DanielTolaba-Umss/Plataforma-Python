@@ -149,134 +149,148 @@ const Editor = ({ titulo, lessonId }) => {
   }
 
   return (
-    <section className="instrucciones">
-      <h3 className="problema">{titulo}</h3>
+    <section className="instrucciones layout-horizontal">
       { !cargando && !error && practica &&  (
         <>
-          <div className="instrucciones-texto">
-            <p className="prolema">{practica.instrucciones}</p>
-            <h4>Restricciones:</h4>
-            <ul>
-              {restriccionesFormateadas.map((restriccion, index) => (
-                <li key={index}>{restriccion}</li>
-              ))}
-            </ul>
-            <h4>Casos de Prueba:</h4>
-            <ul>
-              {testCases.map((testCase, index) => (
-                <li key={index}>
-                  Entrada: "{testCase.entrada}" | Salida Esperada: "{testCase.salida}"
-                </li>
-              ))}
-            </ul>
+
+          <div className="instrucciones-container">
+            <div className="instrucciones-header">
+              <h3 className="instrucciones-titulo">{titulo}</h3>
+            </div>
+            
+            <div className="instrucciones-detalles">
+              <div className="instrucciones-descripcion">
+                <div className="seccion-header">
+                  <span className="seccion-icono">📝</span>
+                  <h4>Descripción:</h4>
+                </div>
+                <p>{practica.instrucciones}</p>
+              </div>
+              
+              <div className="instrucciones-seccion restricciones-seccion">
+                <div className="seccion-header">
+                  <span className="seccion-icono">📋</span>
+                  <h4>Restricciones:</h4>
+                </div>
+                <ul className="restricciones-lista">
+                  {restriccionesFormateadas.map((restriccion, index) => (
+                    <li key={index} className="restriccion-item">
+                      <span className="bullet"></span>
+                      {restriccion}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
-        
-        
-          <div
-            className="editor"
-            role="region"
-            aria-label="Editor de texto para escribir código Python"
-          >
-            <h4>EDITOR DE CÓDIGO</h4>
-            <EditorMonaco
-              height="300px"
-              width="100%"
-              defaultLanguage="python"
-              defaultValue={practica?.codigoInicial || "# Escribe tu código Python aquí"}
-              theme="vs-white"
-              onMount={(editor) => {
-                editorRef.current = editor;
-              }}
-              options={{
-                fontSize: 14,
-                minimap: { enabled: false },
-                automaticLayout: true,
-              }}
-            />
-
-            <button 
-              className="ejecutar-button" 
-              onClick={ejecutarCodigo}
-              disabled={ejecutando}
-              style={{ 
-                opacity: ejecutando ? 0.7 : 1,
-                cursor: ejecutando ? 'wait' : 'pointer'
-              }}
+          <div className="layout-editor">
+            <div
+              className="editor"
+              role="region"
+              aria-label="Editor de texto para escribir código Python"
             >
-                {ejecutando ? "Ejecutando..." : "Ejecutar Código"}
-            </button>
+              <h4>EDITOR DE CÓDIGO</h4>
+              <EditorMonaco
+                height="300px"
+                width="100%"
+                defaultLanguage="python"
+                defaultValue={practica?.codigoInicial || "# Escribe tu código Python aquí"}
+                theme="vs-white"
+                onMount={(editor) => {
+                  editorRef.current = editor;
+                }}
+                options={{
+                  fontSize: 14,
+                  minimap: { enabled: false },
+                  automaticLayout: true,
+                }}
+              />
 
-            {/* Retroalimentación visible */}
-            {retroalimentacion && (
-              <div
-                className="retroalimentacion"
-                style={{
-                  marginTop: "1rem",
-                  padding: "1rem",
-                  backgroundColor: "#f0f8ff",
-                  borderLeft: "5px solid #007bff",
+              <button 
+                className="ejecutar-button" 
+                onClick={ejecutarCodigo}
+                disabled={ejecutando}
+                style={{ 
+                  opacity: ejecutando ? 0.7 : 1,
+                  cursor: ejecutando ? 'wait' : 'pointer'
                 }}
               >
-                <strong>Retroalimentación:</strong>
-                <p>{retroalimentacion}</p>
-              </div>
-            )}
+                  {ejecutando ? "Ejecutando..." : "Ejecutar Código"}
+              </button>
 
-            {/* Resultados simulados en tabla */}
-            {resultado && (
-              <div className="resultado-simulacion" style={{ marginTop: "1rem" }}>
-                <p>
-                  <strong style={{ color: resultado.approved ? "green" : "red" }}>
-                    {resultado.status}
-                  </strong>{" "}
-                  {testCases.length} Test Cases
-                </p>
-                <table
+              {/* Retroalimentación visible */}
+              {retroalimentacion && (
+                <div
+                  className="retroalimentacion"
                   style={{
-                    width: "100%",
-                    borderCollapse: "collapse",
-                    backgroundColor: "#fffbe6",
-                    border: "1px solid #ffe58f",
                     marginTop: "1rem",
+                    padding: "1rem",
+                    backgroundColor: "#f0f8ff",
+                    borderLeft: "5px solid #007bff",
                   }}
                 >
-                  <thead>
-                    <tr>
-                      <th style={cellHeaderStyle}>Test Case #</th>
-                      <th style={cellHeaderStyle}>Input</th>
-                      <th style={cellHeaderStyle}>Output Esperado</th>
-                      <th style={cellHeaderStyle}>Estado</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {testCases.map((testCase, index) => {
-                      // Verificar si tenemos resultados para este test case
-                      const correcto = resultado.resultados && 
-                                      index < resultado.resultados.length ? 
-                                      resultado.resultados[index] : false;
+                  <strong>Retroalimentación:</strong>
+                  <p>{retroalimentacion}</p>
+                </div>
+              )}
 
-                      return (
-                        <tr key={index}>
-                          <td style={cellStyle}>#{index + 1}</td>
-                          <td style={cellStyle}>{testCase.entrada}</td>
-                          <td style={cellStyle}>{testCase.salida}</td>
-                          <td
-                            style={{
-                              ...cellStyle,
-                              color: correcto ? "green" : "red",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {correcto ? "✓ Aceptado" : "✗ Fallido"}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
+              {/* Resultados simulados en tabla */}
+              {resultado && (
+                <div className="resultado-simulacion" style={{ marginTop: "1rem" }}>
+                  <p>
+                    <strong style={{ color: resultado.approved ? "green" : "red" }}>
+                      {resultado.status}
+                    </strong>{" "}
+                    {testCases.length} Test Cases
+                  </p>
+                  <table
+                    style={{
+                      width: "100%",
+                      borderCollapse: "collapse",
+                      backgroundColor: "#fffbe6",
+                      border: "1px solid #ffe58f",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <thead>
+                      <tr>
+                        <th style={cellHeaderStyle}>Test Case #</th>
+                        <th style={cellHeaderStyle}>Input</th>
+                        <th style={cellHeaderStyle}>Output Esperado</th>
+                        <th style={cellHeaderStyle}>Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {testCases.map((testCase, index) => {
+                        // Verificar si tenemos resultados para este test case
+                        const correcto = resultado.resultados && 
+                                        index < resultado.resultados.length ? 
+                                        resultado.resultados[index] : false;
+
+                        return (
+                          <tr key={index}>
+                            <td style={cellStyle}>#{index + 1}</td>
+                            <td style={cellStyle}>{testCase.entrada}</td>
+                            <td style={cellStyle}>{testCase.salida}</td>
+                            <td
+                              style={{
+                                ...cellStyle,
+                                color: correcto ? "green" : "red",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {correcto ? "✓ Aceptado" : "✗ Fallido"}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           </div>
+          
         </>
       )}
     </section>

@@ -336,3 +336,172 @@
   border-radius: 4px;
   font-weight: 500;
 }
+
+
+
+/* Estilos para la sección de instrucciones */
+
+.instrucciones-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.instrucciones-header {
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 0.8rem;
+}
+
+.instrucciones-titulo {
+  margin: 0;
+  color: #2d3748;
+  font-size: 1.5rem;
+}
+
+/* Modificamos la estructura de detalles para que contenga la descripción y restricciones */
+.instrucciones-detalles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Ajustamos la descripción para que forme parte del grid y tenga el mismo estilo que la sección */
+.instrucciones-descripcion {
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 1.2rem;
+  height: 100%;
+  border: 1px solid #edf2f7;
+  line-height: 1.6;
+  color: #4a5568;
+  font-size: 1rem;
+  border-top: 3px solid #3182ce;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .instrucciones-detalles {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.instrucciones-seccion {
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 1.2rem;
+  height: 100%;
+  border: 1px solid #edf2f7;
+  display: flex;
+  flex-direction: column;
+}
+
+.restricciones-seccion {
+  border-top: 3px solid #4299e1;
+}
+
+.seccion-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.seccion-icono {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+.seccion-header h4 {
+  margin: 0;
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 1.1rem;
+}
+
+.restricciones-lista, .test-cases-lista {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.restriccion-item {
+  position: relative;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  color: #4a5568;
+  line-height: 1.5;
+}
+
+.restriccion-item:not(:last-child) {
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.restriccion-item .bullet {
+  position: absolute;
+  left: 0;
+  top: 0.85rem;
+  width: 6px;
+  height: 6px;
+  background-color: #4299e1;
+  border-radius: 50%;
+}
+
+/* .testcase-item {
+  margin-bottom: 0.8rem;
+  background-color: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+.testcases-seccion {
+  border-top: 3px solid #38b2ac;
+}
+
+.testcase-numero {
+  background-color: #ebf8ff;
+  color: #2b6cb0;
+  padding: 0.4rem 0.8rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #bee3f8;
+}
+
+.testcase-contenido {
+  padding: 0.8rem;
+}
+
+.testcase-entrada, .testcase-salida {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.3rem 0;
+}
+
+.testcase-salida {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.testcase-label {
+  color: #718096;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+  min-width: 110px;
+  white-space: nowrap;
+}
+
+.testcase-valor {
+  background-color: #edf2f7;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  color: #2d3748;
+  font-family: 'Menlo', monospace;
+  font-size: 0.9rem;
+} */
