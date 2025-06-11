@@ -152,7 +152,6 @@ const Editor = ({ titulo, lessonId }) => {
     <section className="instrucciones layout-horizontal">
       { !cargando && !error && practica &&  (
         <>
-
           <div className="instrucciones-container">
             <div className="instrucciones-header">
               <h3 className="instrucciones-titulo">{titulo}</h3>
@@ -183,114 +182,107 @@ const Editor = ({ titulo, lessonId }) => {
               </div>
             </div>
           </div>
-          <div className="layout-editor">
-            <div
-              className="editor"
-              role="region"
-              aria-label="Editor de texto para escribir código Python"
+          <div
+            className="editor"
+            role="region"
+            aria-label="Editor de texto para escribir código Python"
+          >
+            <h4>EDITOR DE CÓDIGO</h4>
+            <EditorMonaco
+              height="300px"
+              width="100%"
+              defaultLanguage="python"
+              defaultValue={practica?.codigoInicial || "# Escribe tu código Python aquí"}
+              theme="vs-white"
+              onMount={(editor) => {
+                editorRef.current = editor;
+              }}
+              options={{
+                fontSize: 14,
+                minimap: { enabled: false },
+                automaticLayout: true,
+              }}
+            />
+            <button 
+              className="ejecutar-button" 
+              onClick={ejecutarCodigo}
+              disabled={ejecutando}
+              style={{ 
+                opacity: ejecutando ? 0.7 : 1,
+                cursor: ejecutando ? 'wait' : 'pointer'
+              }}
             >
-              <h4>EDITOR DE CÓDIGO</h4>
-              <EditorMonaco
-                height="300px"
-                width="100%"
-                defaultLanguage="python"
-                defaultValue={practica?.codigoInicial || "# Escribe tu código Python aquí"}
-                theme="vs-white"
-                onMount={(editor) => {
-                  editorRef.current = editor;
-                }}
-                options={{
-                  fontSize: 14,
-                  minimap: { enabled: false },
-                  automaticLayout: true,
-                }}
-              />
-
-              <button 
-                className="ejecutar-button" 
-                onClick={ejecutarCodigo}
-                disabled={ejecutando}
-                style={{ 
-                  opacity: ejecutando ? 0.7 : 1,
-                  cursor: ejecutando ? 'wait' : 'pointer'
+                {ejecutando ? "Ejecutando..." : "Ejecutar Código"}
+            </button>
+            {/* Retroalimentación visible */}
+            {retroalimentacion && (
+              <div
+                className="retroalimentacion"
+                style={{
+                  marginTop: "1rem",
+                  padding: "1rem",
+                  backgroundColor: "#f0f8ff",
+                  borderLeft: "5px solid #007bff",
                 }}
               >
-                  {ejecutando ? "Ejecutando..." : "Ejecutar Código"}
-              </button>
-
-              {/* Retroalimentación visible */}
-              {retroalimentacion && (
-                <div
-                  className="retroalimentacion"
+                <strong>Retroalimentación:</strong>
+                <p>{retroalimentacion}</p>
+              </div>
+            )}
+            {/* Resultados simulados en tabla */}
+            {resultado && (
+              <div className="resultado-simulacion" style={{ marginTop: "1rem" }}>
+                <p>
+                  <strong style={{ color: resultado.approved ? "green" : "red" }}>
+                    {resultado.status}
+                  </strong>{" "}
+                  {testCases.length} Test Cases
+                </p>
+                <table
                   style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    backgroundColor: "#fffbe6",
+                    border: "1px solid #ffe58f",
                     marginTop: "1rem",
-                    padding: "1rem",
-                    backgroundColor: "#f0f8ff",
-                    borderLeft: "5px solid #007bff",
                   }}
                 >
-                  <strong>Retroalimentación:</strong>
-                  <p>{retroalimentacion}</p>
-                </div>
-              )}
-
-              {/* Resultados simulados en tabla */}
-              {resultado && (
-                <div className="resultado-simulacion" style={{ marginTop: "1rem" }}>
-                  <p>
-                    <strong style={{ color: resultado.approved ? "green" : "red" }}>
-                      {resultado.status}
-                    </strong>{" "}
-                    {testCases.length} Test Cases
-                  </p>
-                  <table
-                    style={{
-                      width: "100%",
-                      borderCollapse: "collapse",
-                      backgroundColor: "#fffbe6",
-                      border: "1px solid #ffe58f",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <thead>
-                      <tr>
-                        <th style={cellHeaderStyle}>Test Case #</th>
-                        <th style={cellHeaderStyle}>Input</th>
-                        <th style={cellHeaderStyle}>Output Esperado</th>
-                        <th style={cellHeaderStyle}>Estado</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {testCases.map((testCase, index) => {
-                        // Verificar si tenemos resultados para este test case
-                        const correcto = resultado.resultados && 
-                                        index < resultado.resultados.length ? 
-                                        resultado.resultados[index] : false;
-
-                        return (
-                          <tr key={index}>
-                            <td style={cellStyle}>#{index + 1}</td>
-                            <td style={cellStyle}>{testCase.entrada}</td>
-                            <td style={cellStyle}>{testCase.salida}</td>
-                            <td
-                              style={{
-                                ...cellStyle,
-                                color: correcto ? "green" : "red",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              {correcto ? "✓ Aceptado" : "✗ Fallido"}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
+                  <thead>
+                    <tr>
+                      <th style={cellHeaderStyle}>Test Case #</th>
+                      <th style={cellHeaderStyle}>Input</th>
+                      <th style={cellHeaderStyle}>Output Esperado</th>
+                      <th style={cellHeaderStyle}>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {testCases.map((testCase, index) => {
+                      // Verificar si tenemos resultados para este test case
+                      const correcto = resultado.resultados && 
+                                      index < resultado.resultados.length ? 
+                                      resultado.resultados[index] : false;
+                      return (
+                        <tr key={index}>
+                          <td style={cellStyle}>#{index + 1}</td>
+                          <td style={cellStyle}>{testCase.entrada}</td>
+                          <td style={cellStyle}>{testCase.salida}</td>
+                          <td
+                            style={{
+                              ...cellStyle,
+                              color: correcto ? "green" : "red",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {correcto ? "✓ Aceptado" : "✗ Fallido"}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
-          
         </>
       )}
     </section>
