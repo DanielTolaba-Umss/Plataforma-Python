@@ -73,12 +73,12 @@ const Editor = ({ titulo, descripcion }) => {
             automaticLayout: true,
           }}
         />
-        <input
+        {/* <input
           type="text"
           placeholder="Entrada (stdin)"
           value={inputStdin}
           onChange={(e) => setInputStdin(e.target.value)}
-        />
+        /> */}
         <button className="ejecutar-button" onClick={ejecutarCodigo}>
           Ejecutar Código
         </button>
@@ -100,22 +100,35 @@ const Editor = ({ titulo, descripcion }) => {
         )}
 
         {/* Resultado de la simulación */}
+        {/* Simulación de test cases */}
         {resultado && (
           <div className="resultado-simulacion">
             <p>
               <strong style={{ color: "green" }}>{resultado.status}</strong>{" "}
-              #stdin #stdout {resultado.tiempo} {resultado.memoria}
+              #TestCases {resultado.tiempo} {resultado.memoria}
             </p>
-            <p>
-              <strong>📥 stdin</strong>
-              <br />
-              {resultado.stdin}
-            </p>
-            <p>
-              <strong>📤 stdout</strong>
-              <br />
-              {resultado.stdout}
-            </p>
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                style={{
+                  backgroundColor: "#fffbe6",
+                  border: "1px solid #ffe58f",
+                  borderRadius: "6px",
+                  padding: "10px",
+                  marginBottom: "10px",
+                }}
+              >
+                <p>
+                  <strong>📄 Test Case #{i}</strong>
+                </p>
+                <p>
+                  <strong>📥 Input:</strong> 10 5
+                </p>
+                <p>
+                  <strong>📤 Output Esperado:</strong> 15
+                </p>
+              </div>
+            ))}
           </div>
         )}
       </div>
