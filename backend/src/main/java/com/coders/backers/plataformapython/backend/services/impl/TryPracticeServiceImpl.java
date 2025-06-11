@@ -65,18 +65,34 @@ public class TryPracticeServiceImpl implements TryPracticeService {
             if (practiceDto == null) {
                 throw new ResourceNotFoundException("Practice not found with id: " + practiceId);
             }
+            List<TestCaseDto> testCases = testCaseService.getByPractice(practiceId);
+            if (testCases.isEmpty()) {
+                throw new ResourceNotFoundException("No test cases found for practice with id: " + practiceId);
+            }
 
             boolean hasApprovedAttempt = getByStudentId(studentId).stream()
                     .filter(tryPractice -> tryPractice.getPractice().getId().equals(practiceId))
                     .anyMatch(tryPractice -> tryPractice.getApproved());
 
             if (hasApprovedAttempt) {
-                throw new IllegalStateException("Ya existe un intento aprobado para esta práctica");
-            }
+                TryPracticeEntity entity = new TryPracticeEntity();
+                entity.setCode(codeReceived);
+                entity.setStudent(student);
+                entity.setPractice(practice);
+                StringBuilder testResultsJson = new StringBuilder("[");
+                for (int i = 0; i < testCases.size(); i++) {
+                    testResultsJson.append("true");
+                    if (i < testCases.size() - 1) {
+                        testResultsJson.append(",");
+                    }
+                }
+                testResultsJson.append("]");
+                entity.setTestResults(testResultsJson.toString());
+                entity.setApproved(true);
+                entity.setFeedback(
+                        "¡Ya has aprobado esta práctica anteriormente! Puedes continuar con la siguiente lección.");
 
-            List<TestCaseDto> testCases = testCaseService.getByPractice(practiceId);
-            if (testCases.isEmpty()) {
-                throw new ResourceNotFoundException("No test cases found for practice with id: " + practiceId);
+                return TryPracticeMapper.mapToDto(entity);
             }
 
             String initialCode = practiceDto.getCodigoInicial();

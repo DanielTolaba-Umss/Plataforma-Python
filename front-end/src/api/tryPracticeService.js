@@ -1,6 +1,6 @@
 import { API_URL } from "./configuracion";
 
-const TRY_PRACTICE_API_URL = `${API_URL}/try-practice`;
+const TRY_PRACTICE_API_URL = `${API_URL}/try-practices`;
 
 export const tryPracticeService = {
     async getAllPractices() {
