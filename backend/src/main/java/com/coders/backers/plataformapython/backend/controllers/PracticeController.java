@@ -40,4 +40,10 @@ public class PracticeController {
         return ResponseEntity.ok(updated);
     }
 
+    @GetMapping("/lesson/{lessonid}")
+    public ResponseEntity<PracticeDto> getPracticeByLessonId(@PathVariable("lessonid") Long lessonId) {
+        PracticeDto practice = practiceService.getPracticeByLessonId(lessonId);
+        return ResponseEntity.ok(practice);
+    }
+
 }

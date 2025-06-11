@@ -27,7 +27,7 @@ public class PracticeServiceImpl implements PracticeService {
     @Override
     public PracticeDto createPractice(CreatePracticeDto dto) {
         LessonEntity lesson = lessonRepository.findById(dto.getLeccionId())
-            .orElseThrow(() -> new RuntimeException("Lesson not found"));
+                .orElseThrow(() -> new RuntimeException("Lesson not found"));
         PracticeEntity module = PracticeMapper.fromCreateDto(dto, lesson);
         PracticeEntity savedModule = practiceModuleRepository.save(module);
         return PracticeMapper.toDto(savedModule);
@@ -36,8 +36,8 @@ public class PracticeServiceImpl implements PracticeService {
     @Override
     public List<PracticeDto> getAllPractice() {
         return practiceModuleRepository.findAll().stream()
-            .map(PracticeMapper::toDto)
-            .collect(Collectors.toList());
+                .map(PracticeMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -48,10 +48,10 @@ public class PracticeServiceImpl implements PracticeService {
     @Override
     public PracticeDto updatePractice(Long id, UpdatePracticeDto dto) {
         PracticeEntity entity = practiceModuleRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Practice module not found"));
+                .orElseThrow(() -> new RuntimeException("Practice module not found"));
 
         LessonEntity lesson = lessonRepository.findById(dto.getLeccionId())
-            .orElseThrow(() -> new RuntimeException("Lesson not found"));
+                .orElseThrow(() -> new RuntimeException("Lesson not found"));
 
         PracticeMapper.updateEntityFromDto(dto, entity, lesson);
 
@@ -63,6 +63,15 @@ public class PracticeServiceImpl implements PracticeService {
     public PracticeDto getPracticeById(Long id) {
         PracticeEntity practice = practiceModuleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Practice not found with id: " + id));
+        return PracticeMapper.toDto(practice);
+    }
+
+    @Override
+    public PracticeDto getPracticeByLessonId(Long lessonId) {
+        PracticeEntity practice = practiceModuleRepository.findByLessonId(lessonId);
+        if (practice == null) {
+            throw new ResourceNotFoundException("Practice not found for lesson with id: " + lessonId);
+        }
         return PracticeMapper.toDto(practice);
     }
 

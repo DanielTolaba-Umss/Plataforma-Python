@@ -1,12 +1,34 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import EditorMonaco from "@monaco-editor/react";
+
 import "/src/paginas/estudiante/estilos/Prueba.css";
+import { practiceJhService } from "../../api/practiceJh";
+import { tryPracticeService } from "../../api/tryPracticeService";
+
 
 const Editor = ({ titulo, descripcion }) => {
   const [resultado, setResultado] = useState(null);
   const [retroalimentacion, setRetroalimentacion] = useState("");
+  const [practica, setPractica] = useState(null);
+  const [error, setError] = useState(null);
   const editorRef = useRef(null);
 
+   useEffect(() => {
+    const cargarPractica = async () => {
+      try {
+        const datos = await practiceJhService.getPracticeByLessonId(lessonId);
+        setPractica(datos);
+
+      } catch (error) {
+        console.error("Error al cargar la práctica:", error);
+        setError("No se pudo cargar la información de la práctica");
+      }
+    };
+
+      cargarPractica();
+  }, [lessonId]);
+  
+  
   const ejecutarCodigo = () => {
     if (editorRef.current) {
       const codigo = editorRef.current.getValue();
@@ -60,7 +82,22 @@ const Editor = ({ titulo, descripcion }) => {
   return (
     <section className="instrucciones">
       <h3 className="problema">{titulo}</h3>
-      <p className="prolema">{descripcion}</p>
+      <div className="instrucciones-texto">
+        <p className="prolema">{descripcion}</p>
+        <h4>Restricciones:</h4>
+        <ul>
+          <li>El código debe estar escrito en Python.</li>
+          <li>Debe utilizar la función `input()` para recibir datos.</li>
+          <li>Debe mostrar un saludo personalizado usando `print()`.</li>
+          <li>El código debe ser ejecutable sin errores de sintaxis.</li>
+        </ul>
+        <h4>Casos de Prueba:</h4>
+        <ul>
+          <li>Entrada: "10 5" | Salida Esperada: "15"</li>
+          <li>Entrada: "20 30" | Salida Esperada: "50"</li>
+          <li>Entrada: "100 200" | Salida Esperada: "300"</li>
+        </ul>
+      </div>
       <div
         className="editor"
         role="region"
@@ -158,6 +195,6 @@ const Editor = ({ titulo, descripcion }) => {
       </div>
     </section>
   );
-};
+}
 
 export default Editor;
