@@ -66,41 +66,48 @@ public class CodeRestrictionValidator {
     public List<String> validateCode(String code, String restrictions) {
         List<String> violations = new ArrayList<>();
 
-        if (code == null || restrictions == null || restrictions.trim().isEmpty()) {
+        if (code == null) {
             return violations;
         }
 
-        String[] restrictionLines = restrictions.split("\n");
+        List<String> dangerousImports = checkDangerousImports(code);
+        violations.addAll(dangerousImports);
 
-        for (String line : restrictionLines) {
-            line = line.trim();
-            if (line.startsWith("-") || line.startsWith("*")) {
-                line = line.substring(1).trim();
+        if (code.contains("\u200b") || code.contains("\u200c") ||
+                code.contains("\u200d") || code.contains("\ufeff")) {
+            violations.add("El código contiene caracteres Unicode invisibles no permitidos");
+        }
 
-                for (Map.Entry<Pattern, Pair<Predicate<String>, String>> entry : restrictionValidators.entrySet()) {
-                    if (entry.getKey().matcher(line).find()) {
-                        if (entry.getValue().getFirst().test(code)) {
-                            violations.add(entry.getValue().getSecond());
+        if (restrictions != null && !restrictions.trim().isEmpty()) {
+            String[] restrictionLines = restrictions.split("\n");
+
+            for (String line : restrictionLines) {
+                line = line.trim();
+                if (line.startsWith("-") || line.startsWith("*")) {
+                    line = line.substring(1).trim();
+
+                    for (Map.Entry<Pattern, Pair<Predicate<String>, String>> entry : restrictionValidators.entrySet()) {
+                        if (entry.getKey().matcher(line).find()) {
+                            if (entry.getValue().getFirst().test(code)) {
+                                violations.add(entry.getValue().getSecond());
+                            }
                         }
                     }
-                }
 
-                if (line.matches("(?i).*no usar (?:la función )?\\w+\\(\\).*")) {
-                    Pattern functionPattern = Pattern.compile("no usar (?:la función )?(\\w+)\\(\\)",
-                            Pattern.CASE_INSENSITIVE);
-                    Matcher matcher = functionPattern.matcher(line);
-                    if (matcher.find()) {
-                        String functionName = matcher.group(1);
-                        if (containsFunction(code, functionName)) {
-                            violations.add("No se permite usar la función " + functionName + "()");
+                    if (line.matches("(?i).*no usar (?:la función )?\\w+\\(\\).*")) {
+                        Pattern functionPattern = Pattern.compile("no usar (?:la función )?(\\w+)\\(\\)",
+                                Pattern.CASE_INSENSITIVE);
+                        Matcher matcher = functionPattern.matcher(line);
+                        if (matcher.find()) {
+                            String functionName = matcher.group(1);
+                            if (containsFunction(code, functionName)) {
+                                violations.add("No se permite usar la función " + functionName + "()");
+                            }
                         }
                     }
                 }
             }
         }
-
-        List<String> dangerousImports = checkDangerousImports(code);
-        violations.addAll(dangerousImports);
 
         return violations;
     }
@@ -140,6 +147,23 @@ public class CodeRestrictionValidator {
                 Pattern.compile("exec\\s*\\(").matcher(code).find()) {
 
             foundDangerousImports.add("Se detectaron construcciones potencialmente peligrosas en el código");
+        }
+
+        if (Pattern.compile("subprocess\\.").matcher(code).find() ||
+                Pattern.compile("os\\.system").matcher(code).find() ||
+                Pattern.compile("os\\.popen").matcher(code).find()) {
+            foundDangerousImports.add("Se detectaron intentos de ejecutar comandos del sistema operativo");
+        }
+
+        if (Pattern.compile("#.*[;:@].*\\\\").matcher(code).find()) {
+            foundDangerousImports.add("Se detectaron patrones sospechosos de inyección de código");
+        }
+
+        for (String module : dangerousModules) {
+            String pattern = ".*[\"']" + module + "[\"'].*";
+            if (Pattern.compile(pattern).matcher(code).find()) {
+                foundDangerousImports.add("Posible intento de importar el módulo peligroso: " + module);
+            }
         }
 
         return foundDangerousImports;
