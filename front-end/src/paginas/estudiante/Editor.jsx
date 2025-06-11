@@ -1,10 +1,10 @@
-// src/components/Editor.jsx
 import React, { useState, useRef } from "react";
 import EditorMonaco from "@monaco-editor/react";
 import "/src/paginas/estudiante/estilos/Prueba.css";
 
 const Editor = ({ titulo, descripcion }) => {
   const [resultado, setResultado] = useState(null);
+  const [retroalimentacion, setRetroalimentacion] = useState("");
   const editorRef = useRef(null);
   const [inputStdin, setInputStdin] = useState("");
 
@@ -13,6 +13,29 @@ const Editor = ({ titulo, descripcion }) => {
       const codigo = editorRef.current.getValue();
       console.log("Código ejecutado:", codigo);
 
+      // ✅ Validación simple del código del estudiante
+      const usaInput = codigo.includes("input");
+      const saludaBien = /print\s*\(.*Hola.*\)/.test(codigo);
+
+      if (usaInput && saludaBien) {
+        setRetroalimentacion(
+          "¡Excelente! Estás utilizando `input()` y mostrando correctamente el saludo."
+        );
+      } else if (!usaInput && !saludaBien) {
+        setRetroalimentacion(
+          " Asegúrate de pedir el nombre usando `input()` y mostrar un saludo con `print()`."
+        );
+      } else if (!usaInput) {
+        setRetroalimentacion(
+          " Falta el uso de `input()` para pedir el nombre."
+        );
+      } else {
+        setRetroalimentacion(
+          " Falta mostrar el saludo correctamente con `print('Hola nombre')`."
+        );
+      }
+
+      // Salida simulada (puedes personalizar más si deseas)
       const salidaSimulada = {
         status: "Éxito",
         tiempo: "0.07s",
@@ -60,6 +83,23 @@ const Editor = ({ titulo, descripcion }) => {
           Ejecutar Código
         </button>
 
+        {/* Retroalimentación visible */}
+        {retroalimentacion && (
+          <div
+            className="retroalimentacion"
+            style={{
+              marginTop: "1rem",
+              padding: "1rem",
+              backgroundColor: "#f0f8ff",
+              borderLeft: "5px solid #007bff",
+            }}
+          >
+            <strong>Retroalimentación:</strong>
+            <p>{retroalimentacion}</p>
+          </div>
+        )}
+
+        {/* Resultado de la simulación */}
         {resultado && (
           <div className="resultado-simulacion">
             <p>
