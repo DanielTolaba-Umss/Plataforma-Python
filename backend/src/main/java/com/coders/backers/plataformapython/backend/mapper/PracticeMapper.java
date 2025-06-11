@@ -13,7 +13,6 @@ public class PracticeMapper {
         dto.setInstrucciones(entity.getInstrucciones());
         dto.setCodigoInicial(entity.getCodigoInicial());
         dto.setSolucionReferencia(entity.getSolucionReferencia());
-        dto.setCasosPrueba(entity.getCasosPrueba());
         dto.setRestricciones(entity.getRestricciones());
         dto.setIntentosMax(entity.getIntentosMax());
         if (entity.getLesson() != null) {
@@ -27,7 +26,6 @@ public class PracticeMapper {
         entity.setInstrucciones(dto.getInstrucciones());
         entity.setCodigoInicial(dto.getCodigoInicial());
         entity.setSolucionReferencia(dto.getSolucionReferencia());
-        entity.setCasosPrueba(dto.getCasosPrueba());
         entity.setRestricciones(dto.getRestricciones());
         entity.setIntentosMax(dto.getIntentosMax());
         entity.setLesson(lesson);
@@ -37,10 +35,23 @@ public class PracticeMapper {
         entity.setInstrucciones(dto.getInstrucciones());
         entity.setCodigoInicial(dto.getCodigoInicial());
         entity.setSolucionReferencia(dto.getSolucionReferencia());
-        entity.setCasosPrueba(dto.getCasosPrueba());
         entity.setRestricciones(dto.getRestricciones());
         entity.setIntentosMax(dto.getIntentosMax());
         entity.setLesson(lesson);
+    }
+
+    public static PracticeEntity mapToEntity(PracticeDto dto) {
+        if (dto == null) {
+            return null;
+        }
+        PracticeEntity entity = new PracticeEntity();
+        entity.setId(dto.getId());
+        entity.setInstrucciones(dto.getInstrucciones());
+        entity.setCodigoInicial(dto.getCodigoInicial());
+        entity.setSolucionReferencia(dto.getSolucionReferencia());
+        entity.setRestricciones(dto.getRestricciones());
+        entity.setIntentosMax(dto.getIntentosMax());
+        return entity;
     }
 
 }

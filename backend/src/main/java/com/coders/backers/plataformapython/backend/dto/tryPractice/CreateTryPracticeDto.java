@@ -2,18 +2,20 @@ package com.coders.backers.plataformapython.backend.dto.tryPractice;
 
 import lombok.*;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateTryPracticeDto {
-    private Long estudianteProgresoId;
+
+    private Long studentId;
     private Long practiceId;
-    private String codigoEnviado;
-    private String resultadosPruebas;
-    private boolean aprobado;
-    private String retroalimentacion;
-    private Date fechaIntento;
+    private String code;
+    private Boolean [] testResults;
+    private boolean approved;
+    private String feedback;
+    private LocalDateTime createAt;
 }
+

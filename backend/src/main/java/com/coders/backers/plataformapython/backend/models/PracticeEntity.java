@@ -13,22 +13,22 @@ public class PracticeEntity {
     private String instrucciones;
     private String codigoInicial;
     private String solucionReferencia;
-    private String casosPrueba;
     private String restricciones;
     private Integer intentosMax;
 
     @OneToOne
-    @JoinColumn(name = "leccion_id") 
+    @JoinColumn(name = "leccion_id")
     private LessonEntity lesson;
 
-    public PracticeEntity() {}
+    public PracticeEntity() {
+    }
 
-    public PracticeEntity(Long id, String instrucciones, String codigoInicial, String solucionReferencia, String casosPrueba, String restricciones, Integer intentosMax) {
+    public PracticeEntity(Long id, String instrucciones, String codigoInicial, String solucionReferencia,
+            String restricciones, Integer intentosMax) {
         this.id = id;
         this.instrucciones = instrucciones;
         this.codigoInicial = codigoInicial;
         this.solucionReferencia = solucionReferencia;
-        this.casosPrueba = casosPrueba;
         this.restricciones = restricciones;
         this.intentosMax = intentosMax;
     }
@@ -65,14 +65,6 @@ public class PracticeEntity {
         this.solucionReferencia = solucionReferencia;
     }
 
-    public String getCasosPrueba() {
-        return casosPrueba;
-    }
-
-    public void setCasosPrueba(String casosPrueba) {
-        this.casosPrueba = casosPrueba;
-    }
-
     public String getRestricciones() {
         return restricciones;
     }
@@ -95,5 +87,10 @@ public class PracticeEntity {
 
     public void setLesson(LessonEntity lesson) {
         this.lesson = lesson;
+    }
+
+    public PracticeEntity orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
     }
 }

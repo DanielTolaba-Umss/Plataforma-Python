@@ -1,6 +1,7 @@
 package com.coders.backers.plataformapython.backend.controllers;
 
 import com.coders.backers.plataformapython.backend.dto.tryPractice.*;
+import com.coders.backers.plataformapython.backend.dto.tryPractice.python.CodeExecutionRequest;
 import com.coders.backers.plataformapython.backend.services.TryPracticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +17,8 @@ public class TryPracticeController {
     private final TryPracticeService tryPracticeService;
 
     @PostMapping
-    public ResponseEntity<TryPracticeDto> create(@RequestBody CreateTryPracticeDto dto) {
-        return ResponseEntity.ok(tryPracticeService.createTryPractice(dto));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<TryPracticeDto> update(@PathVariable Long id, @RequestBody UpdateTryPracticeDto dto) {
-        return ResponseEntity.ok(tryPracticeService.updateTryPractice(id, dto));
+    public ResponseEntity<TryPracticeDto> create(@RequestBody CodeExecutionRequest code) {
+        return ResponseEntity.ok(tryPracticeService.createTryPractice(code));
     }
 
     @GetMapping
@@ -35,19 +31,13 @@ public class TryPracticeController {
         return ResponseEntity.ok(tryPracticeService.getTryPracticeById(id));
     }
 
-    @GetMapping("/by-estudiante/{progresoId}")
-    public ResponseEntity<List<TryPracticeDto>> getByEstudianteProgreso(@PathVariable Long progresoId) {
-        return ResponseEntity.ok(tryPracticeService.getByEstudianteProgresoId(progresoId));
+    @GetMapping("/by-estudiante/{studentId}")
+    public ResponseEntity<List<TryPracticeDto>> getByEstudianteProgreso(@PathVariable Long studentId) {
+        return ResponseEntity.ok(tryPracticeService.getByStudentId(studentId));
     }
 
     @GetMapping("/by-practice/{practiceId}")
     public ResponseEntity<List<TryPracticeDto>> getByPractice(@PathVariable Long practiceId) {
         return ResponseEntity.ok(tryPracticeService.getByPracticeId(practiceId));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        tryPracticeService.deleteTryPractice(id);
-        return ResponseEntity.noContent().build();
     }
 }
