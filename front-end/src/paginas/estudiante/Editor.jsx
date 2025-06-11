@@ -6,7 +6,6 @@ const Editor = ({ titulo, descripcion }) => {
   const [resultado, setResultado] = useState(null);
   const [retroalimentacion, setRetroalimentacion] = useState("");
   const editorRef = useRef(null);
-  const [inputStdin, setInputStdin] = useState("");
 
   const ejecutarCodigo = () => {
     if (editorRef.current) {
@@ -35,17 +34,27 @@ const Editor = ({ titulo, descripcion }) => {
         );
       }
 
-      // Salida simulada (puedes personalizar más si deseas)
+      // Simular resultado con test cases
       const salidaSimulada = {
         status: "Éxito",
         tiempo: "0.07s",
         memoria: "14060KB",
-        stdin:
-          inputStdin.trim() === "" ? "Standard input is empty" : inputStdin,
-        stdout: "La suma de 10 y 5 es: 15",
+        output: "15", // resultado generado por el código simulado
       };
       setResultado(salidaSimulada);
     }
+  };
+
+  const cellHeaderStyle = {
+    padding: "10px",
+    borderBottom: "2px solid #ffe58f",
+    backgroundColor: "#fff2cc",
+    textAlign: "left",
+  };
+
+  const cellStyle = {
+    padding: "10px",
+    borderBottom: "1px solid #ffe58f",
   };
 
   return (
@@ -73,12 +82,7 @@ const Editor = ({ titulo, descripcion }) => {
             automaticLayout: true,
           }}
         />
-        {/* <input
-          type="text"
-          placeholder="Entrada (stdin)"
-          value={inputStdin}
-          onChange={(e) => setInputStdin(e.target.value)}
-        /> */}
+
         <button className="ejecutar-button" onClick={ejecutarCodigo}>
           Ejecutar Código
         </button>
@@ -99,36 +103,56 @@ const Editor = ({ titulo, descripcion }) => {
           </div>
         )}
 
-        {/* Resultado de la simulación */}
-        {/* Simulación de test cases */}
+        {/* Resultados simulados en tabla */}
         {resultado && (
-          <div className="resultado-simulacion">
+          <div className="resultado-simulacion" style={{ marginTop: "1rem" }}>
             <p>
               <strong style={{ color: "green" }}>{resultado.status}</strong>{" "}
               #TestCases {resultado.tiempo} {resultado.memoria}
             </p>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                style={{
-                  backgroundColor: "#fffbe6",
-                  border: "1px solid #ffe58f",
-                  borderRadius: "6px",
-                  padding: "10px",
-                  marginBottom: "10px",
-                }}
-              >
-                <p>
-                  <strong>📄 Test Case #{i}</strong>
-                </p>
-                <p>
-                  <strong>📥 Input:</strong> 10 5
-                </p>
-                <p>
-                  <strong>📤 Output Esperado:</strong> 15
-                </p>
-              </div>
-            ))}
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                backgroundColor: "#fffbe6",
+                border: "1px solid #ffe58f",
+                marginTop: "1rem",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th style={cellHeaderStyle}>Test Case #</th>
+                  <th style={cellHeaderStyle}>Input</th>
+                  <th style={cellHeaderStyle}>Output Esperado</th>
+                  <th style={cellHeaderStyle}>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[1, 2, 3, 4, 5].map((i) => {
+                  const input = "10 5";
+                  const esperado = "15";
+                  const generado = resultado.output; // simulado
+                  const correcto = generado === esperado;
+
+                  return (
+                    <tr key={i}>
+                      <td style={cellStyle}>#{i}</td>
+                      <td style={cellStyle}>{input}</td>
+                      <td style={cellStyle}>{esperado}</td>
+                      <td
+                        style={{
+                          ...cellStyle,
+                          color: correcto ? "green" : "red",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {correcto ? "Aceptado" : "Respuesta Incorrecta"}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
