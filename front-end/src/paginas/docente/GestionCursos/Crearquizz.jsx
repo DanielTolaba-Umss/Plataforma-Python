@@ -17,14 +17,14 @@ const CrearQuizz = () => {
     aleatorio: false,
     active: true,
     courseId: nivelId, 
-    preguntas: []
+    preguntas: {}
   });
 
   const [currentQuestion, setCurrentQuestion] = useState({
     texto_pregunta: '',
     tipo_pregunta: 'opcion_multiple',
     puntos: 1,
-    opciones: [],
+    opciones: {}, 
     respuesta_correcta: '',
     explicacion: ''
   });
@@ -40,85 +40,99 @@ const CrearQuizz = () => {
   };
 
   const handleQuestionChange = (e) => {
-  const { name, value } = e.target;
-
-  setCurrentQuestion(prev => ({
-    ...prev,
-    [name]: name === 'puntos' ? parseInt(value) || 0 : value
-  }));
-};
+    const { name, value } = e.target;
+    setCurrentQuestion(prev => ({
+      ...prev,
+      [name]: name === 'puntos' ? parseInt(value) || 0 : value
+    }));
+  };
 
   const handleAddOption = () => {
     if (newOption.trim()) {
+      const keys = Object.keys(currentQuestion.opciones);
+      let lastIndex = 0;
+      if (keys.length > 0) {
+        const lastKey = keys[keys.length - 1];
+        lastIndex = parseInt(lastKey.replace('opcion', '')) || 0;
+      }
+      const newKey = `opcion${lastIndex + 1}`;
       setCurrentQuestion(prev => ({
         ...prev,
-        opciones: [...prev.opciones, newOption]
+        opciones: {
+          ...prev.opciones,
+          [newKey]: newOption.trim()
+        }
       }));
       setNewOption('');
     }
   };
 
   const handleAddQuestion = () => {
-  const { texto_pregunta, tipo_pregunta, puntos, opciones, respuesta_correcta } = currentQuestion;
+    const { texto_pregunta, tipo_pregunta, puntos, opciones, respuesta_correcta } = currentQuestion;
+     if (!currentQuestion.texto_pregunta.trim()) return;
 
-  if (!texto_pregunta.trim()) {
-    alert("La pregunta no puede estar vacía.");
-    return;
-  }
-
-  if (puntos <= 0) {
-    alert("Los puntos deben ser mayores a 0.");
-    return;
-  }
-
-  if (tipo_pregunta === 'opcion_multiple') {
-    if (opciones.length < 2) {
-      alert("Debe haber al menos dos opciones para preguntas de opción múltiple.");
+    if (!texto_pregunta.trim()) {
+      alert("La pregunta no puede estar vacía.");
       return;
     }
 
-    if (!respuesta_correcta.trim()) {
-      alert("Debe seleccionar una respuesta correcta.");
+    if (puntos <= 0) {
+      alert("Los puntos deben ser mayores a 0.");
       return;
     }
 
-    if (!opciones.includes(respuesta_correcta)) {
-      alert("La respuesta correcta no está entre las opciones.");
+    if (tipo_pregunta === 'opcion_multiple') {
+      const cantidadOpciones = Object.keys(opciones).length;
+      if (cantidadOpciones < 2) {
+        alert("Debe haber al menos dos opciones para preguntas de opción múltiple.");
+        return;
+      }
+
+      if (!respuesta_correcta.trim()) {
+        alert("Debe seleccionar una respuesta correcta.");
+        return;
+      }
+
+      const respuestaCorrectaValida = Object.values(opciones).some(opcion => opcion === respuesta_correcta);
+      if (!respuestaCorrectaValida) {
+        alert("La respuesta correcta no está entre las opciones.");
+        return;
+      }
+    }
+
+    if (tipo_pregunta === 'verdadero_falso' && !['Verdadero', 'Falso'].includes(respuesta_correcta)) {
+      alert("Seleccione 'Verdadero' o 'Falso' como respuesta.");
       return;
     }
-  }
 
-  if (tipo_pregunta === 'verdadero_falso' && !['Verdadero', 'Falso'].includes(respuesta_correcta)) {
-    alert("Seleccione 'Verdadero' o 'Falso' como respuesta.");
-    return;
-  }
-   const preguntaValida = {
-    ...currentQuestion,
-    texto_pregunta: texto_pregunta.trim(),
-    puntos: parseInt(puntos),
-    opciones: currentQuestion.opciones,
-    respuesta_correcta: respuesta_correcta.trim()
+    const preguntaValida = {
+      ...currentQuestion,
+      texto_pregunta: texto_pregunta.trim(),
+      puntos: parseInt(puntos),
+      opciones: currentQuestion.opciones,
+      respuesta_correcta: currentQuestion.respuesta_correcta.trim(),
+    };
+
+    setQuizData(prev => {
+      const newKey = `pregunta${Object.keys(prev.preguntas).length + 1}`;
+      return {
+        ...prev,
+        preguntas: {
+          ...prev.preguntas,
+          [newKey]: preguntaValida
+        }
+      };
+    });
+
+    setCurrentQuestion({
+      texto_pregunta: '',
+      tipo_pregunta: 'opcion_multiple',
+      puntos: 1,
+      opciones: {},
+      respuesta_correcta: '',
+      explicacion: ''
+    });
   };
-
-  setQuizData(prev => {
-  const updated = {
-    ...prev,
-    preguntas: [...prev.preguntas, preguntaValida]
-  };
-  console.log("Preguntas actualizadas:", updated.preguntas);
-  return updated;
-});
-
-
-  setCurrentQuestion({
-    texto_pregunta: '',
-    tipo_pregunta: 'opcion_multiple',
-    puntos: 1,
-    opciones: [],
-    respuesta_correcta: '',
-    explicacion: ''
-  });
-};
 
   const validateQuiz = () => {
     if (!quizData.titulo.trim()) {
@@ -126,34 +140,33 @@ const CrearQuizz = () => {
       console.log("Validación falló: título vacío");
       return false;
     }
-    
-    if (quizData.preguntas.length === 0) {
+
+    if (Object.keys(quizData.preguntas).length === 0) {
       alert('Debe agregar al menos una pregunta');
       console.log("Validación falló: sin preguntas");
       return false;
     }
-    
-    const hasInvalidQuestions = quizData.preguntas.some(pregunta => 
+
+    const hasInvalidQuestions = Object.values(quizData.preguntas).some(pregunta => 
       pregunta.tipo_pregunta === 'opcion_multiple' && !pregunta.respuesta_correcta
     );
-    
+
     if (hasInvalidQuestions) {
       alert('Todas las preguntas de opción múltiple deben tener una respuesta correcta seleccionada');
       return false;
     }
-    
+
     return true;
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
-  console.log("Submit presionado");
   if (!validateQuiz()) return;
 
   setIsSubmitting(true);
 
   try {
-    const quizToSend = {
+     const quizToSend = {
       titulo: quizData.titulo,
       descripcion: quizData.descripcion,
       duracionMinutos: quizData.duracionMinutos,
@@ -165,61 +178,45 @@ const CrearQuizz = () => {
     };
 
     const quizResponse = await quizzesAPI.crear(quizToSend);
-
-    if (quizResponse.status !== 201) {
-      throw new Error(quizResponse.data?.message || 'Error al crear el quiz');
-    }
-
+    if (quizResponse.status !== 201) throw new Error('Error al crear quiz');
     const quizId = quizResponse.data.id;
-    
- await Promise.all(
-  quizData.preguntas.map((pregunta) => {
-    let opcionesArray = [];
 
-    if (Array.isArray(pregunta.opciones)) {
-      opcionesArray = pregunta.opciones;
-    } else if (typeof pregunta.opciones === 'string') {
-      try {
-        opcionesArray = JSON.parse(pregunta.opciones);
-      } catch (e) {
-        opcionesArray = [];
-      }
-    } else if (typeof pregunta.opciones === 'object' && pregunta.opciones !== null) {
-      opcionesArray = Object.values(pregunta.opciones);
-    }
+    // 2. Preparar preguntas con el formato EXACTO que necesita el backend
+    const questionsToSend = Object.values(quizData.preguntas).map(p => {
+      // Transformar opciones a formato {opcion1: "valor1", opcion2: "valor2"}
+      const opcionesFormateadas = {};
+      Object.entries(p.opciones).forEach(([key, value]) => {
+        opcionesFormateadas[key] = value;
+      });
 
-    return questionsAPI.crearPregunta({
-      ...pregunta,
-      opciones: opcionesArray, // ✅ enviar como array JSON válido
-      quizId,
+      return {
+        quizId: quizId,
+        textoPregunta: p.texto_pregunta,
+        tipoPregunta: p.tipo_pregunta,
+        puntos: p.puntos,
+        opciones: opcionesFormateadas, // Objeto plano {clave: valor}
+        respuestaCorrecta: p.respuesta_correcta,
+        explicacion: p.explicacion
+      };
     });
-  })
-);
 
+    console.log("Datos finales:", JSON.stringify(questionsToSend, null, 2));
 
-    alert('Quiz y preguntas guardados exitosamente');
-    navigate(`/gestion-curso/lecciones/${nivelId}/examenes-y-quizzes/`);
+    // 3. Enviar preguntas
+    await Promise.all(
+      questionsToSend.map(pregunta => questionsAPI.crearPregunta(pregunta))
+    );
+
+    alert('Quiz creado exitosamente!');
+    navigate(`/ruta-de-exito/${nivelId}`);
 
   } catch (error) {
-    let errorMessage = 'Error al guardar el quiz';
-
-    if (error.response) {
-      if (error.response.status === 400) {
-        errorMessage = 'Datos inválidos: ' + (error.response.data?.errors?.join(', ') || 'verifique los campos');
-      } else if (error.response.status === 401) {
-        errorMessage = 'No autorizado - por favor inicie sesión nuevamente';
-      } else if (error.response.status === 500) {
-        errorMessage = 'Error en el servidor - por favor intente más tarde';
-      }
-    }
-
-    alert(errorMessage);
-    console.error('Error detallado:', error);
+    console.error('Error completo:', error);
+    alert(error.response?.data?.message || 'Error al guardar');
   } finally {
     setIsSubmitting(false);
   }
 };
-
   return (
     <div className={styles.coursesContainer}>
       <header className={styles.coursesHeader}>
@@ -358,11 +355,12 @@ const CrearQuizz = () => {
                   <div className={styles.formGroup}>
                     <label>Opciones</label>
                     <ul className={styles.optionsList}>
-                      {currentQuestion.opciones.map((opcion, idx) => (
-                        <li key={idx} className={styles.optionItem}>
-                          {opcion}
-                        </li>
-                      ))}
+                      {Object.values(currentQuestion.opciones).map((opcion, idx) => (
+  <li key={idx} className={styles.optionItem}>
+    {opcion}
+  </li>
+))}
+
                     </ul>
                     <div className={styles.addOption}>
                       <input
@@ -389,11 +387,12 @@ const CrearQuizz = () => {
                       required
                     >
                       <option value="">-- Seleccione la respuesta correcta --</option>
-                      {currentQuestion.opciones.map((opcion, idx) => (
-                        <option key={idx} value={opcion}>
-                          {opcion}
-                        </option>
-                      ))}
+                     {Object.values(currentQuestion.opciones).map((opcion, idx) => (
+  <option key={idx} value={opcion}>
+    {opcion}
+  </option>
+))}
+
                     </select>
                   </div>
                 </>
@@ -439,11 +438,12 @@ const CrearQuizz = () => {
             <div className={styles.quizSummary}>
               <h3>Preguntas agregadas:</h3>
               <ul className={styles.questionList}>
-                {quizData.preguntas.map((preg, index) => (
-                  <li key={index} className={styles.questionListItem}>
-                    {index + 1}. {preg.texto_pregunta} ({preg.tipo_pregunta}, {preg.puntos} pts)
-                  </li>
-                ))}
+                {Object.values(quizData.preguntas).map((preg, index) => (
+  <li key={index} className={styles.questionListItem}>
+    {index + 1}. {preg.texto_pregunta} ({preg.tipo_pregunta}, {preg.puntos} pts)
+  </li>
+))}
+
               </ul>
             </div>
 

@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { quizzesAPI } from "../../../../api/quizzes";
 import { questionsAPI } from "../../../../api/question"; 
 import styles from "/src/paginas/estudiante/estilos/Quiz.module.css";
+
 //import "./CursosBasico.css";
 
 const QuizList = () => {
+  const navigate = useNavigate();
+  const { courseId, quizId } = useParams();
   const [quizzes, setQuizzes] = useState([]);
   const [error, setError] = useState(null);
-  const { courseId } = useParams();  
+  const [mostrarModalQuiz, setMostrarModalQuiz] = useState(false);
+  const [quizSeleccionado, setQuizSeleccionado] = useState(null);
 
   useEffect(() => {
   const fetchQuizzesAndQuestions = async () => {
@@ -54,6 +59,34 @@ const QuizList = () => {
 
    return (
     <div className={styles.coursesContainer}>
+     {mostrarModalQuiz && quizSeleccionado && (
+  <div className={styles.modalOverlay}>
+    <div className={styles.modalContent}>
+      <h3>¿Estás listo para comenzar el quiz?</h3>
+      <p>
+        Al presionar <strong>Comenzar</strong>, el temporizador se iniciará y deberás completar el quiz dentro del tiempo límite.
+      </p>
+      <div className={styles.modalButtons}>
+        <button
+          className={styles.modalConfirm}
+          onClick={() => {
+            setMostrarModalQuiz(false);
+    navigate(`/cursos/${courseId}/lecciones/realizar-quiz/${quizSeleccionado.id}`);
+          }}
+        >
+          Comenzar
+        </button>
+        <button
+          className={styles.modalCancel}
+          onClick={() => setMostrarModalQuiz(false)}
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
       <div className={styles.coursesHeader}>
         <h2 className={styles.coursesTitle}>Lista de Quizzes</h2>
       </div>
@@ -94,11 +127,19 @@ const QuizList = () => {
             ) : (
               <p><em>No hay preguntas asociadas.</em></p>
             )}
-            <button type="submit" className="btn-submit">
-          Realizar Quiz
-        </button>
+           <button
+  type="button"
+  className="btn-submit"
+  onClick={() => {
+    setQuizSeleccionado(q);
+    setMostrarModalQuiz(true);
+  }}
+>
+  Realizar Quiz
+</button>
+
+
           </div>
-          
         ))}
         
       </div>

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../docente/estilos/Recursos.css";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Edit, Trash, X, Upload, CheckCircle2 } from "lucide-react";
 import { pdfApi } from "../../api/pdfService";
 import ErrorModal from "../../componentes/comunes/ErrorModal";
-import { practiceAPI } from "../../api/practice"; 
 
 import {
   createResource,
@@ -15,6 +14,7 @@ import {
 
 const Recursos = () => {
   const { courseId } = useParams();
+  const navigate = useNavigate();
   console.log("🚀 ~ Recursos ~ courseId:", courseId);
   // Modal states
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -23,8 +23,6 @@ const Recursos = () => {
   const [resourceToDelete, setResourceToDelete] = useState(null);
   const [modalMode, setModalMode] = useState("crear"); // 'crear' o 'editar'
   const [editId, setEditId] = useState(null);
-  const [showPracticeModal, setShowPracticeModal] = useState(false);
-  const [practicas, setPracticas] = useState([]);
 
   // Error state
   const [error, setError] = useState(null);
@@ -59,7 +57,7 @@ const Recursos = () => {
   // Filtrar recursos de tipo PDF y Video
   const pdfRecursos = resources.filter((recurso) => recurso.typeId === 2); // Asumiendo typeId 2 para PDFs
   const videoRecursos = resources.filter((recurso) => recurso.typeId === 3); // Asumiendo typeId 3 para Videos
-  
+
   // Cargar recursos al montar el componente
   useEffect(() => {
     const fetchResources = async () => {
@@ -440,87 +438,6 @@ const Recursos = () => {
       setLoading(false);
     }
   };
-  //practica
-  useEffect(() => {
-  const fetchPracticas = async () => {
-    try {
-      const response = await practiceAPI.obtenerTodas();
-      const allPracs = response.data;      console.log("Respuesta de obtenerTodas:", allPracs);
-      const misPracs = allPracs.filter(p => Number(p.leccionId) === Number(courseId));
-      setPracticas(misPracs);
-    } catch (error) {
-      console.error("Error al cargar las prácticas:", error);
-    }
-  };
-
-  fetchPracticas();
-}, [courseId]);
-//const practicaAsignada = practicas.length > 0;
-
- const handleSubmitPractice = async (e) => {
-      e.preventDefault();
-      setLoading(true);
-      console.log("Enviando práctica:", practiceData);
-  try {
-    const response = await practiceAPI.crear(practiceData);
-    console.log("Respuesta del backend:", response);
-
-    if (response?.id || response?.data?.id) {
-      showNotification("✅ La práctica ha sido guardada correctamente.");
-      resetPracticeForm();
-    } else {
-      showError("❌ La práctica no se guardó. El servidor no devolvió un ID.");
-    }
-  } catch (error) {
-    console.error("Error al crear práctica:", error);
-    if (error.response) {
-      showError(`❌ Error del servidor: ${error.response.data?.message || "Error desconocido"}`);
-    } else {
-      showError("❌ No se pudo conectar al servidor.");
-    }
-  } finally {
-    setLoading(false);
-  }
-};
-const [practiceData, setPracticeData] = useState({
-  instrucciones: "",
-  codigoInicial: "",
-  solucionReferencia: "",
-  restricciones: "",
-  intentosMax: 3,
-  leccionId: courseId
-});
-
-const handleNuevaPractica = () => {
-  setPracticeData({
-    instrucciones: "",
-    codigoInicial: "",
-    solucionReferencia: "",
-    restricciones: "",
-    intentosMax: 3,
-    leccionId: courseId,
-  });
-  setShowPracticeModal(true);
-};
-
-const handlePracticeChange = (e) => {
-  const { name, value } = e.target;
-  const finalValue = name === "intentosMax" ? parseInt(value) : value;
-  setPracticeData(prev => ({ ...prev, [name]: finalValue }));
-};
-
-const resetPracticeForm = () => {
-  setPracticeData({
-    instrucciones: "",
-    codigoInicial: "",
-    solucionReferencia: "",
-    restricciones: "",
-    intentosMax: 3,
-    leccionId: courseId,
-  });
-  setShowPracticeModal(false);
-};
-
   return (
     <div className="recursos">
       {/* Error Banner */}
@@ -548,14 +465,20 @@ const resetPracticeForm = () => {
           <CheckCircle2 size={20} />
           <span>{notification.message}</span>
         </div>
-      )}
-
-      {/* Error Modal */}
+      )}      {/* Error Modal */}
       {showErrorModal && (
         <ErrorModal message={errorMessage} onClose={closeErrorModal} />
       )}
 
-      <h2 className="recursos-title">RECURSOS</h2>
+      <div className="recursos-header">
+        <h2 className="recursos-title">RECURSOS</h2>
+        <button
+          onClick={() => navigate(`/gestion-curso/lecciones/${courseId}`)}
+          className="recursos-back-button"
+        >
+          Volver a lecciones
+        </button>
+      </div>
       <div className="recursos-content-wrapper">
         {loading ? (
           <div className="loading-container">
@@ -603,20 +526,20 @@ const resetPracticeForm = () => {
                   </div>
                 )}
               </div>
-            </div>
-
-            <div className="tabla-container">
+            </div>            <div className="tabla-container">
               <div className="recursos-table">
-                <div className="recursos-table-header">
+                <div className="videos-table-header">
                   <div>Titulo</div>
                   <div>Vista previa/enlace</div>
                   <div>Tipo</div>
                   <div>Acciones</div>
-                </div>                {videoRecursos.length > 0 ? (
+                </div>
+
+                {videoRecursos.length > 0 ? (
                   videoRecursos.map((resource) => (
                     <div
                       key={resource.resourceId}
-                      className="recursos-table-row"
+                      className="videos-table-row"
                     >
                       {/* Título */}
                       <div>{resource.title}</div>
@@ -633,7 +556,6 @@ const resetPracticeForm = () => {
                             href={resource.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-500 underline"
                           >
                             Abrir el enlace
                           </a>
@@ -665,7 +587,7 @@ const resetPracticeForm = () => {
                     </div>
                   ))
                 ) : (
-                  <div className="recursos-table-row">
+                  <div className="videos-table-row">
                     <div
                       style={{ textAlign: "center", gridColumn: "1 / span 4" }}
                     >
@@ -678,20 +600,7 @@ const resetPracticeForm = () => {
           </>
         )}{" "}
         <div className="recursos-button-container">
-          <button
-            className={`recursos-button ${
-            practicas.length > 0 ? "disabled" : ""
-            }`} 
-            onClick={handleNuevaPractica}
-            disabled={loading || practicas.length > 0}
-            title={
-            pdfRecursos.length > 0
-            ? "Ya hay una práctica asignado a esta lección"
-            : "Subir nueva práctica"
-            }
-            >
-            {practicas.length > 0 ? "Práctica ya asignada" : "Subir Practica"}
-          </button>
+          <button className="recursos-button">Subir Practica</button>
           <button
             className={`recursos-button ${
               pdfRecursos.length > 0 ? "disabled" : ""
@@ -1004,114 +913,6 @@ const resetPracticeForm = () => {
           </div>
         </div>
       )}
-      {showPracticeModal && (
-  <div className="recursos-modal-overlay">
-    <div className="recursos-modal">
-      <div className="recursos-modal-header">
-          <h3 className="recursos-modal-title">
-          {modalMode === "crear" ? "Crear Práctica" : "Editar Práctica"}
-        </h3>        
-      </div>
-      <form onSubmit={handleSubmitPractice}>
-        <div className="recursos-modal-form">
-          {/* Instrucciones */}
-          <div className="modal-form-full">
-            <label>Instrucciones:</label>
-            <textarea
-              name="instrucciones"
-              placeholder="Describe el ejercicio para el estudiante"
-              value={practiceData.instrucciones}
-              onChange={handlePracticeChange}
-              className="input-field"
-              rows="4"
-              required
-            />
-          </div>
-          {/* Código Inicial */}
-          <div className="modal-form-full">
-            <label>Código Inicial:</label>
-            <textarea
-              name="codigoInicial"
-              placeholder="Código base que recibirá el estudiante"
-              value={practiceData.codigoInicial}
-              onChange={handlePracticeChange}
-              className="input-field code-field"
-              rows="6"
-              required
-            />
-          </div>
-
-          {/* Solución de Referencia */}
-          <div className="modal-form-full">
-            <label>Solución de Referencia:</label>
-            <textarea
-              name="solucionReferencia"
-              placeholder="Solución correcta para comparar"
-              value={practiceData.solucionReferencia}
-              onChange={handlePracticeChange}
-              className="input-field code-field"
-              rows="6"
-              required
-            />
-          </div>
-
-          {/* Restricciones */}
-          <div className="modal-form-full">
-            <label>Restricciones:</label>
-            <input
-              type="text"
-              name="restricciones"
-              placeholder="Ej: No usar bucles for"
-              value={practiceData.restricciones}
-              onChange={handlePracticeChange}
-              className="input-field"
-              required
-            />
-          </div>
-
-          {/* Intentos Máximos */}
-          <div className="modal-form-full">
-            <label>Intentos Máximos:</label>
-            <select
-              name="intentosMax"
-              value={practiceData.intentosMax}
-              onChange={handlePracticeChange}
-              className="input-field"
-              required
-            >
-              <option value="1">1 Intento</option>
-              <option value="2">2 Intentos</option>
-              <option value="3">3 Intentos</option>
-            </select>
-          </div>
-
-          <div className="modal-action-buttons">
-            <button
-              type="submit"
-              className="btn-subir"
-              disabled={
-                !practiceData.instrucciones ||
-                !practiceData.codigoInicial ||
-                !practiceData.solucionReferencia ||
-                loading
-              }
-            >
-              {loading ? "Creando..." : "Crear Práctica"}
-            </button>
-            <button
-              type="button"
-              className="btn-cancel"
-              onClick={resetPracticeForm}
-              disabled={loading}
-            >
-              Cancelar
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
     </div>
   );
 };

@@ -192,9 +192,35 @@
   }
 }
 
-/* Modal de Vista Previa - Estilos específicos */
+.modalConfirm {
+  background-color: #306998;
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
+.modalConfirm:hover {
+  background-color: #300898;
+}
 
+.modalCancel {
+  background-color: #ffd438;
+  color: #300898;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modalCancel:hover {
+  background-color: #e6c231;
+}
 
 .previewHeader {
   display: flex;
@@ -744,4 +770,14 @@
 
 .toggleCircle.active:hover {
   background-color: #45a049;
+}
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.resourcesButton:hover {
+  background-color: #0056b3;
 }

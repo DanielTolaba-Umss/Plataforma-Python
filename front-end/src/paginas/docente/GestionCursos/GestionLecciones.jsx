@@ -19,7 +19,7 @@ import { leccionesAPI } from "../../../api/leccionService";
 import { convertToEmbedUrl } from "../../../utils/convertYoutubeUrl";
 import { environment } from "../../../environment/environment";
 import { getResourceByLesson } from "../../../api/videoService";
-
+import Practicas from "./FormularioCrearPractica";
 const GestionLecciones = () => {
   const [lecciones, setLecciones] = useState([]);
   const navigate = useNavigate();
@@ -230,36 +230,44 @@ const GestionLecciones = () => {
             </div>
 
             <div
-              className={styles.actionsContainer}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                className={styles.resourcesButton}
-                onClick={() => {
-                  navigate(`/gestion-curso/lecciones/${leccion.id}/recursos`);
-                }}
-              >
-                Recursos
-              </button>
-              <button
-                className={`${styles.resourcesButton} ${styles.editButton}`}
-                onClick={() => {
-                  setLeccionToEdit(leccion);
-                  setShowEditForm(true);
-                }}
-              >
-                <Edit size={18} />
-              </button>
-              <button
-                className={`${styles.resourcesButton} ${styles.deleteButton}`}
-                onClick={() => {
-                  setLeccionToDelete(leccion);
-                  setShowDeleteModal(true);
-                }}
-              >
-                <Trash2 size={18} />
-              </button>
-            </div>
+  className={styles.actionsContainer}
+  onClick={(e) => e.stopPropagation()}
+>
+  <button
+    className={styles.resourcesButton}
+    onClick={() => {
+      navigate(`/gestion-curso/lecciones/${leccion.id}/recursos`);
+    }}
+  >
+    Recursos
+  </button>
+  <button
+    className={styles.resourcesButton}
+    onClick={() => {
+      navigate(`/gestion-curso/lecciones/${leccion.id}/practica`);
+    }}
+  >
+    Prácticas
+  </button>
+  <button
+    className={`${styles.resourcesButton} ${styles.editButton}`}
+    onClick={() => {
+      setLeccionToEdit(leccion);
+      setShowEditForm(true);
+    }}
+  >
+    <Edit size={18} />
+  </button>
+  <button
+    className={`${styles.resourcesButton} ${styles.deleteButton}`}
+    onClick={() => {
+      setLeccionToDelete(leccion);
+      setShowDeleteModal(true);
+    }}
+  >
+    <Trash2 size={18} />
+  </button>
+</div>
           </div>
         ))}
       </div>
@@ -401,7 +409,7 @@ const GestionLecciones = () => {
                   <div className={styles.resourceTypeHeader}>
                     <BookOpen size={20} />
                     <span>
-                      Prácticas (
+                      Práctica (
                       {leccionPreview.recursos?.practicas?.length || 1})
                     </span>
                   </div>
