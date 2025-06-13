@@ -1,7 +1,7 @@
 package com.coders.backers.plataformapython.backend.controllers;
 
-import com.coders.backers.plataformapython.backend.dto.python.CodeExecutionRequest;
-import com.coders.backers.plataformapython.backend.dto.python.CodeExecutionResult;
+import com.coders.backers.plataformapython.backend.dto.tryPractice.python.CodeExecutionRequest;
+import com.coders.backers.plataformapython.backend.dto.tryPractice.python.CodeExecutionResult;
 import com.coders.backers.plataformapython.backend.services.PythonExecutionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,7 @@
 package com.coders.backers.plataformapython.backend.services.impl;
 
-import com.coders.backers.plataformapython.backend.dto.python.CodeExecutionRequest;
-import com.coders.backers.plataformapython.backend.dto.python.CodeExecutionResult;
+import com.coders.backers.plataformapython.backend.dto.tryPractice.python.CodeExecutionRequest;
+import com.coders.backers.plataformapython.backend.dto.tryPractice.python.CodeExecutionResult;
 import com.coders.backers.plataformapython.backend.services.PythonExecutionService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,8 +32,8 @@ public class PythonExecutionServiceImpl implements PythonExecutionService {
     private int executionTimeout;
 
 
-    @Override
-    public CodeExecutionResult executeCode(CodeExecutionRequest request) {
+    /*  @Override
+     public CodeExecutionResult executeCode(CodeExecutionRequest request) {
         try {
             // Crear el proceso Docker con límites de recursos
             ProcessBuilder pb = new ProcessBuilder(
@@ -216,8 +216,8 @@ public class PythonExecutionServiceImpl implements PythonExecutionService {
                 .build();
         }
     }
-    
-/*
+      */
+
     @Override
     public CodeExecutionResult executeCode(CodeExecutionRequest request) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -435,5 +435,4 @@ public class PythonExecutionServiceImpl implements PythonExecutionService {
                 .error(errorMessage)
                 .build();
     }
-*/
 }

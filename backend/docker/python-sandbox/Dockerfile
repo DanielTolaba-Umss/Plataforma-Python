@@ -1,20 +1,15 @@
-FROM python:3.10-slim
+FROM python:3.10-alpine
 
-# Configurar un usuario no privilegiado
-RUN useradd -m -s /bin/bash sandbox
-
-# Crear directorio de trabajo
 WORKDIR /sandbox
 
-# Copiar el script de ejecución
 COPY execute.py .
-RUN chown sandbox:sandbox execute.py
 
-# Cambiar al usuario no privilegiado
-USER sandbox
+RUN chmod +x execute.py
 
-# Establecer límites de recursos
-ENV PYTHONMEMORY=128m
+ENV PYTHONUNBUFFERED=1 
+ENV PYTHONIOENCODING=utf-8
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 
-# Comando por defecto
+
 ENTRYPOINT ["python", "execute.py"]
