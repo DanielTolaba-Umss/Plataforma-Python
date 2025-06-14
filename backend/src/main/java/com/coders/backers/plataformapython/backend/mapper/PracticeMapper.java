@@ -16,7 +16,7 @@ public class PracticeMapper {
         dto.setRestricciones(entity.getRestricciones());
         dto.setIntentosMax(entity.getIntentosMax());
         if (entity.getLesson() != null) {
-            dto.setLeccionId(entity.getLesson().getId());
+            dto.setLeccion(LessonMapper.mapToModelDto(entity.getLesson()));
         }
         return dto;
     }

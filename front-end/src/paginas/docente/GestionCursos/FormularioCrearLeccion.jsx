@@ -16,7 +16,7 @@ const FormularioCrearLeccion = ({ onClose, onSubmit }) => {
 
     if (!nivelId || isNaN(parseInt(nivelId))) {
       alert(
-        "Error: ID del curso no válido. Intenta ingresar desde la pantalla anterior."
+        "Error: ID del curso no válido. Intenta ingresar desde la pantalla anterior.",
       );
       return;
     }

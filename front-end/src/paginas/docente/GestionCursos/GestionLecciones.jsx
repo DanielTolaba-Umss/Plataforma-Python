@@ -19,7 +19,7 @@ import { leccionesAPI } from "../../../api/leccionService";
 import { convertToEmbedUrl } from "../../../utils/convertYoutubeUrl";
 import { environment } from "../../../environment/environment";
 import { getResourceByLesson } from "../../../api/videoService";
-
+import Practicas from "./FormularioCrearPractica";
 const GestionLecciones = () => {
   const [lecciones, setLecciones] = useState([]);
   const navigate = useNavigate();
@@ -39,7 +39,6 @@ const GestionLecciones = () => {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [leccionPreview, setLeccionPreview] = useState(null);
   const [hoveredLeccion, setHoveredLeccion] = useState(null);
-
   const nivelId = localStorage.getItem("nivelId");
 
   useEffect(() => {
@@ -231,49 +230,62 @@ const GestionLecciones = () => {
             </div>
 
             <div
-              className={styles.actionsContainer}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                className={styles.resourcesButton}
-                onClick={() => {
-                  navigate(`/gestion-curso/lecciones/${leccion.id}/recursos`);
-                }}
-              >
-                Recursos
-              </button>
-              <button
-                className={`${styles.resourcesButton} ${styles.editButton}`}
-                onClick={() => {
-                  setLeccionToEdit(leccion);
-                  setShowEditForm(true);
-                }}
-              >
-                <Edit size={18} />
-              </button>
-              <button
-                className={`${styles.resourcesButton} ${styles.deleteButton}`}
-                onClick={() => {
-                  setLeccionToDelete(leccion);
-                  setShowDeleteModal(true);
-                }}
-              >
-                <Trash2 size={18} />
-              </button>
-            </div>
+  className={styles.actionsContainer}
+  onClick={(e) => e.stopPropagation()}
+>
+  <button
+    className={styles.resourcesButton}
+    onClick={() => {
+      navigate(`/gestion-curso/lecciones/${leccion.id}/recursos`);
+    }}
+  >
+    Recursos
+  </button>
+  <button
+    className={styles.resourcesButton}
+    onClick={() => {
+      navigate(`/gestion-curso/lecciones/${leccion.id}/practica`);
+    }}
+  >
+    Prácticas
+  </button>
+  <button
+    className={`${styles.resourcesButton} ${styles.editButton}`}
+    onClick={() => {
+      setLeccionToEdit(leccion);
+      setShowEditForm(true);
+    }}
+  >
+    <Edit size={18} />
+  </button>
+  <button
+    className={`${styles.resourcesButton} ${styles.deleteButton}`}
+    onClick={() => {
+      setLeccionToDelete(leccion);
+      setShowDeleteModal(true);
+    }}
+  >
+    <Trash2 size={18} />
+  </button>
+</div>
           </div>
         ))}
       </div>
 
       {!showCreateForm && (
+      <div className={styles.floatingButtonsContainer}>
+        <button
+         onClick={() =>navigate(`/gestion-curso/lecciones/${nivelId}/examenes-y-quizzes/`)}
+                 className={styles.quizzButton}
+                 >Quizzes</button>
         <button
           onClick={() => setShowCreateForm(true)}
-          className={styles.floatingButton}
-        >
-          <Plus />
-        </button>
-      )}
-
+      className={styles.floatingButton}
+         >
+        <Plus />
+       </button>
+        </div>
+    )}
       {showCreateForm && (
         <FormularioCrearLeccion
           onClose={() => setShowCreateForm(false)}
@@ -397,7 +409,7 @@ const GestionLecciones = () => {
                   <div className={styles.resourceTypeHeader}>
                     <BookOpen size={20} />
                     <span>
-                      Prácticas (
+                      Práctica (
                       {leccionPreview.recursos?.practicas?.length || 1})
                     </span>
                   </div>

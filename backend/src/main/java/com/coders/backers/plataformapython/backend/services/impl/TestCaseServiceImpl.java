@@ -23,7 +23,14 @@ public class TestCaseServiceImpl implements TestCaseService {
     @Override
     public TestCaseDto create(CreateTestCaseDto dto) {
         PracticeEntity practice = practiceRepo.findById(dto.getPracticeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Practice not found: " + dto.getPracticeId()));
+        .orElseThrow(() -> new ResourceNotFoundException("Practice not found: " + dto.getPracticeId()));
+        
+        String definicion = practice.getCodigoInicial();
+        String functionName = definicion.substring(4, definicion.indexOf("(" ));
+        String callFunction = functionName+"("+ dto.getEntrada() +")";
+
+
+        dto.setEntradaTestCase(callFunction);
 
         long count = testCaseRepo.countByPractice_Id(practice.getId());
         if (count >= MAX_TEST_CASES_PER_PRACTICE) {
