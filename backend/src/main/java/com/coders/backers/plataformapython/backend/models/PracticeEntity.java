@@ -17,12 +17,14 @@ public class PracticeEntity {
     private Integer intentosMax;
 
     @OneToOne
-    @JoinColumn(name = "leccion_id") 
+    @JoinColumn(name = "leccion_id")
     private LessonEntity lesson;
 
-    public PracticeEntity() {}
+    public PracticeEntity() {
+    }
 
-    public PracticeEntity(Long id, String instrucciones, String codigoInicial, String solucionReferencia, String restricciones, Integer intentosMax) {
+    public PracticeEntity(Long id, String instrucciones, String codigoInicial, String solucionReferencia,
+            String restricciones, Integer intentosMax) {
         this.id = id;
         this.instrucciones = instrucciones;
         this.codigoInicial = codigoInicial;
@@ -85,5 +87,10 @@ public class PracticeEntity {
 
     public void setLesson(LessonEntity lesson) {
         this.lesson = lesson;
+    }
+
+    public PracticeEntity orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
     }
 }

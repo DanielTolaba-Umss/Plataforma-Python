@@ -32,7 +32,8 @@ public class StudentMapper {
         dto.setNombres(entity.getName());
         dto.setApellidos(entity.getLastName());
         dto.setEmail(entity.getEmail());
-        dto.setTelefono(entity.getPhone());        dto.setActivo(entity.isActive());
+        dto.setTelefono(entity.getPhone());        
+        dto.setActivo(entity.isActive());
         dto.setFechaInicio(
                 entity.getEnrollmentDate() != null ? entity.getEnrollmentDate().toLocalDate() : LocalDate.now());
         
@@ -45,7 +46,9 @@ public class StudentMapper {
         dto.setCursos(cursosIds);
         
         return dto;
-    }    public static StudentEntity mapFromUpdateDto(UpdateStudentDto dto, StudentEntity existingStudent) {
+    }    
+    
+    public static StudentEntity mapFromUpdateDto(UpdateStudentDto dto, StudentEntity existingStudent) {
         StudentEntity entity = new StudentEntity();
         entity.setId(existingStudent.getId());
         entity.setName(dto.getNombres());
@@ -60,4 +63,21 @@ public class StudentMapper {
         // Nota: Los cursos se asignan en el servicio, no en el mapper
         return entity;
     }
+
+    public static StudentEntity mapToEntity(StudentDto dto) {
+        if (dto == null) {
+            return null;
+        }
+        
+        StudentEntity entity = new StudentEntity();
+        entity.setId(dto.getId());
+        entity.setName(dto.getNombres());
+        entity.setLastName(dto.getApellidos());
+        entity.setEmail(dto.getEmail());
+        entity.setPhone(dto.getTelefono());
+        entity.setActive(dto.isActivo());
+        entity.setEnrollmentDate(Date.valueOf(dto.getFechaInicio()));
+        // Los cursos se asignan en el servicio, no en el mapper
+        return entity;
+    }   
 }
