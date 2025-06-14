@@ -21,8 +21,8 @@ const FormularioCrearPractica = () => {
   });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [practicaAEliminar, setPracticaAEliminar] = useState(null);
-  const [modalMode, setModalMode] = useState("crear"); // 'crear' o 'editar'
-  const [showPracticeModal, setShowPracticeModal] = useState(false);
+  const [modalMode, setModalMode] = useState("crear"); 
+   const [showPracticeModal, setShowPracticeModal] = useState(false);
   const [practicas, setPracticas] = useState([]);
   // Error state
   const [error, setError] = useState(null);
@@ -117,7 +117,6 @@ const FormularioCrearPractica = () => {
         setShowErrorModal(true);
         return false;
       }
-      // Aquí podrías agregar validaciones más complejas si quieres
     }
     return true;
   };
@@ -128,7 +127,7 @@ const FormularioCrearPractica = () => {
     setShowErrorModal(false);
 
     if (!validarTestCases()) {
-      return; // Sale si los test cases no son válidos
+      return; 
     }
 
     setLoading(true);
@@ -155,7 +154,6 @@ const FormularioCrearPractica = () => {
         setLoading(false);
         return;
       }
-      // Guardar test cases asociados a la práctica recién creada o actualizada
       for (const testCase of practiceData.testCases) {
         const testCasePayload = {
           entrada: `"${testCase.entrada.replaceAll('"', '\\"')}"`,
