@@ -4,7 +4,6 @@ import { Edit, Trash, X, Upload, CheckCircle2, Plus } from "lucide-react";
 import styles from "/src/paginas/docente/estilos/CrearQuiz.module.css";
 import { quizzesAPI } from "../../../api/quizzes";
 import { useParams } from "react-router-dom";
-import ErrorModal from "../../../componentes/comunes/ErrorModal";
 
 const ExamenesyQuizzes = () => {
   const [loading, setLoading] = useState(false);
@@ -13,123 +12,127 @@ const ExamenesyQuizzes = () => {
   const { courseId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState(null);
-  const [error, setError] = useState(null);
-  const [notification, setNotification] = useState({show: false,message: "",type: "success",  });
-    // Error modal state
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");  
+  const [setError] = useState(null);
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
+  // Error modal state
+  //const [setShowErrorModal] = useState(false);
+  //const [setErrorMessage] = useState("");
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [showQuizModal, setShowQuizModal] = useState(false);
 
+  useEffect(() => {
+    const fetchQuizzes = async () => {
+      setLoading(true);
+      try {
+        const response = await quizzesAPI.getAllQuizzes();
+        setQuiz(response.data);
+      } catch (error) {
+        console.error("Error al obtener quizzes:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
- useEffect(() => {
-  const fetchQuizzes = async () => {
-    setLoading(true);
+    fetchQuizzes();
+  }, []);
+  const filteredQuizzes = quiz.filter(
+    (q) => String(q.courseId) === String(courseId),
+  );
+  const toggleActive = async (quizId, currentActivo) => {
     try {
-      const response = await quizzesAPI.getAllQuizzes();
-      setQuiz(response.data); 
+      if (currentActivo) {
+        await quizzesAPI.actualizar(quizId, { active: false });
+        setQuiz((prev) =>
+          prev.map((q) => (q.id === quizId ? { ...q, active: false } : q)),
+        );
+        return;
+      }
+      const quizzesToUpdate = [];
+
+      for (const q of quiz) {
+        if (q.id === quizId) {
+          quizzesToUpdate.push({
+            id: q.id,
+            data: { ...q, active: true },
+          });
+        } else if (q.active) {
+          quizzesToUpdate.push({
+            id: q.id,
+            data: { ...q, active: false },
+          });
+        }
+      }
+      // Actualizar en backend todos los quizzes afectados
+      await Promise.all(
+        quizzesToUpdate.map(({ id, data }) =>
+          quizzesAPI.actualizar(id, {
+            titulo: data.titulo,
+            descripcion: data.descripcion,
+            duracionMinutos: data.duracionMinutos,
+            intentosPermitidos: data.intentosPermitidos,
+            puntuacionAprobacion: data.puntuacionAprobacion,
+            aleatorio: data.aleatorio,
+            active: data.active,
+            courseId: data.courseId,
+          }),
+        ),
+      );
+      setQuiz((prev) =>
+        prev.map((q) => {
+          if (q.id === quizId) return { ...q, active: true };
+          if (q.active) return { ...q, active: false };
+          return q;
+        }),
+      );
     } catch (error) {
-      console.error("Error al obtener quizzes:", error);
+      console.error("Error al actualizar estado activo:", error);
+    }
+  };
+
+  const openDeleteModal = (quiz) => {
+    setQuizToDelete(quiz);
+    setShowDeleteModal(true);
+  };
+
+  const cancelDelete = () => {
+    setQuizToDelete(null);
+    setShowDeleteModal(false);
+  };
+
+  const confirmDelete = async () => {
+    if (!quizToDelete) {
+      console.error("No hay quiz para eliminar");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      console.log("Eliminando quiz con ID:", quizToDelete.id);
+
+      await quizzesAPI.eliminar(quizToDelete.id);
+
+      setQuiz((prev) => prev.filter((q) => q.id !== quizToDelete.id));
+
+      showNotification("El quiz ha sido eliminado correctamente");
+
+      setShowDeleteModal(false);
+      setQuizToDelete(null);
+      setError(null);
+    } catch (error) {
+      console.error("Error completo al eliminar quiz:", error);
+      setError(
+        "Error al eliminar el quiz: " +
+          (error.message || "Por favor intente nuevamente"),
+      );
     } finally {
       setLoading(false);
     }
   };
-
-  fetchQuizzes();
-}, []);
-const filteredQuizzes = quiz.filter(q => String(q.courseId) === String(courseId));
- const toggleActive = async (quizId, currentActivo) => {
-  try {
-    if (currentActivo) {
-      await quizzesAPI.actualizar(quizId, { active: false });
-      setQuiz(prev =>
-        prev.map(q =>
-          q.id === quizId ? { ...q, active: false } : q
-        )
-      );
-      return;
-    }
-    const quizzesToUpdate = [];
-
-    for (const q of quiz) {
-      if (q.id === quizId) {
-        quizzesToUpdate.push({
-          id: q.id,
-          data: { ...q, active: true }
-        });
-      } else if (q.active) {
-        quizzesToUpdate.push({
-          id: q.id,
-          data: { ...q, active: false }
-        });
-      }
-    }
-    // Actualizar en backend todos los quizzes afectados
-    await Promise.all(
-      quizzesToUpdate.map(({ id, data }) =>
-        quizzesAPI.actualizar(id, {
-          titulo: data.titulo,
-          descripcion: data.descripcion,
-          duracionMinutos: data.duracionMinutos,
-          intentosPermitidos: data.intentosPermitidos,
-          puntuacionAprobacion: data.puntuacionAprobacion,
-          aleatorio: data.aleatorio,
-          active: data.active,
-          courseId: data.courseId
-        })
-      )
-    );
-    setQuiz(prev =>
-      prev.map(q => {
-        if (q.id === quizId) return { ...q, active: true };
-        if (q.active) return { ...q, active: false };
-        return q;
-      })
-    );
-  } catch (error) {
-    console.error("Error al actualizar estado activo:", error);
-  }
-};
-
-  const openDeleteModal = (quiz) => {
-  setQuizToDelete(quiz);
-  setShowDeleteModal(true);
-};
-
-const cancelDelete = () => {
-  setQuizToDelete(null);
-  setShowDeleteModal(false);
-};
-
-const confirmDelete = async () => {
-  if (!quizToDelete) {
-    console.error("No hay quiz para eliminar");
-    return;
-  }
-
-  try {
-    setLoading(true);
-    console.log("Eliminando quiz con ID:", quizToDelete.id);  
-    
-    await quizzesAPI.eliminar(quizToDelete.id);
-    
-    setQuiz(prev => prev.filter(q => q.id !== quizToDelete.id));
-    
-    showNotification("El quiz ha sido eliminado correctamente");
-    
-    setShowDeleteModal(false);
-    setQuizToDelete(null);
-    setError(null); 
-
-  } catch (error) {
-    console.error("Error completo al eliminar quiz:", error);
-    setError("Error al eliminar el quiz: " + (error.message || "Por favor intente nuevamente"));
-    
-  } finally {
-    setLoading(false);
-  }
-};
-const showNotification = (message, type = "success") => {
+  const showNotification = (message, type = "success") => {
     setNotification({
       show: true,
       message,
@@ -143,19 +146,19 @@ const showNotification = (message, type = "success") => {
       });
     }, 3000);
   };
-  // Show error modal
-  const showError = (message) => {
-    setErrorMessage(message);
-    setShowErrorModal(true);
-    setError(null); 
-  };
+  // // Show error modal
+  // const showError = (message) => {
+  //   setErrorMessage(message);
+  //   setShowErrorModal(true);
+  //   setError(null);
+  // };
 
   // Close error modal
-  const closeErrorModal = () => {
-    setShowErrorModal(false);
-    setErrorMessage("");
-  };
- // Función para abrir modal con quiz seleccionado
+  // const closeErrorModal = () => {
+  //   setShowErrorModal(false);
+  //   setErrorMessage("");
+  // };
+  // Función para abrir modal con quiz seleccionado
   const openQuizModal = (quiz) => {
     setSelectedQuiz(quiz);
     setShowQuizModal(true);
@@ -187,7 +190,7 @@ const showNotification = (message, type = "success") => {
           </p>
         </div>
       ) : (
-    <div className={styles.coursesGrid}>
+        <div className={styles.coursesGrid}>
           {filteredQuizzes.map((quiz) => (
             <div
               key={quiz.id}
@@ -198,7 +201,7 @@ const showNotification = (message, type = "success") => {
               <label
                 className={`${styles.toggleCircle} ${quiz.active ? styles.active : ""}`}
                 title="Activar / Desactivar quiz"
-                onClick={(e) => e.stopPropagation()} 
+                onClick={(e) => e.stopPropagation()}
               >
                 <input
                   type="checkbox"
@@ -225,14 +228,15 @@ const showNotification = (message, type = "success") => {
                   <strong>Activo:</strong> {quiz.active ? "Sí" : "No"}
                 </div>
                 <div>
-                  <strong>Puntaje de Aprobación:</strong> {quiz.puntuacionAprobacion}
+                  <strong>Puntaje de Aprobación:</strong>{" "}
+                  {quiz.puntuacionAprobacion}
                 </div>
               </div>
               <div className={styles.actionsContainer}>
                 <button
                   className={`${styles.resourcesButton} ${styles.deleteButton}`}
                   onClick={(e) => {
-                    e.stopPropagation(); 
+                    e.stopPropagation();
                     openDeleteModal(quiz);
                   }}
                 >
@@ -247,7 +251,10 @@ const showNotification = (message, type = "success") => {
       {/* Modal para mostrar info del quiz en modo solo lectura */}
       {showQuizModal && selectedQuiz && (
         <div className="recursos-modal-overlay" onClick={closeQuizModal}>
-          <div className="recursos-modal-content" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="recursos-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h2>Detalles del Quiz</h2>
             <form>
               <label>
@@ -292,44 +299,46 @@ const showNotification = (message, type = "success") => {
                 />
               </label>
               <button
-  className={styles.secondaryButton}
-  onClick={(e) => {
-    e.preventDefault();
-    closeQuizModal();
-  }}
->
-  Cerrar
-</button>
-
+                className={styles.secondaryButton}
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeQuizModal();
+                }}
+              >
+                Cerrar
+              </button>
             </form>
           </div>
         </div>
       )}
 
       <div className={styles.dualButtons}>
-<div className={styles.dualButtons}>
-      <button
-        onClick={() =>
-          navigate(
-            `/gestion-curso/lecciones/${courseId}/examenes-y-quizzes/crear-quizz`
-          )
-        }
-        className={styles.floatingButton}
-      >
-        <Plus />
-        Crear quiz
-      </button>
-    </div>        
+        <div className={styles.dualButtons}>
+          <button
+            onClick={() =>
+              navigate(
+                `/gestion-curso/lecciones/${courseId}/examenes-y-quizzes/crear-quizz`,
+              )
+            }
+            className={styles.floatingButton}
+          >
+            <Plus />
+            Crear quiz
+          </button>
+        </div>
       </div>
       {/* Modal de confirmación de eliminación */}
-      
+
       {showDeleteModal && (
-  <div className="recursos-modal-overlay">
+        <div className="recursos-modal-overlay">
           <div className="recursos-modal-content">
-            <h3>Confirmar eliminación</h3>            <p>
+            <h3>Confirmar eliminación</h3>{" "}
+            <p>
               ¿Estás seguro de que deseas eliminar el quiz?{" "}
               <strong>
-                {quizToDelete?.titulo || quizToDelete?.titulo || quizToDelete?.titulo}
+                {quizToDelete?.titulo ||
+                  quizToDelete?.titulo ||
+                  quizToDelete?.titulo}
               </strong>
               ?
             </p>
@@ -354,16 +363,15 @@ const showNotification = (message, type = "success") => {
             </div>
           </div>
         </div>
-)}
-
+      )}
 
       {/* Notificación */}
-            {notification.show && (
-              <div className={`notification ${notification.type}`}>
-                <CheckCircle2 size={20} />
-                <span>{notification.message}</span>
-              </div>
-            )}     
+      {notification.show && (
+        <div className={`notification ${notification.type}`}>
+          <CheckCircle2 size={20} />
+          <span>{notification.message}</span>
+        </div>
+      )}
     </div>
   );
 };

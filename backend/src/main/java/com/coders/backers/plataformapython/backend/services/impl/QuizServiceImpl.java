@@ -47,4 +47,18 @@ public class QuizServiceImpl implements QuizService {
     public void deleteQuiz(Long id) {
         quizRepository.deleteById(id);
     }
+    
+    @Override
+public void descontarIntento(Long quizId) {
+    QuizEntity quiz = quizRepository.findById(quizId)
+            .orElseThrow(() -> new RuntimeException("Quiz no encontrado"));
+
+    if (quiz.getIntentosPermitidos() <= 0) {
+        throw new RuntimeException("No quedan intentos disponibles");
+    }
+
+    quiz.setIntentosPermitidos(quiz.getIntentosPermitidos() - 1);
+    quizRepository.save(quiz);
+}
+
 }

@@ -25,10 +25,18 @@ export default function RutasDocente() {
         />
         <Route path="/crear-examen" element={<CrearExamen />} />
         <Route path="/crear-pdf" element={<CrearPdf />} />
-        <Route path="/gestion-curso/lecciones/:courseId/examenes-y-quizzes" element={<ExamenesyQuizzes />} />
-        <Route path="/gestion-curso/lecciones/:courseId/examenes-y-quizzes/crear-quizz" element={<CrearQuizz />} />
-        <Route path="/gestion-curso/lecciones/:courseId/practica" element={<Practicas />} />
-
+        <Route
+          path="/gestion-curso/lecciones/:courseId/examenes-y-quizzes"
+          element={<ExamenesyQuizzes />}
+        />
+        <Route
+          path="/gestion-curso/lecciones/:courseId/examenes-y-quizzes/crear-quizz"
+          element={<CrearQuizz />}
+        />
+        <Route
+          path="/gestion-curso/lecciones/:courseId/practica"
+          element={<Practicas />}
+        />
       </Routes>
     </>
   );

@@ -35,4 +35,10 @@ public class QuizController {
         quizService.deleteQuiz(id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/{id}/descontar-intento")
+    public ResponseEntity<?> descontarIntento(@PathVariable Long id) {
+    quizService.descontarIntento(id);
+    return ResponseEntity.ok("Intento descontado");
+}
+
 }
