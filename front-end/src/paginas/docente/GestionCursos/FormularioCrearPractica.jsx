@@ -21,8 +21,8 @@ const FormularioCrearPractica = () => {
   });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [practicaAEliminar, setPracticaAEliminar] = useState(null);
-  const [modalMode, setModalMode] = useState("crear"); 
-   const [showPracticeModal, setShowPracticeModal] = useState(false);
+  const [modalMode, setModalMode] = useState("crear");
+  const [showPracticeModal, setShowPracticeModal] = useState(false);
   const [practicas, setPracticas] = useState([]);
   // Error state
   const [error, setError] = useState(null);
@@ -41,7 +41,18 @@ const FormularioCrearPractica = () => {
     salida: "",
   });
 
-  const handleEditarPractica = (practica) => {
+  const handleEditarPractica = async (practica) => {
+    console.log("Editando práctica con ID:", practica.id);
+
+    let testCasesFromBackend = [];
+    try {
+      const response = await testCasesAPI.obtenerPorPractice(practica.id);
+      testCasesFromBackend = response.data;
+    } catch (err) {
+      console.error("Error al obtener los test cases:", err);
+      showError("No se pudieron cargar los test cases de esta práctica.");
+    }
+
     setPracticeData({
       instrucciones: practica.instrucciones,
       codigoInicial: practica.codigoInicial,
@@ -50,8 +61,9 @@ const FormularioCrearPractica = () => {
       intentosMax: practica.intentosMax,
       leccionId: practica.leccionId,
       id: practica.id,
-      testCases: practica.testCases || [],
+      testCases: testCasesFromBackend,
     });
+
     setModalMode("editar");
     setShowPracticeModal(true);
   };
@@ -92,8 +104,9 @@ const FormularioCrearPractica = () => {
     const fetchPracticas = async () => {
       try {
         const response = await practiceAPI.obtenerTodas();
+        console.log(response.data);
         const filtradas = response.data.filter(
-          (p) => Number(p.leccionId) === Number(courseId),
+          (p) => Number(p.leccion?.id) === Number(courseId)
         );
         setPracticas(filtradas);
       } catch (error) {
@@ -103,6 +116,13 @@ const FormularioCrearPractica = () => {
 
     fetchPracticas();
   }, [courseId]);
+
+  const removeTestCase = (indexToRemove) => {
+    setPracticeData((prev) => ({
+      ...prev,
+      testCases: prev.testCases.filter((_, index) => index !== indexToRemove),
+    }));
+  };
 
   const validarTestCases = () => {
     const { testCases } = practiceData;
@@ -126,21 +146,31 @@ const FormularioCrearPractica = () => {
     setErrorMessage("");
     setShowErrorModal(false);
 
-    if (!validarTestCases()) {
-      return; 
-    }
-
+    if (!validarTestCases()) return;
     setLoading(true);
 
     try {
       let response;
-      const practicePayload = { ...practiceData };
-      delete practicePayload.testCases;
+
+      if (modalMode === "editar" && !practiceData.id) {
+        showError("❌ No se puede actualizar: Falta el ID de la práctica.");
+        return;
+      }
+
+      const practicePayload = {
+        instrucciones: practiceData.instrucciones,
+        codigoInicial: practiceData.codigoInicial,
+        solucionReferencia: practiceData.solucionReferencia,
+        restricciones: practiceData.restricciones,
+        intentosMax: practiceData.intentosMax,
+        leccionId:
+          practiceData.leccionId ?? practiceData.leccion?.id ?? courseId,
+      };
 
       if (modalMode === "editar") {
         response = await practiceAPI.actualizar(
           practiceData.id,
-          practicePayload,
+          practicePayload
         );
       } else {
         response = await practiceAPI.crear(practicePayload);
@@ -149,44 +179,71 @@ const FormularioCrearPractica = () => {
       const practiceId = response?.id || response?.data?.id;
       if (!practiceId) {
         showError(
-          "❌ La práctica no se guardó. El servidor no devolvió un ID.",
+          "❌ La práctica no se guardó. El servidor no devolvió un ID."
         );
-        setLoading(false);
         return;
       }
-      for (const testCase of practiceData.testCases) {
-        const testCasePayload = {
-          entrada: `"${testCase.entrada.replaceAll('"', '\\"')}"`,
-          salida: `"${testCase.salida.replaceAll('"', '\\"')}"`,
-          practiceId: practiceId,
-        };
-        if (testCase.id) {
-          await testCasesAPI.actualizar(testCase.id, testCasePayload);
-        } else {
-          await testCasesAPI.crear(testCasePayload);
+
+      // Eliminar test cases antiguos si estás en modo editar
+      if (modalMode === "editar") {
+        try {
+          const existentes = await testCasesAPI.obtenerPorPractice(practiceId);
+          for (const tc of existentes.data) {
+            await testCasesAPI.eliminar(tc.id);
+          }
+        } catch (err) {
+          console.warn(
+            "No se pudieron eliminar los test cases anteriores",
+            err
+          );
         }
       }
 
+      // Crear test cases nuevos
+      for (const testCase of practiceData.testCases) {
+        const testCasePayload = {
+          entrada: testCase.entrada,
+          salida: testCase.salida,
+          isPublic: testCase.isPublic || false,
+          practiceId: practiceId,
+        };
+        await testCasesAPI.crear(testCasePayload);
+      }
+
+      // Actualizar prácticas en estado local
+      const nuevaPractica = {
+        ...practicePayload,
+        id: practiceId,
+        testCases: [...practiceData.testCases],
+      };
+
+      setPracticas((prev) => {
+        const otras = prev.filter((p) => p.id !== practiceId);
+        return [...otras, nuevaPractica];
+      });
+
       showNotification(
-        `✅ Práctica ${modalMode === "editar" ? "actualizada" : "creada"} correctamente.`,
+        `✅ Práctica ${
+          modalMode === "editar" ? "actualizada" : "creada"
+        } correctamente.`
       );
       resetPracticeForm();
-
-      const refrescar = await practiceAPI.obtenerTodas();
-      const filtradas = refrescar.data.filter(
-        (p) => Number(p.leccionId) === Number(courseId),
-      );
-      setPracticas(filtradas);
     } catch (error) {
       console.error("Error al guardar la práctica:", error);
       showError("❌ Error al guardar la práctica o test cases.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const openDeleteModal = (practica) => {
+    if (!practica || !practica.id) {
+      console.error("❌ Error: práctica inválida para eliminar:", practica);
+      return;
+    }
+
     setShowDeleteModal(true);
-    const practicaAEliminar = practica.id || practica._id;
-    setPracticaAEliminar({ practicaAEliminar });
+    setPracticaAEliminar(practica); // puedes guardar el objeto completo
   };
 
   const confirmDelete = async () => {
@@ -197,7 +254,7 @@ const FormularioCrearPractica = () => {
 
       const refrescar = await practiceAPI.obtenerTodas();
       const filtradas = refrescar.data.filter(
-        (p) => Number(p.leccionId) === Number(courseId),
+        (p) => Number(p.leccionId) === Number(courseId)
       );
       setPracticas(filtradas);
       setShowDeleteModal(false);
@@ -206,7 +263,9 @@ const FormularioCrearPractica = () => {
       console.error("Error al eliminar práctica:", error);
       if (error.response) {
         showError(
-          `❌ Error del servidor al eliminar: ${error.response.status} - ${error.response.data?.message || "Error desconocido"}`,
+          `❌ Error del servidor al eliminar: ${error.response.status} - ${
+            error.response.data?.message || "Error desconocido"
+          }`
         );
       } else if (error.request) {
         showError("❌ No se recibió respuesta del servidor al eliminar.");
@@ -347,45 +406,53 @@ const FormularioCrearPractica = () => {
         ) : (
           <>
             <div className="tabla-container">
-              <div className="recursos-table">
-                <div className="recursos-table-header">
-                  <div>Nombre</div>
-                  <div>Acciones</div>
-                </div>
-                {practicas.length > 0 ? (
-                  practicas.map((practica) => (
-                    <div key={practica.id} className="recursos-table-row">
-                      <div>{practica.instrucciones?.slice(0, 40)}...</div>
-                      <div className="action-buttons">
-                        <button
-                          className="recursos-button edit-button"
-                          onClick={() => handleEditarPractica(practica)}
-                          disabled={loading}
-                          title="Editar práctica existente"
-                        >
-                          Editar Práctica
-                        </button>
-                        <button
-                          className="action-button"
-                          title="Eliminar"
-                          onClick={() => openDeleteModal(practica)}
-                          disabled={loading}
-                        >
-                          <Trash size={18} color="#300898" />
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="recursos-table-row">
-                    <div
-                      style={{ textAlign: "center", gridColumn: "1 / span 3" }}
-                    >
-                      {loading ? "Cargando..." : "No hay prácticas disponibles"}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <table className="recursos-table">
+                <thead>
+                  <tr className="recursos-table-header">
+                    <th>Nombre</th>
+                    <th></th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {practicas.length > 0 ? (
+                    practicas.map((practica) => (
+                      <tr key={practica.id} className="recursos-table-row">
+                        <td>{practica.instrucciones?.slice(0, 40)}...</td>
+                        <td></td>
+                        <td>
+                          <div className="action-buttons">
+                            <button
+                              className={styles["boton-editar"]}
+                              onClick={() => handleEditarPractica(practica)}
+                              disabled={loading}
+                              title="Editar práctica existente"
+                            >
+                              <Edit size={18} />
+                            </button>
+                            <button
+                              className="action-button"
+                              title="Eliminar"
+                              onClick={() => openDeleteModal(practica)}
+                              disabled={loading}
+                            >
+                              <Trash size={18} color="#300898" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className="recursos-table-row">
+                      <td colSpan={3} style={{ textAlign: "center" }}>
+                        {loading
+                          ? "Cargando..."
+                          : "No hay prácticas disponibles"}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </>
         )}{" "}
@@ -491,26 +558,31 @@ const FormularioCrearPractica = () => {
 
                   {/* Lista de test cases añadidos */}
                   {(practiceData.testCases || []).map((tc, index) => (
-                    <div key={index} className="test-case-item">
-                      <div>
-                        <strong>Entrada:</strong> {tc.entrada}
-                        <br />
-                        <strong>Salida esperada:</strong> {tc.salida}
-                        {tc.entradaTestCase && (
-                          <>
-                            <br />
-                            <strong>Entrada para test:</strong>{" "}
-                            {tc.entradaTestCase}
-                          </>
-                        )}
+                    <div key={index} className={styles.testCaseCard}>
+                      <div className={styles.testCaseContent}>
+                        <div>
+                          <p>
+                            <strong>Entrada:</strong> <code>{tc.entrada}</code>
+                          </p>
+                          <p>
+                            <strong>Salida esperada:</strong>{" "}
+                            <code>{tc.salida}</code>
+                          </p>
+                          {tc.isPublic && (
+                            <p className={styles.publicLabel}>
+                              Visible para estudiantes
+                            </p>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          className={styles.deleteButton}
+                          onClick={() => removeTestCase(index)}
+                          title="Eliminar este caso de prueba"
+                        >
+                          <Trash size={16} />
+                        </button>
                       </div>
-                      {/* <button
-                  type="button"
-                  onClick={() => removeTestCase(index)}
-                  className="btn-eliminar"
-                >
-                  <Trash size={14} />
-                </button> */}
                     </div>
                   ))}
 
@@ -537,7 +609,7 @@ const FormularioCrearPractica = () => {
                         onChange={handleTestCaseChange}
                         placeholder="Salida esperada"
                         rows="2"
-                        required
+                        // required
                       />
                     </div>
 
@@ -584,8 +656,8 @@ const FormularioCrearPractica = () => {
                         ? "Creando..."
                         : "Actualizando..."
                       : modalMode === "crear"
-                        ? "Crear Práctica"
-                        : "Actualizar Práctica"}
+                      ? "Crear Práctica"
+                      : "Actualizar Práctica"}
                   </button>
                   <button
                     type="button"
