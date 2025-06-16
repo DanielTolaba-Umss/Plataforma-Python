@@ -1,7 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "../paginas/estudiante/Dashboard";
-import Cursos from "../paginas/estudiante/Cursos";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Lecciones from "../paginas/estudiante/Cursos/cursos/Lecciones";
 import PerfilEstudiante from "../paginas/estudiante/PerfilEstudiante";
 import Quiz from "../paginas/estudiante/Cursos/cursos/Quiz";
@@ -11,8 +9,7 @@ import RealizarQuiz from "../paginas/estudiante/Cursos/cursos/RealizarQuiz";
 const RutasEstudiante = () => {
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/cursos" element={<Cursos />} />
+      <Route path="/" element={<Navigate to="/perfil" replace />} />
       {/* Ruta de lecciones */}
       <Route path="/cursos/:id/lecciones" element={<Lecciones />} />
       <Route path="/cursos/:id/lecciones/Practica" element={<Prueba />} />

@@ -15,9 +15,6 @@ const Sidebar = () => {
     <aside className="sidebar">
       <div className="sidebar-header">Python EDU</div>
       <nav className="sidebar-nav">
-        <NavLink to="/" className="sidebar-link">
-          <LayoutDashboard className="sidebar-icon" /> Dashboard
-        </NavLink>
         <NavLink to="/gestion-curso" className="sidebar-link">
           <BookOpen className="sidebar-icon" /> Cursos
         </NavLink>

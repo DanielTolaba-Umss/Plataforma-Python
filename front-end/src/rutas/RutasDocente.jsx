@@ -1,6 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Dashboard from "../paginas/docente/Dashboard";
+import { Navigate, Routes, Route } from "react-router-dom";
 import GestionCurso from "../paginas/docente/GestionCursos/GestionCurso";
 import CrearExamen from "../paginas/docente/GestionCursos/CrearExamen";
 import CrearPdf from "../paginas/docente/GestionCursos/CrearPdf";
@@ -13,7 +11,8 @@ export default function RutasDocente() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        {/* Redireccionar desde la raíz */}
+        <Route path="/" element={<Navigate to="/gestion-curso" replace />} />
         <Route path="/gestion-curso" element={<GestionCurso />} />
         <Route
           path="/gestion-curso/lecciones/:courseId"
