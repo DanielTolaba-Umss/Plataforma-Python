@@ -36,9 +36,10 @@ const Prueba = () => {
 
   useEffect(() => {
     const getResources = async () => {
-      try {        const leccion = await getResourceByLesson(id);
+      try {
+        const leccion = await getResourceByLesson(id);
         console.log("🚀 ~ useEffect ~ recursos de lección:", leccion);
-        
+
         // Buscar video (typeId = 3)
         const video = leccion.find((recurso) => recurso.typeId === 3);
         if (video && video.url) {
@@ -51,11 +52,11 @@ const Prueba = () => {
           }
           console.log("🚀 ~ getResources ~ Video URL:", embedUrl);
           setVideoUrl(embedUrl);
-        }        // Buscar PDF (typeId = 2)
+        } // Buscar PDF (typeId = 2)
         const pdf = leccion.find((recurso) => recurso.typeId === 2);
         if (pdf && pdf.url) {
           // Extraer el nombre del archivo del URL
-          const filename = pdf.url.split('/').pop();
+          const filename = pdf.url.split("/").pop();
           // Usar el endpoint específico para PDFs
           const pdfUrlComplete = `${environment.apiUrl}/resources/pdf/${filename}`;
           console.log("🚀 ~ getResources ~ PDF URL:", pdfUrlComplete);
@@ -101,7 +102,8 @@ const Prueba = () => {
             ) : (
               <p>Cargando video...</p>
             )}
-          </div>          <div
+          </div>{" "}
+          <div
             className="transcriptor"
             role="region"
             aria-label="Transcriptor del video"
@@ -109,33 +111,42 @@ const Prueba = () => {
             <LiveTranscription />
           </div>
         </section>
-      </div>      <div className="contenido-acordeon">
+      </div>{" "}
+      <div className="contenido-acordeon">
         {/* Acordeón PDF */}
         <div className="acordeon-item">
-          <div 
-            className={`acordeon-header ${pdfAbierto ? 'activo' : ''}`}
+          <div
+            className={`acordeon-header ${pdfAbierto ? "activo" : ""}`}
             onClick={togglePdf}
           >
             <h3>📄 Material PDF</h3>
-            <span className={`acordeon-flecha ${pdfAbierto ? 'abierta' : ''}`}>
+            <span className={`acordeon-flecha ${pdfAbierto ? "abierta" : ""}`}>
               ▼
             </span>
           </div>
-          <div className={`acordeon-contenido ${pdfAbierto ? 'abierto' : 'cerrado'}`}>
+          <div
+            className={`acordeon-contenido ${
+              pdfAbierto ? "abierto" : "cerrado"
+            }`}
+          >
             {pdfUrl ? (
               <VisorPDF src={pdfUrl} />
             ) : (
               <div className="visor-pdf">
                 <h4>Visor de PDF</h4>
-                <div style={{ 
-                  padding: "2rem", 
-                  textAlign: "center", 
-                  backgroundColor: "#f8f9fa", 
-                  borderRadius: "8px",
-                  margin: "1rem 0"
-                }}>
+                <div
+                  style={{
+                    padding: "2rem",
+                    textAlign: "center",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "8px",
+                    margin: "1rem 0",
+                  }}
+                >
                   <p>No hay PDF disponible para esta lección.</p>
-                  <small>El docente aún no ha subido material de apoyo en PDF.</small>
+                  <small>
+                    El docente aún no ha subido material de apoyo en PDF.
+                  </small>
                 </div>
               </div>
             )}
@@ -144,24 +155,26 @@ const Prueba = () => {
 
         {/* Acordeón Práctica */}
         <div className="acordeon-item">
-          <div 
-            className={`acordeon-header ${practicaAbierta ? 'activo' : ''}`}
+          <div
+            className={`acordeon-header ${practicaAbierta ? "activo" : ""}`}
             onClick={togglePractica}
           >
             <h3>💻 Práctica</h3>
-            <span className={`acordeon-flecha ${practicaAbierta ? 'abierta' : ''}`}>
+            <span
+              className={`acordeon-flecha ${practicaAbierta ? "abierta" : ""}`}
+            >
               ▼
             </span>
           </div>
-          <div className={`acordeon-contenido ${practicaAbierta ? 'abierto' : 'cerrado'}`}>
-            <Editor
-              titulo="Instrucciones de la práctica:"
-              lessonId={id}
-            />
+          <div
+            className={`acordeon-contenido ${
+              practicaAbierta ? "abierto" : "cerrado"
+            }`}
+          >
+            <Editor titulo="Instrucciones de la práctica:" lessonId={id} />
           </div>
         </div>
       </div>
-
       <footer className="progreso-footer">
         <div className="progreso-barra">
           <div className="progreso"></div>

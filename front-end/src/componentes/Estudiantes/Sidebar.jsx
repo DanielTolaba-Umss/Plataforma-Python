@@ -3,13 +3,13 @@ import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { cursosAPI } from "/src/api/courseService";
 import "/src/componentes/Estudiantes/Sidebar.css";
-import { LayoutDashboard, BookOpen, GraduationCap } from "lucide-react";
+import { BookOpen, GraduationCap } from "lucide-react";
 
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
   const [isCursosOpen, setIsCursosOpen] = useState(false);
+
   const [niveles, setNiveles] = useState([]);
   // Extraer el ID del nivel de la URL
   const nivelIdActivo = location.pathname.split("/")[2];
@@ -47,10 +47,9 @@ const Sidebar = () => {
     <aside className="sidebar">
       <div className="sidebar-header">Python EDU</div>
       <nav className="sidebar-nav">
-        <NavLink to="/" className="sidebar-link">
-          <LayoutDashboard className="sidebar-icon" /> Dashboard
+        <NavLink to="/perfil" className="sidebar-link">
+          <GraduationCap className="sidebar-icon" /> Perfil
         </NavLink>
-
         <div
           onClick={toggleCursos}
           className={`sidebar-link sidebar-link-static ${
@@ -76,10 +75,6 @@ const Sidebar = () => {
             ))}
           </div>
         )}
-
-        <NavLink to="/perfil" className="sidebar-link">
-          <GraduationCap className="sidebar-icon" /> Perfil
-        </NavLink>
       </nav>
     </aside>
   );
