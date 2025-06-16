@@ -21,8 +21,8 @@ const FormularioCrearPractica = () => {
   });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [practicaAEliminar, setPracticaAEliminar] = useState(null);
-  const [modalMode, setModalMode] = useState("crear"); 
-   const [showPracticeModal, setShowPracticeModal] = useState(false);
+  const [modalMode, setModalMode] = useState("crear");
+  const [showPracticeModal, setShowPracticeModal] = useState(false);
   const [practicas, setPracticas] = useState([]);
   // Error state
   const [error, setError] = useState(null);
@@ -42,6 +42,7 @@ const FormularioCrearPractica = () => {
   });
 
   const handleEditarPractica = (practica) => {
+    console.log("Editando práctica con ID:", practica.id);
     setPracticeData({
       instrucciones: practica.instrucciones,
       codigoInicial: practica.codigoInicial,
@@ -92,8 +93,9 @@ const FormularioCrearPractica = () => {
     const fetchPracticas = async () => {
       try {
         const response = await practiceAPI.obtenerTodas();
+        console.log(response.data);
         const filtradas = response.data.filter(
-          (p) => Number(p.leccionId) === Number(courseId),
+          (p) => Number(p.leccion?.id) === Number(courseId)
         );
         setPracticas(filtradas);
       } catch (error) {
@@ -126,21 +128,30 @@ const FormularioCrearPractica = () => {
     setErrorMessage("");
     setShowErrorModal(false);
 
-    if (!validarTestCases()) {
-      return; 
-    }
-
+    if (!validarTestCases()) return;
     setLoading(true);
 
     try {
       let response;
-      const practicePayload = { ...practiceData };
+
+      // Asegurarse que el id esté presente
+      if (modalMode === "editar" && !practiceData.id) {
+        showError("❌ No se puede actualizar: Falta el ID de la práctica.");
+        setLoading(false);
+        return;
+      }
+
+      const practicePayload = {
+        ...practiceData,
+        // Se incluye explícitamente el ID
+        id: practiceData.id,
+      };
       delete practicePayload.testCases;
 
       if (modalMode === "editar") {
         response = await practiceAPI.actualizar(
           practiceData.id,
-          practicePayload,
+          practicePayload
         );
       } else {
         response = await practiceAPI.crear(practicePayload);
@@ -149,11 +160,12 @@ const FormularioCrearPractica = () => {
       const practiceId = response?.id || response?.data?.id;
       if (!practiceId) {
         showError(
-          "❌ La práctica no se guardó. El servidor no devolvió un ID.",
+          "❌ La práctica no se guardó. El servidor no devolvió un ID."
         );
         setLoading(false);
         return;
       }
+
       for (const testCase of practiceData.testCases) {
         const testCasePayload = {
           entrada: `"${testCase.entrada.replaceAll('"', '\\"')}"`,
@@ -168,25 +180,33 @@ const FormularioCrearPractica = () => {
       }
 
       showNotification(
-        `✅ Práctica ${modalMode === "editar" ? "actualizada" : "creada"} correctamente.`,
+        `✅ Práctica ${
+          modalMode === "editar" ? "actualizada" : "creada"
+        } correctamente.`
       );
       resetPracticeForm();
 
       const refrescar = await practiceAPI.obtenerTodas();
       const filtradas = refrescar.data.filter(
-        (p) => Number(p.leccionId) === Number(courseId),
+        (p) => Number(p.leccionId) === Number(courseId)
       );
       setPracticas(filtradas);
     } catch (error) {
       console.error("Error al guardar la práctica:", error);
       showError("❌ Error al guardar la práctica o test cases.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const openDeleteModal = (practica) => {
+    if (!practica || !practica.id) {
+      console.error("❌ Error: práctica inválida para eliminar:", practica);
+      return;
+    }
+
     setShowDeleteModal(true);
-    const practicaAEliminar = practica.id || practica._id;
-    setPracticaAEliminar({ practicaAEliminar });
+    setPracticaAEliminar(practica); // puedes guardar el objeto completo
   };
 
   const confirmDelete = async () => {
@@ -197,7 +217,7 @@ const FormularioCrearPractica = () => {
 
       const refrescar = await practiceAPI.obtenerTodas();
       const filtradas = refrescar.data.filter(
-        (p) => Number(p.leccionId) === Number(courseId),
+        (p) => Number(p.leccionId) === Number(courseId)
       );
       setPracticas(filtradas);
       setShowDeleteModal(false);
@@ -206,7 +226,9 @@ const FormularioCrearPractica = () => {
       console.error("Error al eliminar práctica:", error);
       if (error.response) {
         showError(
-          `❌ Error del servidor al eliminar: ${error.response.status} - ${error.response.data?.message || "Error desconocido"}`,
+          `❌ Error del servidor al eliminar: ${error.response.status} - ${
+            error.response.data?.message || "Error desconocido"
+          }`
         );
       } else if (error.request) {
         showError("❌ No se recibió respuesta del servidor al eliminar.");
@@ -363,7 +385,7 @@ const FormularioCrearPractica = () => {
                           disabled={loading}
                           title="Editar práctica existente"
                         >
-                          Editar Práctica
+                          <Edit size={18} color="white" />
                         </button>
                         <button
                           className="action-button"
@@ -584,8 +606,8 @@ const FormularioCrearPractica = () => {
                         ? "Creando..."
                         : "Actualizando..."
                       : modalMode === "crear"
-                        ? "Crear Práctica"
-                        : "Actualizar Práctica"}
+                      ? "Crear Práctica"
+                      : "Actualizar Práctica"}
                   </button>
                   <button
                     type="button"
