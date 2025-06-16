@@ -53,9 +53,7 @@
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   border: 1px solid #e5e5e5;
   height: auto;
 }
@@ -391,9 +389,7 @@
   color: white;
   z-index: 1001;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  animation:
-    slideIn 0.3s,
-    fadeOut 0.5s 2.5s forwards;
+  animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
 }
 
 .notification.success {
@@ -738,4 +734,66 @@
 
 .toggleCircle.active:hover {
   background-color: #45a049;
+}
+
+.testCaseCard {
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.testCaseCard code {
+  background-color: #eef2f7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.publicLabel {
+  font-size: 0.85rem;
+  color: #2563eb;
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+.testCaseContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.deleteButton {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 4px;
+  transition: transform 0.2s ease;
+}
+
+.deleteButton:hover {
+  transform: scale(1.1);
+}
+
+.boton-editar {
+  background-color: #306998;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton-editar:hover {
+  background-color: #300898; /* lila */
 }
