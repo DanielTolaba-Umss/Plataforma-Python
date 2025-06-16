@@ -7,15 +7,40 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const [vista, setVista] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const manejarVista = (tipo) => {
-    setVista(tipo);
-    navigate("/");
+  const usuarios = [
+    { rol: "admin", email: "admin@edu.com", password: "admin111" },
+    { rol: "docente", email: "docente@edu.com", password: "docente222" },
+    {
+      rol: "estudiante",
+      email: "estudiante@edu.com",
+      password: "estudiante333",
+    },
+  ];
+
+  const handleLogin = () => {
+    const usuario = usuarios.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (usuario) {
+      setVista(usuario.rol);
+      setError("");
+      navigate("/");
+    } else {
+      setError("Correo o contraseña incorrectos");
+    }
   };
 
   const volver = () => {
     setVista(null);
+    setEmail("");
+    setPassword("");
+    setError("");
     navigate("/");
   };
 
@@ -30,99 +55,121 @@ function App() {
     borderRadius: "5px",
     cursor: "pointer",
     zIndex: 1000,
-    display: "flex",
-    alignItems: "center",
-    gap: "5px",
     fontWeight: "bold",
   };
 
-  const estiloBoton = {
-    padding: "15px 30px",
-    fontSize: "16px",
-    backgroundColor: "#303dcc",
+  const estiloInput = {
+    padding: "10px",
+    width: "100%",
+    marginBottom: "15px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+  };
+
+  const estiloBotonLogin = {
+    padding: "12px 30px",
+    backgroundColor: "rgb(48, 61, 204)",
     color: "white",
     border: "none",
     borderRadius: "8px",
+    fontWeight: "bold",
     cursor: "pointer",
-    transition: "all 0.3s ease",
-    margin: "10px",
+    transition: "all 0.3s",
+    width: "100%",
   };
 
-  // Si hay una vista seleccionada, mostrar la aplicación correspondiente
   if (vista) {
     return (
       <div className="app-container">
         <button onClick={volver} style={estiloBotonVolver}>
-          ← Volver al inicio
+          ← Volver al login
         </button>
-        <div className="app-content">
-          <Routes>
-            <Route
-              path="/*"
-              element={
-                vista === "admin" ? (
-                  <AppAdmin />
-                ) : vista === "docente" ? (
-                  <AppDocente />
-                ) : vista === "estudiante" ? (
-                  <AppEstudiante />
-                ) : null
-              }
-            />
-          </Routes>
-        </div>
+        <Routes>
+          <Route
+            path="/*"
+            element={
+              vista === "admin" ? (
+                <AppAdmin />
+              ) : vista === "docente" ? (
+                <AppDocente />
+              ) : vista === "estudiante" ? (
+                <AppEstudiante />
+              ) : null
+            }
+          />
+        </Routes>
       </div>
     );
   }
 
-  // Pantalla de selección de rol
   return (
     <div
       style={{
-        padding: "20px",
-        textAlign: "center",
+        backgroundColor: "#0c0461fd",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f3f4f6",
+        paddingTop: "50px",
       }}
     >
-      <h1 style={{ marginBottom: "30px", color: "" }}>
-        Bienvenido a Python EDU
-      </h1>
-      <div
+      {/* Título fuera del formulario */}
+      <h1
         style={{
-          display: "flex",
-          gap: "20px",
-          flexWrap: "wrap",
-          justifyContent: "center",
+          color: "#FFD438",
+          marginBottom: "40px",
+          fontWeight: "bold",
+          textAlign: "center",
         }}
       >
-        <button
-          onClick={() => manejarVista("admin")}
-          style={estiloBoton}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#301dcb")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#303dcc")}
+        Bienvenido a Python EDU
+      </h1>
+
+      {/* Formulario */}
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "40px",
+          borderRadius: "12px",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+          maxWidth: "400px",
+          width: "100%",
+        }}
+      >
+        <h2
+          style={{
+            textAlign: "center",
+            marginBottom: "25px",
+            color: "#0c0461fd",
+          }}
         >
-          Entrar como Admin
-        </button>
+          Iniciar sesión
+        </h2>
+
+        <input
+          type="email"
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={estiloInput}
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={estiloInput}
+        />
+        {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
         <button
-          onClick={() => manejarVista("docente")}
-          style={estiloBoton}
+          onClick={handleLogin}
+          style={estiloBotonLogin}
           onMouseOver={(e) => (e.target.style.backgroundColor = "#301dcb")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#303dcc")}
+          onMouseOut={(e) =>
+            (e.target.style.backgroundColor = "rgb(48, 61, 204)")
+          }
         >
-          Entrar como Docente
-        </button>
-        <button
-          onClick={() => manejarVista("estudiante")}
-          style={estiloBoton}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#301dcb")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#303dcc")}
-        >
-          Entrar como Estudiante
+          Ingresar
         </button>
       </div>
     </div>
