@@ -4,6 +4,8 @@ import EditorMonaco from "@monaco-editor/react";
 import "/src/paginas/estudiante/estilos/Prueba.css";
 import { practiceJhService, testCasesService  } from "../../api/practiceJh";
 import { tryPracticeService } from "../../api/tryPracticeService";
+import ReactMarkdown from 'react-markdown';
+import { autoFeedbackService } from "../../api/feedback";
 
 
 const Editor = ({ titulo, lessonId }) => {
@@ -14,6 +16,7 @@ const Editor = ({ titulo, lessonId }) => {
   const [error, setError] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [ejecutando, setEjecutando] = useState(false);
+  const [generandoFeedback, setGenerandoFeedback] = useState(false);
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -98,6 +101,12 @@ const Editor = ({ titulo, lessonId }) => {
           resultados: resultadosTests,
           approved: respuesta.approved
         });
+
+        await generarFeedbackAutomatico(
+          codigo, 
+          resultadosTests, 
+          respuesta.approved
+        );
       } catch (error) {
         console.error("Error al ejecutar el código:", error);
         setRetroalimentacion("Ocurrió un error al procesar tu código: " + error.message);
@@ -108,6 +117,40 @@ const Editor = ({ titulo, lessonId }) => {
       setRetroalimentacion("No se puede ejecutar el código. Asegúrate de que la práctica esté cargada.");
     }
   };
+
+  const generarFeedbackAutomatico = async (codigo, resultados, approved) => {
+    if (!practica || !codigo || !testCases.length) {
+      return;
+    }
+
+    setGenerandoFeedback(true);
+    setRetroalimentacion("Generando retroalimentación personalizada...");
+
+    try {
+
+      const restriccionesTexto = obtenerRestricciones().join("\n- ");
+
+      const feedbackPersonalizado = await autoFeedbackService.getFeedback(
+        practica.instrucciones,
+        "- " + restriccionesTexto,
+        codigo,
+        JSON.stringify(resultados, null, 2),
+        testCases,
+        approved
+      );
+
+      setRetroalimentacion(feedbackPersonalizado);
+    } catch (error) {
+      console.error("Error al generar feedback automático:", error);
+      setRetroalimentacion(
+        "No se pudo generar la retroalimentación automática. " +
+        "Por favor, revisa tu código y los resultados de los tests."
+      );
+    } finally {
+      setGenerandoFeedback(false);
+    }
+  };
+
 
   const cellHeaderStyle = {
     padding: "10px",
@@ -219,14 +262,24 @@ const Editor = ({ titulo, lessonId }) => {
               <div
                 className="retroalimentacion"
                 style={{
+                  overflowY: "auto",
+                  maxHeight: "600px",
                   marginTop: "1rem",
                   padding: "1rem",
                   backgroundColor: "#f0f8ff",
                   borderLeft: "5px solid #007bff",
                 }}
               >
-                <strong>Retroalimentación:</strong>
-                <p>{retroalimentacion}</p>
+                {generandoFeedback ? (
+                  <>
+                    <strong>Generando retroalimentación...</strong>
+                    <div className="spinner-carga" style={{ margin: "10px auto" }}></div>
+                  </>
+                ) : (
+                  <>
+                    <ReactMarkdown>{retroalimentacion}</ReactMarkdown>
+                  </>
+                )}
               </div>
             )}
             {/* Resultados simulados en tabla */}

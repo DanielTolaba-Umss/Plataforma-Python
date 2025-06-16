@@ -47,5 +47,5 @@ export const tryPracticeService = {
             console.error(`Error fetching practice with ID ${id}:`, error);
             throw error;
         }
-    }
+    },
 };
