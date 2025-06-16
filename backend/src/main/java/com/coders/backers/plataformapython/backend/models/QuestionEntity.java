@@ -1,10 +1,22 @@
 package com.coders.backers.plataformapython.backend.models;
 
-import com.coders.backers.plataformapython.backend.config.MapToJsonConverter;
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.Map;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import jakarta.persistence.Column;    // ✅ Hibernate 6.x
+import jakarta.persistence.Entity; // ✅ Hibernate 6.x
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "question")
@@ -32,7 +44,7 @@ public class QuestionEntity {
     @Column(name = "puntos", nullable = false)
     private Integer puntos;
 
-    @Convert(converter = MapToJsonConverter.class)
+    @JdbcTypeCode(SqlTypes.JSON)  
     @Column(name = "opciones", columnDefinition = "jsonb")
     private Map<String, String> opciones;
 

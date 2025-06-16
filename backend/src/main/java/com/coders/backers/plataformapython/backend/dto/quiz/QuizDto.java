@@ -15,5 +15,5 @@ public class QuizDto {
     private Integer puntuacionAprobacion;
     private boolean aleatorio;
     private boolean active;
-    private Long contenidoId;
+    private Long courseId;
 }
