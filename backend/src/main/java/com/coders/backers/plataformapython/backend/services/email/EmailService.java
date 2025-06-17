@@ -16,11 +16,15 @@ public interface EmailService {
      * Envía email de recuperación de contraseña
      */
     void sendPasswordResetEmail(UserEntity user, String resetToken);
-    
-    /**
+      /**
      * Envía email de bienvenida
      */
     void sendWelcomeEmail(UserEntity user);
+    
+    /**
+     * Envía email de bienvenida con credenciales
+     */
+    void sendWelcomeEmailWithCredentials(UserEntity user, String password);
     
     /**
      * Envía email de notificación de cambio de contraseña

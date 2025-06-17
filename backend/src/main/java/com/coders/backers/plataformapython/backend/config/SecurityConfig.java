@@ -44,13 +44,21 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))            .authorizeHttpRequests(auth -> auth
                 // Endpoints públicos (sin autenticación)
                 .requestMatchers(
-                    "/api/auth/**",
+                    "/api/auth/login",
+                    "/api/auth/refresh",
+                    "/api/auth/logout",
+                    "/api/auth/email/**",
                     "/api/public/**",
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
                     "/swagger-ui.html",
                     "/actuator/health"
                 ).permitAll()
+                  // Endpoints de auth que requieren autenticación
+                .requestMatchers("/api/auth/verify", "/api/auth/change-password").authenticated()
+                
+                // Endpoints de usuario autenticado
+                .requestMatchers("/api/user/**").authenticated()
                 
                 // Endpoints solo para ADMIN
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")

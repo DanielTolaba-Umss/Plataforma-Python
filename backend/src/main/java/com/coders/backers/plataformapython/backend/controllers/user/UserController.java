@@ -1,11 +1,9 @@
-package com.coders.backers.plataformapython.backend.controllers.auth;
+package com.coders.backers.plataformapython.backend.controllers.user;
 
-import com.coders.backers.plataformapython.backend.dto.auth.AuthResponse;
 import com.coders.backers.plataformapython.backend.dto.auth.ChangePasswordRequest;
-import com.coders.backers.plataformapython.backend.dto.auth.LoginRequest;
-import com.coders.backers.plataformapython.backend.dto.auth.RefreshTokenRequest;
 import com.coders.backers.plataformapython.backend.services.auth.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,57 +15,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-import java.util.Map;
-
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "Autenticación", description = "Endpoints para autenticación y autorización")
-public class AuthController {
+@Tag(name = "Usuario", description = "Endpoints para gestión de perfil de usuario")
+@SecurityRequirement(name = "Bearer Authentication")
+public class UserController {
 
     private final AuthService authService;
-
-    @Operation(summary = "Iniciar sesión", description = "Autentica un usuario y devuelve tokens JWT")
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        log.info("Intento de login para email: {}", loginRequest.getEmail());
-        
-        AuthResponse response = authService.login(loginRequest);
-        
-        log.info("Login exitoso para email: {}", loginRequest.getEmail());
-        return ResponseEntity.ok(response);
-    }
-
-    @Operation(summary = "Renovar token", description = "Renueva el access token usando el refresh token")
-    @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshRequest) {
-        log.info("Solicitando renovación de token");
-        
-        AuthResponse response = authService.refreshToken(refreshRequest.getRefreshToken());
-        
-        log.info("Token renovado exitosamente");
-        return ResponseEntity.ok(response);
-    }
-
-    @Operation(summary = "Cerrar sesión", description = "Invalida los tokens del usuario (implementación simple)")
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout() {
-        log.info("Solicitud de logout recibida");
-        
-        // En nuestro enfoque simplificado, el logout es manejado por el frontend
-        // eliminando los tokens del localStorage
-        
-        return ResponseEntity.ok("Logout exitoso. Elimina los tokens del cliente.");
-    }
-
-    @Operation(summary = "Verificar token", description = "Verifica si el token actual es válido")
-    @GetMapping("/verify")
-    public ResponseEntity<String> verifyToken() {
-        // Si llega hasta aquí, significa que el token es válido
-        // (pasó por el JwtAuthenticationFilter)
-        return ResponseEntity.ok("Token válido");
-    }
 
     @Operation(summary = "Cambiar contraseña", description = "Permite al usuario cambiar su propia contraseña")
     @PostMapping("/change-password")
@@ -105,5 +61,17 @@ public class AuthController {
                 "error", "INTERNAL_ERROR"
             ));
         }
+    }
+
+    @Operation(summary = "Obtener perfil", description = "Obtiene la información del perfil del usuario autenticado")
+    @GetMapping("/profile")
+    public ResponseEntity<Map<String, Object>> getProfile(Authentication authentication) {
+        log.info("Solicitando perfil para usuario: {}", authentication.getName());
+        
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "email", authentication.getName(),
+            "authorities", authentication.getAuthorities()
+        ));
     }
 }

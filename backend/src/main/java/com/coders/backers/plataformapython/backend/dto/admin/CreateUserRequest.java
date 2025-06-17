@@ -48,14 +48,11 @@ public class CreateUserRequest {
     // Campos específicos para Admin
     @Schema(description = "Permisos especiales para administradores", example = "ALL_PERMISSIONS")
     private String specialPermits;
-    
-    // Campos específicos para Teacher
+      // Campos específicos para Teacher
     @Schema(description = "Especialidad para docentes", example = "Programación Python")
     private String specialty;
-      @Schema(description = "Si el email debe marcarse como verificado", example = "true")
-    @Builder.Default
-    private boolean emailVerified = false;
     
+    // Los usuarios creados por admin siempre están verificados
     @Schema(description = "Si el usuario debe estar activo", example = "true")
     @Builder.Default
     private boolean active = true;

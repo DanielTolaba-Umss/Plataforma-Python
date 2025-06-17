@@ -99,6 +99,30 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    public void sendWelcomeEmailWithCredentials(UserEntity user, String password) {
+        log.info("Enviando email de bienvenida con credenciales a: {}", user.getEmail());
+        
+        try {
+            Context context = new Context();
+            context.setVariable("userName", user.getName());
+            context.setVariable("userRole", user.getRole());
+            context.setVariable("userEmail", user.getEmail());
+            context.setVariable("userPassword", password);
+            context.setVariable("platformName", "Plataforma Python");
+            context.setVariable("loginUrl", baseUrl + "/login");
+            
+            String content = templateEngine.process("email/welcome-with-credentials", context);
+            
+            sendHtmlEmail(user.getEmail(), "¡Bienvenido a Plataforma Python! - Credenciales de acceso", content);
+            
+            log.info("Email de bienvenida con credenciales enviado exitosamente a: {}", user.getEmail());
+        } catch (Exception e) {
+            log.error("Error enviando email de bienvenida con credenciales a {}: {}", user.getEmail(), e.getMessage());
+            // No lanzamos excepción aquí para que no interrumpa el flujo principal
+        }
+    }
+
+    @Override
     public void sendPasswordChangeNotification(UserEntity user) {
         log.info("Enviando notificación de cambio de contraseña a: {}", user.getEmail());
         

@@ -8,7 +8,6 @@ import com.coders.backers.plataformapython.backend.models.userModel.*;
 import com.coders.backers.plataformapython.backend.repository.UserRepository;
 import com.coders.backers.plataformapython.backend.services.admin.UserManagementService;
 import com.coders.backers.plataformapython.backend.services.email.EmailService;
-import com.coders.backers.plataformapython.backend.services.email.EmailVerificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,12 +27,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class UserManagementServiceImpl implements UserManagementService {
-
-    private final UserRepository userRepository;
+public class UserManagementServiceImpl implements UserManagementService {    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-    private final EmailVerificationService emailVerificationService;
 
     @Override
     public UserResponse createUser(CreateUserRequest request) {
@@ -46,37 +42,29 @@ public class UserManagementServiceImpl implements UserManagementService {
         
         // Crear la entidad según el rol
         UserEntity user = createUserEntityByRole(request);
-        
-        // Configurar campos comunes
+          // Configurar campos comunes
         user.setName(request.getName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole().name());
-        user.setActive(request.isActive());        user.setEmailVerified(request.isEmailVerified());
+        user.setActive(request.isActive());
+        // Las cuentas creadas por admin siempre están verificadas
+        user.setEmailVerified(true);
         user.setCreatedAt(Date.valueOf(LocalDate.now()));
         user.setUpdatedAt(Date.valueOf(LocalDate.now()));
           // Configurar campos específicos por rol
         configureRoleSpecificFields(user, request);
-        
-        UserEntity savedUser = userRepository.save(user);
+          UserEntity savedUser = userRepository.save(user);
         log.info("Usuario creado exitosamente con ID: {}", savedUser.getId());
         
-        // Enviar email de bienvenida si el email está verificado
-        // Para usuarios creados por admin, típicamente ya están verificados
+        // Enviar email de bienvenida con credenciales
         try {
-            if (savedUser.isEmailVerified()) {
-                emailService.sendWelcomeEmail(savedUser);
-                log.info("Email de bienvenida enviado a: {}", savedUser.getEmail());
-            } else {
-                // Si no está verificado, enviar email de verificación
-                String verificationToken = emailVerificationService.generateVerificationToken(savedUser);
-                emailService.sendVerificationEmail(savedUser, verificationToken);
-                log.info("Email de verificación enviado a: {}", savedUser.getEmail());
-            }
+            emailService.sendWelcomeEmailWithCredentials(savedUser, request.getPassword());
+            log.info("Email de bienvenida con credenciales enviado a: {}", savedUser.getEmail());
         } catch (Exception e) {
-            log.warn("Error enviando email a {}: {}", savedUser.getEmail(), e.getMessage());
+            log.warn("Error enviando email de bienvenida a {}: {}", savedUser.getEmail(), e.getMessage());
             // No interrumpir el flujo si falla el envío de email
         }
         
