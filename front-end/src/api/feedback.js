@@ -1,11 +1,11 @@
+/* eslint-disable no-undef */
 import OpenAI from 'openai';
 
 
-
 const openai = new OpenAI({
-    baseURL: 'https://openrouter.ai/api/v1',
-    apiKey:'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',
-    //apiKey: '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',
+
+    baseURL: import.meta.env.VITE_API_URL,
+    apiKey: import.meta.env.VITE_API_KEY,
     dangerouslyAllowBrowser: true
 });
 
@@ -80,7 +80,7 @@ export const autoFeedbackService = {
 
 
             const response = await openai.chat.completions.create({
-            model: 'deepseek/deepseek-r1-0528:free',
+            model: import.meta.env.VITE_API_MODEL,
                 messages: [
                     { 
                         role: 'system', content: prompt[0].content
