@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface TryPracticeRepository extends JpaRepository<TryPracticeEntity, Long> {
     List<TryPracticeEntity> findByStudentId(Long studentId);
+
     List<TryPracticeEntity> findByPracticeId(Long practiceId);
+
+    List<TryPracticeEntity> findByStudentIdAndPracticeId(Long studentId, Long practiceId);
 }

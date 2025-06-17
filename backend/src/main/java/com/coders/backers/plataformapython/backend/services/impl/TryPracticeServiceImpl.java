@@ -144,7 +144,7 @@ public class TryPracticeServiceImpl implements TryPracticeService {
                 TestCaseDto testCase = testCases.get(i);
                 CodeExecutionResult result = pythonExecution.executeCode(
                         codeReceived,
-                        testCase.getEntrada(),
+                        testCase.getEntradaTestCase(),
                         testCase.getSalida());
 
                 boolean success = result.isSuccess();
@@ -255,5 +255,29 @@ public class TryPracticeServiceImpl implements TryPracticeService {
         } catch (Exception e) {
             return new Boolean[0];
         }
+    }
+
+    @Override
+    public List<TryPracticeDto> getByStudentIdAndPracticeId(Long studentId, Long practiceId) {
+        List<TryPracticeEntity> tryPractices = tryPracticeRepository.findByStudentIdAndPracticeId(studentId,
+                practiceId);
+        if (tryPractices.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    "No TryPractice found for studentId: " + studentId + " and practiceId: " + practiceId);
+        }
+        return tryPractices.stream()
+                .map(TryPracticeMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public TryPracticeDto updateTryPracticeByFeedback(Long id, String feedback) {
+        TryPracticeEntity tryPractice = tryPracticeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("TryPractice not found with id: " + id));
+
+        tryPractice.setFeedback(feedback);
+        TryPracticeEntity updatedTryPractice = tryPracticeRepository.save(tryPractice);
+
+        return TryPracticeMapper.mapToDto(updatedTryPractice);
     }
 }
