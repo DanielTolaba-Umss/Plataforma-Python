@@ -19,9 +19,8 @@ const Editor = ({ titulo, lessonId }) => {
   const [generandoFeedback, setGenerandoFeedback] = useState(false);
   const [intentosAnteriores, setIntentosAnteriores] = useState([]);
   const [practiceApproved, setPracticeApproved] = useState(false);
-  const [cargandoIntentos, setCargandoIntentos] = useState(false);
+  const [, setCargandoIntentos] = useState(false);
   const editorRef = useRef(null);
-  const [intentosLength, setIntentosLength] = useState(0);
   const [codigoInicial, setCodigoInicial] = useState("# Escribe tu código Python aquí");
 
   const studentId = 1;
@@ -72,8 +71,6 @@ const Editor = ({ titulo, lessonId }) => {
           practica.id
         );
 
-        setIntentosLength(intentos.length);
-
         console.log("Intentos previos cargados:", intentos);
         
         setIntentosAnteriores(intentos);
@@ -87,8 +84,9 @@ const Editor = ({ titulo, lessonId }) => {
 
           const ultimoIntento = intentos[intentos.length - 1];
 
-          if (ultimoIntento.code && editorRef.current) {
-            setCodigoInicial(ultimoIntento.code);
+          if (ultimoIntento && ultimoIntento.code && editorRef.current) {
+            editorRef.current.setValue(ultimoIntento.code);
+            console.log("Código cargado en editor:", ultimoIntento.code);
           }
 
           if (ultimoIntento.feedback) {
