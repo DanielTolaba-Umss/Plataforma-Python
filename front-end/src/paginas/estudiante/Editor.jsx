@@ -17,7 +17,14 @@ const Editor = ({ titulo, lessonId }) => {
   const [cargando, setCargando] = useState(true);
   const [ejecutando, setEjecutando] = useState(false);
   const [generandoFeedback, setGenerandoFeedback] = useState(false);
+  const [intentosAnteriores, setIntentosAnteriores] = useState([]);
+  const [practiceApproved, setPracticeApproved] = useState(false);
+  const [cargandoIntentos, setCargandoIntentos] = useState(false);
   const editorRef = useRef(null);
+  const [intentosLength, setIntentosLength] = useState(0);
+  const [codigoInicial, setCodigoInicial] = useState("# Escribe tu código Python aquí");
+
+  const studentId = 1;
 
   useEffect(() => {
     const cargarPractica = async () => {
@@ -52,6 +59,91 @@ const Editor = ({ titulo, lessonId }) => {
     };
     cargarTestCases();
   }, [practica]);
+
+  useEffect(() => {
+    const cargarIntentosPrevios = async () => {
+      if (!practica || !practica.id) return;
+      
+      setCargandoIntentos(true);
+      try {
+        console.log(`Cargando intentos previos para práctica ${practica.id}`);
+        const intentos = await tryPracticeService.getStudentPracticeAttempts(
+          studentId,
+          practica.id
+        );
+
+        setIntentosLength(intentos.length);
+
+        console.log("Intentos previos cargados:", intentos);
+        
+        setIntentosAnteriores(intentos);
+
+
+        
+        const aprobada = intentos.some(intento => intento.approved === true);
+        setPracticeApproved(aprobada);
+
+        if (intentos && intentos.length > 0) {
+
+          const ultimoIntento = intentos[intentos.length - 1];
+
+          if (ultimoIntento.code && editorRef.current) {
+            setCodigoInicial(ultimoIntento.code);
+          }
+
+          if (ultimoIntento.feedback) {
+            try {
+              const feedbackObj = JSON.parse(ultimoIntento.feedback);
+              if (feedbackObj && typeof feedbackObj === 'object' && feedbackObj.feedback) {
+                setRetroalimentacion(feedbackObj.feedback);
+              } else {
+                setRetroalimentacion(ultimoIntento.feedback);
+              }
+            } catch (e) {
+              console.error("Error al parsear feedback del último intento:", e);
+              setRetroalimentacion(ultimoIntento.feedback);
+            }
+          }
+
+          if (ultimoIntento.testResults) {
+            try {
+              let resultadosTests = [];
+              resultadosTests = JSON.parse(ultimoIntento.testResults.replace(/^"|"$/g, ''));
+              
+              setResultado({
+                status: ultimoIntento.approved ? "Éxito" : "Fallido",
+                output: ultimoIntento.testResults,
+                resultados: resultadosTests,
+                approved: ultimoIntento.approved
+              });
+            } catch (error) {
+              console.error("Error al parsear resultados de tests del último intento:", error);
+            }
+          }
+        } else if (aprobada) {
+          setRetroalimentacion("¡Esta práctica ya ha sido aprobada anteriormente!");
+        }
+
+      } catch (error) {
+        console.error("Error al cargar intentos previos:", error);
+      } finally {
+        setCargandoIntentos(false);
+      }
+    };
+    
+    cargarIntentosPrevios();
+  }, [practica, studentId]);
+
+  useEffect(() => {
+    if (intentosAnteriores && intentosAnteriores.length > 0) {
+      const ultimoIntento = intentosAnteriores[intentosAnteriores.length - 1];
+      if (ultimoIntento && ultimoIntento.code) {
+        setCodigoInicial(ultimoIntento.code);
+      }
+    } else if (practica?.codigoInicial) {
+      setCodigoInicial(practica.codigoInicial);
+    }
+  }, [intentosAnteriores, practica]);
   
   const obtenerRestricciones = () => {
     if (!practica || !practica.restricciones) {
@@ -77,23 +169,16 @@ const Editor = ({ titulo, lessonId }) => {
         return;
       }
 
-      const studentId = 1; 
+      if (practiceApproved) {
+        setRetroalimentacion("¡Esta práctica ya ha sido aprobada anteriormente! No es necesario volver a ejecutar el código.");
+        return;
+      }
+ 
       
       setRetroalimentacion("Ejecutando código...");
       setEjecutando(true);
 
       try {
-        const intentosAnteriores = await tryPracticeService.getStudentPracticeAttempts(
-          studentId,
-          practica.id
-        );
-
-        const practicaYaAprobada = intentosAnteriores.some(intento => intento.approved === true);
-      
-        if (practicaYaAprobada) {
-          setRetroalimentacion("¡Esta práctica ya ha sido aprobada anteriormente! No es necesario volver a ejecutar el código.");
-          return;
-        }
 
         const codigo = editorRef.current.getValue();
         console.log("Código ejecutado:", codigo);
@@ -124,6 +209,10 @@ const Editor = ({ titulo, lessonId }) => {
           approved: respuesta.approved
         });
 
+        if (respuesta.approved) {
+          setPracticeApproved(true);
+        }
+
         const feedbackGenerado = await generarFeedbackAutomatico(
           codigo, 
           resultadosTests, 
@@ -132,9 +221,7 @@ const Editor = ({ titulo, lessonId }) => {
 
         if (feedbackGenerado && respuesta.id) {
           try {
-            console.log(`Actualizando feedback para el intento ID: ${respuesta.id}`);
             await tryPracticeService.updatePracticeFeedback(respuesta.id, feedbackGenerado);
-            console.log("Feedback actualizado exitosamente en la base de datos");
             setRetroalimentacion(feedbackGenerado);
           } catch (feedbackError) {
             console.error("Error al actualizar feedback:", feedbackError);
@@ -147,6 +234,13 @@ const Editor = ({ titulo, lessonId }) => {
       } finally {
         setEjecutando(false);
       }
+
+
+      const nuevosIntentos = await tryPracticeService.getStudentPracticeAttempts(
+        studentId,
+        practica.id
+      );
+      setIntentosAnteriores(nuevosIntentos);
     } else {
       setRetroalimentacion("No se puede ejecutar el código. Asegúrate de que la práctica esté cargada.");
     }
@@ -266,7 +360,7 @@ const Editor = ({ titulo, lessonId }) => {
               height="300px"
               width="100%"
               defaultLanguage="python"
-              defaultValue={practica?.codigoInicial || "# Escribe tu código Python aquí"}
+              defaultValue={codigoInicial}
               theme="vs-white"
               onMount={(editor) => {
                 editorRef.current = editor;
