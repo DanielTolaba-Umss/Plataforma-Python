@@ -116,11 +116,29 @@ public class CodeRestrictionValidator {
         if (submittedCode == null || initialCode == null || initialCode.trim().isEmpty()) {
             return true;
         }
+        String functionDefinition = extractFunctionDefinition(initialCode);
+        if (functionDefinition.isEmpty()) {
+            return true;
+        }
 
         String cleanedSubmitted = cleanCodeForComparison(submittedCode);
-        String cleanedInitial = cleanCodeForComparison(initialCode);
 
-        return cleanedSubmitted.startsWith(cleanedInitial);
+        return cleanedSubmitted.contains(functionDefinition);
+    }
+
+    private String extractFunctionDefinition(String code) {
+        if (code == null || code.isEmpty()) {
+            return "";
+        }
+
+        String[] lines = code.split("\\r?\\n");
+        for (String line : lines) {
+            String trimmedLine = line.trim();
+            if (trimmedLine.startsWith("def ") && trimmedLine.contains("(") && trimmedLine.endsWith(":")) {
+                return trimmedLine;
+            }
+        }
+        return "";
     }
 
     private List<String> checkDangerousImports(String code) {
@@ -170,6 +188,9 @@ public class CodeRestrictionValidator {
     }
 
     private String cleanCodeForComparison(String code) {
+        if (code == null) {
+            return "";
+        }
 
         code = code.replaceAll("#.*$", "");
         code = code.replaceAll("\\s+", " ");

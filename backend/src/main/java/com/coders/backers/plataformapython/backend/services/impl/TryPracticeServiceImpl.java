@@ -144,7 +144,7 @@ public class TryPracticeServiceImpl implements TryPracticeService {
                 TestCaseDto testCase = testCases.get(i);
                 CodeExecutionResult result = pythonExecution.executeCode(
                         codeReceived,
-                        testCase.getEntrada(),
+                        testCase.getEntradaTestCase(),
                         testCase.getSalida());
 
                 boolean success = result.isSuccess();
