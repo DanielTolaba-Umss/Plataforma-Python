@@ -50,10 +50,17 @@ export const tryPracticeService = {
     },
 
     async getStudentPracticeAttempts(studentId, practiceId) {
+        
+        if (!studentId || !practiceId) {
+            console.error('studentId y practiceId son obligatorios', { studentId, practiceId });
+            return [];
+        }
+        
         try {
-            const response = await fetch(`${TRY_PRACTICE_API_URL}/student/${studentId}/practice/${practiceId}`);
+
+            const response = await fetch(`${TRY_PRACTICE_API_URL}/by-estudiante/${studentId}/by-practice/${practiceId}`);
             if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
             }
             return await response.json();
         } catch (error) {

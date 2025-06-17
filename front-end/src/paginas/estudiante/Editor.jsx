@@ -72,22 +72,26 @@ const Editor = ({ titulo, lessonId }) => {
 
   const ejecutarCodigo = async () => {
     if (editorRef.current && practica) {
+      if (!practica.id) {
+        setRetroalimentacion("No se puede ejecutar el código. ID de práctica no válido.");
+        return;
+      }
+
+      const studentId = 1; 
+      
+      setRetroalimentacion("Ejecutando código...");
+      setEjecutando(true);
+
       try {
-        const intentosAnteriores = await tryPracticeService.getStudentPracticeAttempts({
-          studentId: 1,
-          practiceId: practica.id
-        });
+        const intentosAnteriores = await tryPracticeService.getStudentPracticeAttempts(
+          studentId,
+          practica.id
+        );
 
         const practicaYaAprobada = intentosAnteriores.some(intento => intento.approved === true);
       
         if (practicaYaAprobada) {
           setRetroalimentacion("¡Esta práctica ya ha sido aprobada anteriormente! No es necesario volver a ejecutar el código.");
-          setResultado({
-            status: practicaYaAprobada.approved ? "Éxito" : "Fallido",
-            output: practicaYaAprobada.testResults,
-            //resultados: resultadosTests,
-            approved: practicaYaAprobada.approved
-          });
           return;
         }
 
@@ -120,11 +124,23 @@ const Editor = ({ titulo, lessonId }) => {
           approved: respuesta.approved
         });
 
-        await generarFeedbackAutomatico(
-            codigo, 
-            resultadosTests, 
-            respuesta.approved
+        const feedbackGenerado = await generarFeedbackAutomatico(
+          codigo, 
+          resultadosTests, 
+          respuesta.approved
         );
+
+        if (feedbackGenerado && respuesta.id) {
+          try {
+            console.log(`Actualizando feedback para el intento ID: ${respuesta.id}`);
+            await tryPracticeService.updatePracticeFeedback(respuesta.id, feedbackGenerado);
+            console.log("Feedback actualizado exitosamente en la base de datos");
+            setRetroalimentacion(feedbackGenerado);
+          } catch (feedbackError) {
+            console.error("Error al actualizar feedback:", feedbackError);
+          }
+        }
+        
       } catch (error) {
         console.error("Error al ejecutar el código:", error);
         setRetroalimentacion("Ocurrió un error al procesar tu código: " + error.message);
@@ -157,13 +173,10 @@ const Editor = ({ titulo, lessonId }) => {
         approved
       );
 
-      setRetroalimentacion(feedbackPersonalizado);
+      return feedbackPersonalizado;
     } catch (error) {
       console.error("Error al generar feedback automático:", error);
-      setRetroalimentacion(
-        "No se pudo generar la retroalimentación automática. " +
-        "Por favor, revisa tu código y los resultados de los tests."
-      );
+      return "Ocurrió un error al generar la retroalimentación automática. Por favor, intenta nuevamente más tarde.";
     } finally {
       setGenerandoFeedback(false);
     }
