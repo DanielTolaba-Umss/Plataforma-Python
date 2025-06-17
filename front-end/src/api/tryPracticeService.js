@@ -48,4 +48,36 @@ export const tryPracticeService = {
             throw error;
         }
     },
+
+    async getStudentPracticeAttempts(studentId, practiceId) {
+        try {
+            const response = await fetch(`${TRY_PRACTICE_API_URL}/student/${studentId}/practice/${practiceId}`);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error(`Error fetching attempts for student ${studentId} and practice ${practiceId}:`, error);
+            throw error;
+        }
+    },
+
+    async updatePracticeFeedback(id, feedback) {
+        try {
+            const response = await fetch(`${TRY_PRACTICE_API_URL}/${id}/feedback`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ feedback })
+            });
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error(`Error updating feedback for practice with ID ${id}:`, error);
+            throw error;
+        }
+    }
 };

@@ -40,4 +40,15 @@ public class TryPracticeController {
     public ResponseEntity<List<TryPracticeDto>> getByPractice(@PathVariable Long practiceId) {
         return ResponseEntity.ok(tryPracticeService.getByPracticeId(practiceId));
     }
+
+    @GetMapping("/by-estudiante/{studentId}/by-practice/{practiceId}")
+    public ResponseEntity<List<TryPracticeDto>> getByEstudianteAndPractice(@PathVariable Long studentId,
+            @PathVariable Long practiceId) {
+        return ResponseEntity.ok(tryPracticeService.getByStudentIdAndPracticeId(studentId, practiceId));
+    }
+
+    @PutMapping("/{id}/feedback")
+    public ResponseEntity<TryPracticeDto> updateFeedback(@PathVariable Long id, @RequestBody String feedback) {
+        return ResponseEntity.ok(tryPracticeService.updateTryPracticeByFeedback(id, feedback));
+    }
 }

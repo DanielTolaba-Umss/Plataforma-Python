@@ -72,12 +72,30 @@ const Editor = ({ titulo, lessonId }) => {
 
   const ejecutarCodigo = async () => {
     if (editorRef.current && practica) {
-      const codigo = editorRef.current.getValue();
-      console.log("Código ejecutado:", codigo);
-      setRetroalimentacion("Ejecutando código...");
-      setEjecutando(true);
-      
       try {
+        const intentosAnteriores = await tryPracticeService.getStudentPracticeAttempts({
+          studentId: 1,
+          practiceId: practica.id
+        });
+
+        const practicaYaAprobada = intentosAnteriores.some(intento => intento.approved === true);
+      
+        if (practicaYaAprobada) {
+          setRetroalimentacion("¡Esta práctica ya ha sido aprobada anteriormente! No es necesario volver a ejecutar el código.");
+          setResultado({
+            status: practicaYaAprobada.approved ? "Éxito" : "Fallido",
+            output: practicaYaAprobada.testResults,
+            //resultados: resultadosTests,
+            approved: practicaYaAprobada.approved
+          });
+          return;
+        }
+
+        const codigo = editorRef.current.getValue();
+        console.log("Código ejecutado:", codigo);
+        setRetroalimentacion("Ejecutando código...");
+        setEjecutando(true);
+
         const respuesta = await tryPracticeService.createTryPractice({
           code: codigo,
           studentId: 1, 
@@ -103,9 +121,9 @@ const Editor = ({ titulo, lessonId }) => {
         });
 
         await generarFeedbackAutomatico(
-          codigo, 
-          resultadosTests, 
-          respuesta.approved
+            codigo, 
+            resultadosTests, 
+            respuesta.approved
         );
       } catch (error) {
         console.error("Error al ejecutar el código:", error);
