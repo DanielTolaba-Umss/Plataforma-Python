@@ -24,7 +24,7 @@ public class PracticeServiceImpl implements PracticeService {
     @Override
     public PracticeDto createPractice(CreatePracticeDto dto) {
         LessonEntity lesson = lessonRepository.findById(dto.getLeccionId())
-            .orElseThrow(() -> new RuntimeException("Lesson not found"));
+                .orElseThrow(() -> new RuntimeException("Lesson not found"));
         PracticeEntity module = PracticeMapper.fromCreateDto(dto, lesson);
         PracticeEntity savedModule = practiceModuleRepository.save(module);
         return PracticeMapper.toDto(savedModule);
@@ -33,22 +33,25 @@ public class PracticeServiceImpl implements PracticeService {
     @Override
     public List<PracticeDto> getAllPractice() {
         return practiceModuleRepository.findAll().stream()
-            .map(PracticeMapper::toDto)
-            .collect(Collectors.toList());
+                .map(PracticeMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void deletePractice(Long id) {
-        practiceModuleRepository.deleteById(id);
+        PracticeEntity entity = practiceModuleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Practice not found"));
+
+        practiceModuleRepository.delete(entity);
     }
 
     @Override
     public PracticeDto updatePractice(Long id, UpdatePracticeDto dto) {
         PracticeEntity entity = practiceModuleRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Practice module not found"));
+                .orElseThrow(() -> new RuntimeException("Practice module not found"));
 
         LessonEntity lesson = lessonRepository.findById(dto.getLeccionId())
-            .orElseThrow(() -> new RuntimeException("Lesson not found"));
+                .orElseThrow(() -> new RuntimeException("Lesson not found"));
 
         PracticeMapper.updateEntityFromDto(dto, entity, lesson);
 

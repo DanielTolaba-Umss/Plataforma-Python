@@ -1,24 +1,35 @@
 package com.coders.backers.plataformapython.backend.models;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "practice")
 public class PracticeEntity {
+
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
+     @Column(name = "instrucciones", columnDefinition = "TEXT")
     private String instrucciones;
+
     private String codigoInicial;
     private String solucionReferencia;
+
+     @Column(name = "restricciones", columnDefinition = "TEXT")
     private String restricciones;
+    
     private Integer intentosMax;
 
     @OneToOne
-    @JoinColumn(name = "leccion_id") 
+    @JoinColumn(name = "leccion_id")
     private LessonEntity lesson;
+
+    @OneToMany(mappedBy = "practice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TestCaseEntity> testCases = new ArrayList<>();
 
     public PracticeEntity() {}
 
@@ -85,5 +96,13 @@ public class PracticeEntity {
 
     public void setLesson(LessonEntity lesson) {
         this.lesson = lesson;
+    }
+
+    public List<TestCaseEntity> getTestCases() {
+        return testCases;
+    }
+
+    public void setTestCases(List<TestCaseEntity> testCases) {
+        this.testCases = testCases;
     }
 }
