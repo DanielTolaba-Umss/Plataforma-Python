@@ -322,7 +322,8 @@
 .documentItem,
 .practiceItem {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: left;
   gap: 0.75rem;
   padding: 1rem;
   background-color: white;
@@ -636,52 +637,52 @@
     max-height: 95vh;
     margin: 10px;
   }
-  
+
   .previewHeader {
     padding: 1rem 1.5rem;
   }
-  
+
   .previewMainTitle {
     font-size: 1.25rem;
     color: #3d2491;
   }
-  
+
   .previewLessonTitle {
     font-size: 1rem;
     color: #3d2491;
   }
-  
+
   .previewBody {
     padding: 1rem 1.5rem;
   }
-  
+
   .expandableSection {
     border-radius: 8px;
   }
-  
+
   .sectionHeader {
     padding: 1rem;
   }
-  
+
   .sectionContent {
     padding: 1rem;
   }
-  
+
   .videoContainer iframe,
   .videoContainer video {
     height: 200px;
   }
-  
+
   .documentItem,
   .practiceItem {
     padding: 0.75rem;
   }
-  
+
   .previewActions {
     flex-direction: column;
     padding: 1rem 1.5rem;
   }
-  
+
   .primaryButton,
   .secondaryButton {
     width: 100%;
@@ -696,34 +697,48 @@
     max-height: 100vh;
     border-radius: 0;
   }
-  
+
   .previewHeader {
     border-radius: 0;
     padding: 1rem;
   }
-  
+
   .previewMainTitle {
     font-size: 1.1rem;
   }
-  
+
   .previewLessonTitle {
     font-size: 0.9rem;
   }
-  
+
   .previewBody {
     padding: 1rem;
   }
-  
+
   .sectionHeader {
     padding: 0.75rem;
   }
-  
+
   .sectionContent {
     padding: 0.75rem;
   }
-  
+
   .videoContainer iframe,
   .videoContainer video {
     height: 180px;
   }
+}
+
+.codeBlock {
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  margin-bottom: 1rem;
+}
+
+.testCaseList {
+  list-style-type: disc;
+  margin-left: 1rem;
 }

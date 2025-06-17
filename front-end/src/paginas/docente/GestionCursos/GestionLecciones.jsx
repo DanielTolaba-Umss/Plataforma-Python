@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
+import { practiceJhService, testCasesService } from "../../../api/practiceJh";
 import styles from "/src/paginas/docente/estilos/GestionLecciones.module.css";
 import FormularioCrearLeccion from "./FormularioCrearLeccion";
 import FormularioEditarLeccion from "./FormularioEditarLeccion";
@@ -42,7 +43,7 @@ const GestionLecciones = () => {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [leccionPreview, setLeccionPreview] = useState(null);
   const [hoveredLeccion, setHoveredLeccion] = useState(null);
-  
+
   // Estados para controlar las secciones desplegables
   const [expandedSections, setExpandedSections] = useState({
     videos: true,
@@ -109,9 +110,9 @@ const GestionLecciones = () => {
 
   // Función para toggle de secciones expandibles
   const toggleSection = (section) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section]
+      [section]: !prev[section],
     }));
   };
 
@@ -119,7 +120,6 @@ const GestionLecciones = () => {
   const handleShowPreview = async (leccion) => {
     setLeccionPreview(leccion);
     setShowPreviewModal(true);
-    // Reset expanded sections
     setExpandedSections({
       videos: true,
       documentos: false,
@@ -128,24 +128,50 @@ const GestionLecciones = () => {
 
     try {
       const recursos = await getResourceByLesson(leccion.id);
-      console.log("🚀 ~ Recursos desde API:", recursos);
-
-      const video = recursos.find((r) => r.typeId === 3); // tipo video
+      const video = recursos.find((r) => r.typeId === 3);
       if (video && video.url) {
         const rawUrl = video.url;
         const finalUrl = esYoutube(rawUrl)
           ? convertToEmbedUrl(rawUrl)
-          : `${environment.apiUrl}${rawUrl}`;
+          : `${environment.apiUrl.replace("/api", "")}${rawUrl}`;
         setVideoUrl(finalUrl);
       } else {
         setVideoUrl(null);
       }
+
+      const pdfs = recursos.filter((r) => r.typeId === 2);
+      const practica = await practiceJhService.getPracticeByLessonId(
+        leccion.id
+      );
+      const testCases = await testCasesService.getTestCasesByPracticeId(
+        practica.id
+      );
+
+      setLeccionPreview((prev) => ({
+        ...prev,
+        recursos: {
+          pdfs: pdfs.map((pdf) => ({
+            titulo: pdf.title,
+            url: `${environment.apiUrl.replace("/api", "")}${pdf.url}`,
+          })),
+          practicas: [
+            {
+              titulo: leccion.title,
+              instrucciones: practica.instrucciones,
+              codigoInicial: practica.codigoInicial,
+              solucionReferencia: practica.solucionReferencia,
+              restricciones: practica.restricciones,
+              intentosMax: practica.intentosMax,
+              casosPrueba: testCases,
+            },
+          ],
+        },
+      }));
     } catch (error) {
       console.error("Error al cargar recursos de lección:", error);
       setVideoUrl(null);
     }
   };
-
   const handleCreateLeccion = async (leccionData) => {
     try {
       const response = await leccionesAPI.crear(leccionData);
@@ -301,7 +327,9 @@ const GestionLecciones = () => {
         <div className={styles.floatingButtonsContainer}>
           <button
             onClick={() =>
-              navigate(`/gestion-curso/lecciones/${nivelId}/examenes-y-quizzes/`)
+              navigate(
+                `/gestion-curso/lecciones/${nivelId}/examenes-y-quizzes/`
+              )
             }
             className={styles.quizzButton}
           >
@@ -362,23 +390,22 @@ const GestionLecciones = () => {
       {showPreviewModal && leccionPreview && (
         <div className={styles.modalOverlay}>
           <div className={`${styles.modalContent} ${styles.previewModal}`}>
+            <div className={styles.previewHeader}>
+              <div className={styles.previewTitleSection}>
+                <h1 className={styles.previewMainTitle}>Fundamentos Python</h1>
+                <h2 className={styles.previewLessonTitle}>
+                  {leccionPreview.title}
+                </h2>
+              </div>
+            </div>
 
-                  <div className={styles.previewHeader}>
-                    <div className={styles.previewTitleSection}>
-                    <h1 className={styles.previewMainTitle}>Fundamentos Python</h1>
-                    <h2 className={styles.previewLessonTitle}>
-                      {leccionPreview.title}
-                    </h2>
-                    </div>
-                  </div>
-
-                  {/* Contenido del Modal */}
+            {/* Contenido del Modal */}
             <div className={styles.previewBody}>
               {/* Sección de Videos */}
               <div className={styles.expandableSection}>
                 <div
                   className={styles.sectionHeader}
-                  onClick={() => toggleSection('videos')}
+                  onClick={() => toggleSection("videos")}
                 >
                   <div className={styles.sectionTitleContainer}>
                     <Video size={20} className={styles.sectionIcon} />
@@ -423,12 +450,13 @@ const GestionLecciones = () => {
               <div className={styles.expandableSection}>
                 <div
                   className={styles.sectionHeader}
-                  onClick={() => toggleSection('documentos')}
+                  onClick={() => toggleSection("documentos")}
                 >
                   <div className={styles.sectionTitleContainer}>
                     <FileText size={20} className={styles.sectionIcon} />
                     <span className={styles.sectionTitle}>
-                      Material PDF ({leccionPreview.recursos?.pdfs?.length || 1})
+                      Material PDF ({leccionPreview.recursos?.pdfs?.length || 0}
+                      )
                     </span>
                   </div>
                   {expandedSections.documentos ? (
@@ -444,21 +472,33 @@ const GestionLecciones = () => {
                       {leccionPreview.recursos?.pdfs?.length > 0 ? (
                         leccionPreview.recursos.pdfs.map((pdf, index) => (
                           <div key={index} className={styles.documentItem}>
-                            <FileText size={16} />
-                            <span>{pdf.titulo || `Documento ${index + 1}`}</span>
+                            {/* <span className={styles.pdfTitle}>
+                              {pdf.titulo || `Documento ${index + 1}`}
+                            </span> */}
+                            <iframe
+                              src={pdf.url}
+                              title={`PDF Preview ${index + 1}`}
+                              width="100%"
+                              height="500px"
+                              style={{
+                                border: "1px solid #ccc",
+                                marginTop: "8px",
+                                borderRadius: "8px",
+                              }}
+                            />
                           </div>
                         ))
                       ) : (
                         <div className={styles.documentItem}>
                           <FileText size={16} />
-                          <span>Material de apoyo.pdf</span>
+                          <span>No hay documentos PDF disponibles</span>
                         </div>
                       )}
                     </div>
-                    <div className={styles.sectionNote}>
+                    {/* <div className={styles.sectionNote}>
                       <span>Material PDF</span>
                       <ChevronDown size={16} />
-                    </div>
+                    </div> */}
                   </div>
                 )}
               </div>
@@ -467,12 +507,13 @@ const GestionLecciones = () => {
               <div className={styles.expandableSection}>
                 <div
                   className={styles.sectionHeader}
-                  onClick={() => toggleSection('practica')}
+                  onClick={() => toggleSection("practica")}
                 >
                   <div className={styles.sectionTitleContainer}>
                     <BookOpen size={20} className={styles.sectionIcon} />
                     <span className={styles.sectionTitle}>
-                      Práctica ({leccionPreview.recursos?.practicas?.length || 1})
+                      Práctica (
+                      {leccionPreview.recursos?.practicas?.length || 0})
                     </span>
                   </div>
                   {expandedSections.practica ? (
@@ -489,24 +530,73 @@ const GestionLecciones = () => {
                         leccionPreview.recursos.practicas.map(
                           (practica, index) => (
                             <div key={index} className={styles.practiceItem}>
-                              <BookOpen size={16} />
-                              <span>
+                              {/* <h4>
                                 {practica.titulo || `Práctica ${index + 1}`}
-                              </span>
+                              </h4> */}
+                              <p>
+                                <strong>Instrucciones:</strong>
+                              </p>
+                              <pre className={styles.codeBlock}>
+                                {practica.instrucciones}
+                              </pre>
+
+                              <p>
+                                <strong>Código inicial:</strong>
+                              </p>
+                              <pre className={styles.codeBlock}>
+                                {practica.codigoInicial}
+                              </pre>
+
+                              <p>
+                                <strong>Solución de referencia:</strong>
+                              </p>
+                              <pre className={styles.codeBlock}>
+                                {practica.solucionReferencia}
+                              </pre>
+
+                              <p>
+                                <strong>Restricciones:</strong>{" "}
+                                {practica.restricciones}
+                              </p>
+                              <p>
+                                <strong>Intentos máximos:</strong>{" "}
+                                {practica.intentosMax}
+                              </p>
+
+                              <p>
+                                <strong>Casos de prueba:</strong>
+                              </p>
+                              <ul className={styles.testCaseList}>
+                                {practica.casosPrueba.map((caso, i) => (
+                                  <li key={i}>
+                                    <p>
+                                      <strong>Entrada:</strong> {caso.entrada}
+                                    </p>
+                                    <p>
+                                      <strong>Salida esperada:</strong>{" "}
+                                      {caso.salida}
+                                    </p>
+                                    <p>
+                                      <strong>Invocación:</strong>{" "}
+                                      <code>{caso.entradaTestCase}</code>
+                                    </p>
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
                           )
                         )
                       ) : (
                         <div className={styles.practiceItem}>
                           <BookOpen size={16} />
-                          <span>Ejercicios prácticos</span>
+                          <span>No hay ejercicios prácticos disponibles</span>
                         </div>
                       )}
                     </div>
-                    <div className={styles.sectionNote}>
+                    {/* <div className={styles.sectionNote}>
                       <span>Práctica</span>
                       <ChevronDown size={16} />
-                    </div>
+                    </div> */}
                   </div>
                 )}
               </div>
