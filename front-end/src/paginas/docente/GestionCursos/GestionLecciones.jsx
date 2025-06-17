@@ -10,6 +10,8 @@ import {
   Video,
   BookOpen,
   X,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import styles from "/src/paginas/docente/estilos/GestionLecciones.module.css";
 import FormularioCrearLeccion from "./FormularioCrearLeccion";
@@ -20,6 +22,7 @@ import { convertToEmbedUrl } from "../../../utils/convertYoutubeUrl";
 import { environment } from "../../../environment/environment";
 import { getResourceByLesson } from "../../../api/videoService";
 import Practicas from "./FormularioCrearPractica";
+
 const GestionLecciones = () => {
   const [lecciones, setLecciones] = useState([]);
   const navigate = useNavigate();
@@ -39,6 +42,14 @@ const GestionLecciones = () => {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [leccionPreview, setLeccionPreview] = useState(null);
   const [hoveredLeccion, setHoveredLeccion] = useState(null);
+  
+  // Estados para controlar las secciones desplegables
+  const [expandedSections, setExpandedSections] = useState({
+    videos: true,
+    documentos: false,
+    practica: false,
+  });
+
   const nivelId = localStorage.getItem("nivelId");
 
   useEffect(() => {
@@ -96,10 +107,24 @@ const GestionLecciones = () => {
     alert(`${type.toUpperCase()}: ${message}`);
   };
 
+  // Función para toggle de secciones expandibles
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
   // Función para mostrar la vista previa
   const handleShowPreview = async (leccion) => {
     setLeccionPreview(leccion);
     setShowPreviewModal(true);
+    // Reset expanded sections
+    setExpandedSections({
+      videos: true,
+      documentos: false,
+      practica: false,
+    });
 
     try {
       const recursos = await getResourceByLesson(leccion.id);
@@ -230,62 +255,67 @@ const GestionLecciones = () => {
             </div>
 
             <div
-  className={styles.actionsContainer}
-  onClick={(e) => e.stopPropagation()}
->
-  <button
-    className={styles.resourcesButton}
-    onClick={() => {
-      navigate(`/gestion-curso/lecciones/${leccion.id}/recursos`);
-    }}
-  >
-    Recursos
-  </button>
-  <button
-    className={styles.resourcesButton}
-    onClick={() => {
-      navigate(`/gestion-curso/lecciones/${leccion.id}/practica`);
-    }}
-  >
-    Prácticas
-  </button>
-  <button
-    className={`${styles.resourcesButton} ${styles.editButton}`}
-    onClick={() => {
-      setLeccionToEdit(leccion);
-      setShowEditForm(true);
-    }}
-  >
-    <Edit size={18} />
-  </button>
-  <button
-    className={`${styles.resourcesButton} ${styles.deleteButton}`}
-    onClick={() => {
-      setLeccionToDelete(leccion);
-      setShowDeleteModal(true);
-    }}
-  >
-    <Trash2 size={18} />
-  </button>
-</div>
+              className={styles.actionsContainer}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className={styles.resourcesButton}
+                onClick={() => {
+                  navigate(`/gestion-curso/lecciones/${leccion.id}/recursos`);
+                }}
+              >
+                Recursos
+              </button>
+              <button
+                className={styles.resourcesButton}
+                onClick={() => {
+                  navigate(`/gestion-curso/lecciones/${leccion.id}/practica`);
+                }}
+              >
+                Prácticas
+              </button>
+              <button
+                className={`${styles.resourcesButton} ${styles.editButton}`}
+                onClick={() => {
+                  setLeccionToEdit(leccion);
+                  setShowEditForm(true);
+                }}
+              >
+                <Edit size={18} />
+              </button>
+              <button
+                className={`${styles.resourcesButton} ${styles.deleteButton}`}
+                onClick={() => {
+                  setLeccionToDelete(leccion);
+                  setShowDeleteModal(true);
+                }}
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
           </div>
         ))}
       </div>
 
       {!showCreateForm && (
-      <div className={styles.floatingButtonsContainer}>
-        <button
-         onClick={() =>navigate(`/gestion-curso/lecciones/${nivelId}/examenes-y-quizzes/`)}
-                 className={styles.quizzButton}
-                 >Quizzes</button>
-        <button
-          onClick={() => setShowCreateForm(true)}
-      className={styles.floatingButton}
-         >
-        <Plus />
-       </button>
+        <div className={styles.floatingButtonsContainer}>
+          <button
+            onClick={() =>
+              navigate(`/gestion-curso/lecciones/${nivelId}/examenes-y-quizzes/`)
+            }
+            className={styles.quizzButton}
+          >
+            Quizzes
+          </button>
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className={styles.floatingButton}
+          >
+            <Plus />
+          </button>
         </div>
-    )}
+      )}
+
       {showCreateForm && (
         <FormularioCrearLeccion
           onClose={() => setShowCreateForm(false)}
@@ -328,34 +358,43 @@ const GestionLecciones = () => {
         </div>
       )}
 
-      {/* Modal de Vista Previa */}
+      {/* Modal de Vista Previa Reestructurado */}
       {showPreviewModal && leccionPreview && (
         <div className={styles.modalOverlay}>
           <div className={`${styles.modalContent} ${styles.previewModal}`}>
-            <div className={styles.previewHeader}>
-              <h2 className={styles.previewTitle}>{leccionPreview.title}</h2>
-              <span className={styles.previewDuration}>
-                {leccionPreview.duracion}
-              </span>
-            </div>
 
-            <div className={styles.previewContent}>
-              <h3>Contenido de la lección</h3>
-              <p>{leccionPreview.description}</p>
-            </div>
+                  <div className={styles.previewHeader}>
+                    <div className={styles.previewTitleSection}>
+                    <h1 className={styles.previewMainTitle}>Fundamentos Python</h1>
+                    <h2 className={styles.previewLessonTitle}>
+                      {leccionPreview.title}
+                    </h2>
+                    </div>
+                  </div>
 
-            <div className={styles.previewResources}>
-              <h3>Recursos disponibles</h3>
-              <div className={styles.resourcesGrid}>
-                {/* Videos */}
-                <div className={styles.resourceType}>
-                  <div className={styles.resourceTypeHeader}>
-                    <Video size={20} />
-                    <span>
+                  {/* Contenido del Modal */}
+            <div className={styles.previewBody}>
+              {/* Sección de Videos */}
+              <div className={styles.expandableSection}>
+                <div
+                  className={styles.sectionHeader}
+                  onClick={() => toggleSection('videos')}
+                >
+                  <div className={styles.sectionTitleContainer}>
+                    <Video size={20} className={styles.sectionIcon} />
+                    <span className={styles.sectionTitle}>
                       Videos ({leccionPreview.recursos?.videos?.length || 1})
                     </span>
                   </div>
-                  <div className={styles.resourceItems}>
+                  {expandedSections.videos ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </div>
+
+                {expandedSections.videos && (
+                  <div className={styles.sectionContent}>
                     {videoUrl && (
                       <div className={styles.videoContainer}>
                         {esYoutube(videoUrl) ? (
@@ -377,65 +416,103 @@ const GestionLecciones = () => {
                       </div>
                     )}
                   </div>
-                </div>
+                )}
+              </div>
 
-                {/* PDFs */}
-                <div className={styles.resourceType}>
-                  <div className={styles.resourceTypeHeader}>
-                    <FileText size={20} />
-                    <span>
-                      Documentos ({leccionPreview.recursos?.pdfs?.length || 1})
+              {/* Sección de Documentos */}
+              <div className={styles.expandableSection}>
+                <div
+                  className={styles.sectionHeader}
+                  onClick={() => toggleSection('documentos')}
+                >
+                  <div className={styles.sectionTitleContainer}>
+                    <FileText size={20} className={styles.sectionIcon} />
+                    <span className={styles.sectionTitle}>
+                      Material PDF ({leccionPreview.recursos?.pdfs?.length || 1})
                     </span>
                   </div>
-                  <div className={styles.resourceItems}>
-                    {leccionPreview.recursos?.pdfs?.length > 0 ? (
-                      leccionPreview.recursos.pdfs.map((pdf, index) => (
-                        <div key={index} className={styles.resourceItem}>
-                          <FileText size={16} />
-                          <span>{pdf.titulo || `Documento ${index + 1}`}</span>
-                        </div>
-                      ))
-                    ) : (
-                      <div className={styles.resourceItem}>
-                        <FileText size={16} />
-                        <span>Material de apoyo.pdf</span>
-                      </div>
-                    )}
-                  </div>
+                  {expandedSections.documentos ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
                 </div>
 
-                {/* Prácticas */}
-                <div className={styles.resourceType}>
-                  <div className={styles.resourceTypeHeader}>
-                    <BookOpen size={20} />
-                    <span>
-                      Práctica (
-                      {leccionPreview.recursos?.practicas?.length || 1})
-                    </span>
-                  </div>
-                  <div className={styles.resourceItems}>
-                    {leccionPreview.recursos?.practicas?.length > 0 ? (
-                      leccionPreview.recursos.practicas.map(
-                        (practica, index) => (
-                          <div key={index} className={styles.resourceItem}>
-                            <BookOpen size={16} />
-                            <span>
-                              {practica.titulo || `Práctica ${index + 1}`}
-                            </span>
+                {expandedSections.documentos && (
+                  <div className={styles.sectionContent}>
+                    <div className={styles.documentList}>
+                      {leccionPreview.recursos?.pdfs?.length > 0 ? (
+                        leccionPreview.recursos.pdfs.map((pdf, index) => (
+                          <div key={index} className={styles.documentItem}>
+                            <FileText size={16} />
+                            <span>{pdf.titulo || `Documento ${index + 1}`}</span>
                           </div>
-                        )
-                      )
-                    ) : (
-                      <div className={styles.resourceItem}>
-                        <BookOpen size={16} />
-                        <span>Ejercicios prácticos</span>
-                      </div>
-                    )}
+                        ))
+                      ) : (
+                        <div className={styles.documentItem}>
+                          <FileText size={16} />
+                          <span>Material de apoyo.pdf</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className={styles.sectionNote}>
+                      <span>Material PDF</span>
+                      <ChevronDown size={16} />
+                    </div>
                   </div>
+                )}
+              </div>
+
+              {/* Sección de Práctica */}
+              <div className={styles.expandableSection}>
+                <div
+                  className={styles.sectionHeader}
+                  onClick={() => toggleSection('practica')}
+                >
+                  <div className={styles.sectionTitleContainer}>
+                    <BookOpen size={20} className={styles.sectionIcon} />
+                    <span className={styles.sectionTitle}>
+                      Práctica ({leccionPreview.recursos?.practicas?.length || 1})
+                    </span>
+                  </div>
+                  {expandedSections.practica ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
                 </div>
+
+                {expandedSections.practica && (
+                  <div className={styles.sectionContent}>
+                    <div className={styles.practiceList}>
+                      {leccionPreview.recursos?.practicas?.length > 0 ? (
+                        leccionPreview.recursos.practicas.map(
+                          (practica, index) => (
+                            <div key={index} className={styles.practiceItem}>
+                              <BookOpen size={16} />
+                              <span>
+                                {practica.titulo || `Práctica ${index + 1}`}
+                              </span>
+                            </div>
+                          )
+                        )
+                      ) : (
+                        <div className={styles.practiceItem}>
+                          <BookOpen size={16} />
+                          <span>Ejercicios prácticos</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className={styles.sectionNote}>
+                      <span>Práctica</span>
+                      <ChevronDown size={16} />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
+            {/* Footer con botones de acción */}
             <div className={styles.previewActions}>
               <button
                 className={styles.primaryButton}
@@ -461,5 +538,5 @@ const GestionLecciones = () => {
     </div>
   );
 };
-//
+
 export default GestionLecciones;

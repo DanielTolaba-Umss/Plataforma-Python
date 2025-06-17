@@ -63,12 +63,9 @@
   border-color: #ffd438;
 }
 
-
-
 .courseCardContent {
   position: relative;
 }
-
 
 @keyframes fadeIn {
   from {
@@ -128,7 +125,6 @@
 }
 
 .floatingButton {
- 
   background-color: #306998;
   color: white;
   padding: 1rem;
@@ -190,150 +186,239 @@
   }
 }
 
-/* Modal de Vista Previa - Estilos específicos */
-
-
+/* Modal de Vista Previa - Estilos Reestructurados */
+.previewModal {
+  max-width: 900px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 0;
+  border-top: none;
+  border-radius: 12px;
+}
 
 .previewHeader {
+  background-color: #f8fafc;
+  color: #3d2491;
+  padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #f0f0f0;
+  border-radius: 12px 12px 0 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.previewTitle {
+.previewTitleSection {
+  flex: 1;
+}
+
+.previewMainTitle {
   font-size: 1.5rem;
-  font-weight: 600;
-  color: #1f2937;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: #3d2491;
+}
+
+.previewLessonTitle {
+  font-size: 1.1rem;
+  font-weight: 500;
   margin: 0;
+  color: #3d2491;
 }
 
-
-.previewDescription {
-  margin-bottom: 20px;
-}
-
-.previewDescription p {
-  color: #6b7280;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-.previewContent {
-  margin-bottom: 25px;
-}
-
-.previewContent h3 {
-  color: #300898;
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-.previewContent p {
-  color: #4b5563;
-  line-height: 1.6;
-}
-
-.previewResources {
-  margin-bottom: 25px;
-}
-
-.previewResources h3 {
-  color: #300898;
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.resourcesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
-}
-
-.resourceType {
-  background-color: #f9fafb;
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
-.resourceTypeHeader {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-  color: #306998;
-  font-weight: 600;
-}
-
-.resourceItems {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.resourceItem {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  background-color: white;
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
   border-radius: 4px;
-  border: 1px solid #e5e7eb;
+  transition: background-color 0.2s;
 }
 
-.resourceItem svg {
-  color: #4299e1;
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.previewBody {
+  padding: 1.5rem 2rem;
+  background-color: #f8fafc;
+  min-height: 400px;
+}
+
+/* Secciones Expandibles */
+.expandableSection {
+  background-color: white;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+  border-bottom: 1px solid transparent;
+}
+
+.sectionHeader:hover {
+  background-color: #f8fafc;
+  border-bottom-color: #e2e8f0;
+}
+
+.sectionTitleContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sectionIcon {
+  color: #6366f1;
   flex-shrink: 0;
 }
 
-.resourceItem span {
-  font-size: 0.875rem;
-  color: #4b5563;
+.sectionTitle {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 1rem;
 }
 
+.sectionContent {
+  padding: 1.5rem;
+  background-color: #fafbfc;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Video Container */
+.videoContainer {
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #000;
+}
+
+.videoContainer iframe,
+.videoContainer video {
+  border-radius: 8px;
+  width: 100%;
+  height: 315px;
+}
+
+/* Document and Practice Lists */
+.documentList,
+.practiceList {
+  margin-bottom: 1rem;
+}
+
+.documentItem,
+.practiceItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.documentItem:hover,
+.practiceItem:hover {
+  background-color: #f8fafc;
+  border-color: #6366f1;
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.documentItem:last-child,
+.practiceItem:last-child {
+  margin-bottom: 0;
+}
+
+.documentItem svg,
+.practiceItem svg {
+  color: #6366f1;
+  flex-shrink: 0;
+}
+
+.documentItem span,
+.practiceItem span {
+  font-size: 0.9rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.sectionNote {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: #e2e8f0;
+  border-radius: 8px;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+/* Actions Footer */
 .previewActions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 25px;
-  padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+  padding: 1.5rem 2rem;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  border-radius: 0 0 12px 12px;
 }
 
 .primaryButton {
   background-color: #306998;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
 }
 
 .primaryButton:hover {
   background-color: #300898;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(48, 105, 152, 0.3);
 }
 
 .secondaryButton {
   background-color: #ffd438;
   color: #300898;
   font-weight: 600;
-  padding: 0.6rem 1.2rem;
+  padding: 12px 24px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
 }
 
 .secondaryButton:hover {
   background-color: #e6c231;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 212, 56, 0.3);
 }
+
 .modalHeader {
   display: flex;
   justify-content: space-between;
@@ -508,6 +593,7 @@
   outline: none;
   border-color: #ffd438;
 }
+
 .floatingButtonsContainer {
   position: fixed;
   bottom: 1.5rem;
@@ -518,8 +604,8 @@
   gap: 0.75rem;
   z-index: 1000;
 }
+
 .quizzButton {
-  
   background-color: #306998;
   color: white;
   padding: 1rem;
@@ -534,6 +620,7 @@
   font-weight: bold;
   font-size: 1rem;
 }
+
 .dualButtons {
   display: flex;
   gap: 1rem;
@@ -542,26 +629,101 @@
   flex-wrap: wrap;
 }
 
-/* Responsive para el modal de vista previa */
+/* Responsive para el modal reestructurado */
 @media (max-width: 768px) {
   .previewModal {
-    width: 95%;
+    width: 98%;
     max-height: 95vh;
     margin: 10px;
   }
   
-  .resourcesGrid {
-    grid-template-columns: 1fr;
+  .previewHeader {
+    padding: 1rem 1.5rem;
+  }
+  
+  .previewMainTitle {
+    font-size: 1.25rem;
+    color: #3d2491;
+  }
+  
+  .previewLessonTitle {
+    font-size: 1rem;
+    color: #3d2491;
+  }
+  
+  .previewBody {
+    padding: 1rem 1.5rem;
+  }
+  
+  .expandableSection {
+    border-radius: 8px;
+  }
+  
+  .sectionHeader {
+    padding: 1rem;
+  }
+  
+  .sectionContent {
+    padding: 1rem;
+  }
+  
+  .videoContainer iframe,
+  .videoContainer video {
+    height: 200px;
+  }
+  
+  .documentItem,
+  .practiceItem {
+    padding: 0.75rem;
   }
   
   .previewActions {
     flex-direction: column;
+    padding: 1rem 1.5rem;
   }
   
   .primaryButton,
   .secondaryButton {
     width: 100%;
+    padding: 14px 20px;
   }
 }
 
-/* Responsive para el modal de confirmación */
+@media (max-width: 480px) {
+  .previewModal {
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .previewHeader {
+    border-radius: 0;
+    padding: 1rem;
+  }
+  
+  .previewMainTitle {
+    font-size: 1.1rem;
+  }
+  
+  .previewLessonTitle {
+    font-size: 0.9rem;
+  }
+  
+  .previewBody {
+    padding: 1rem;
+  }
+  
+  .sectionHeader {
+    padding: 0.75rem;
+  }
+  
+  .sectionContent {
+    padding: 0.75rem;
+  }
+  
+  .videoContainer iframe,
+  .videoContainer video {
+    height: 180px;
+  }
+}
