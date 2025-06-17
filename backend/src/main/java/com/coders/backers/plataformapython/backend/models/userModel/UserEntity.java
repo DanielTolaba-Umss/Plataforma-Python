@@ -36,15 +36,23 @@ public class UserEntity {
     @Email(message = "Email should be valid")
     private String email;
 
-    private String phone;
-
-    private String password;
+    private String phone;    private String password;
 
     private boolean active;
 
     // role es un enum
     @Column(nullable = false, name = "role")
     private String role;
+
+    // Campos para verificación de email
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;
+    
+    @Column(name = "verification_token")
+    private String verificationToken;
+    
+    @Column(name = "verification_token_expiry")
+    private Date verificationTokenExpiry;
 
     @Column(name = "created_at")
     private Date createdAt;
