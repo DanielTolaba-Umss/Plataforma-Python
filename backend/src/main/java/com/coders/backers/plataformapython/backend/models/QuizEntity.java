@@ -1,7 +1,10 @@
 package com.coders.backers.plataformapython.backend.models;
 
+import java.util.ArrayList;
+
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Entity
 @Table(name = "quiz")
@@ -38,6 +41,10 @@ public class QuizEntity {
     private boolean active;
 
     @ManyToOne
-    @JoinColumn(name = "contenido_id", nullable = false)
-    private ContenidoModel contenido;
+    @JoinColumn(name = "course_id", nullable = false)
+    private CourseEntity course;
+    
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuestionEntity> preguntas = new ArrayList<>();
+
 }

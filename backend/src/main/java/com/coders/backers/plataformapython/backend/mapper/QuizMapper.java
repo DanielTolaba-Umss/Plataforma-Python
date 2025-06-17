@@ -14,11 +14,11 @@ public class QuizMapper {
         dto.setPuntuacionAprobacion(entity.getPuntuacionAprobacion());
         dto.setAleatorio(entity.isAleatorio());
         dto.setActive(entity.isActive());
-        dto.setContenidoId(entity.getContenido().getContenidoId());
+        dto.setCourseId(entity.getCourse().getId());
         return dto;
     }
 
-    public static QuizEntity fromCreateDto(CreateQuizDto dto, ContenidoModel contenido) {
+    public static QuizEntity fromCreateDto(CreateQuizDto dto, CourseEntity course) {
         QuizEntity entity = new QuizEntity();
         entity.setTitulo(dto.getTitulo());
         entity.setDescripcion(dto.getDescripcion());
@@ -27,11 +27,11 @@ public class QuizMapper {
         entity.setPuntuacionAprobacion(dto.getPuntuacionAprobacion());
         entity.setAleatorio(dto.isAleatorio());
         entity.setActive(dto.isActive());
-        entity.setContenido(contenido);
+        entity.setCourse(course);
         return entity;
     }
 
-    public static void updateEntityFromDto(UpdateQuizDto dto, QuizEntity entity, ContenidoModel contenido) {
+    public static void updateEntityFromDto(UpdateQuizDto dto, QuizEntity entity, CourseEntity course) {
         entity.setTitulo(dto.getTitulo());
         entity.setDescripcion(dto.getDescripcion());
         entity.setDuracionMinutos(dto.getDuracionMinutos());
@@ -39,6 +39,6 @@ public class QuizMapper {
         entity.setPuntuacionAprobacion(dto.getPuntuacionAprobacion());
         entity.setAleatorio(dto.isAleatorio());
         entity.setActive(dto.isActive());
-        entity.setContenido(contenido);
+        entity.setCourse(course);
     }
 }
