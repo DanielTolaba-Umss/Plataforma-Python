@@ -1,7 +1,9 @@
 package com.coders.backers.plataformapython.backend.services.impl;
 
 import com.coders.backers.plataformapython.backend.dto.student.CreateStudentDto;
+import com.coders.backers.plataformapython.backend.dto.student.ModuloCompletadoDto;
 import com.coders.backers.plataformapython.backend.dto.student.StudentDto;
+import com.coders.backers.plataformapython.backend.dto.student.StudentProfileDto;
 import com.coders.backers.plataformapython.backend.dto.student.UpdateStudentDto;
 import com.coders.backers.plataformapython.backend.mapper.StudentMapper;
 import com.coders.backers.plataformapython.backend.models.CourseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -140,4 +143,40 @@ public class StudentServiceImpl implements StudentService {
         result.put("students", savedStudents);
         return result;
     }
+
+    @Override
+public StudentProfileDto getPerfilEstudiante(Long studentId) {
+    StudentEntity student = studentRepository.findById(studentId)
+        .orElseThrow(() -> new RuntimeException("Estudiante no encontrado"));
+
+    // Simulación de datos
+    int modulosCompletados = 4;
+    int ejerciciosCompletados = 12;
+    String moduloActual = "Estructuras de Control";
+    int progresoModuloActual = 80;
+    int progresoGeneral = 75;
+
+    List<ModuloCompletadoDto> modulos = List.of(
+        new ModuloCompletadoDto("Introducción a Python", 95, LocalDate.of(2024, 12, 15)),
+        new ModuloCompletadoDto("Variables y Tipos de Datos", 88, LocalDate.of(2024, 12, 22)),
+        new ModuloCompletadoDto("Operadores y Expresiones", 92, LocalDate.of(2024, 12, 29)),
+        new ModuloCompletadoDto("Funciones Básicas", 90, LocalDate.of(2025, 1, 5))
+    );
+
+    StudentProfileDto perfil = new StudentProfileDto();
+    perfil.setId(student.getId());
+    perfil.setNombreCompleto(student.getName() + " " + student.getLastName());
+    perfil.setEmail(student.getEmail());
+    perfil.setTelefono(student.getPhone());
+    perfil.setFechaInicio(student.getEnrollmentDate().toLocalDate());
+    perfil.setNivelActual(student.getCurrentLevel());
+    perfil.setModulosCompletados(modulosCompletados);
+    perfil.setEjerciciosCompletados(ejerciciosCompletados);
+    perfil.setModuloActual(moduloActual);
+    perfil.setProgresoModuloActual(progresoModuloActual);
+    perfil.setProgresoGeneral(progresoGeneral);
+    perfil.setModulosCompletadosDetalles(modulos);
+
+    return perfil;
+}
 }
