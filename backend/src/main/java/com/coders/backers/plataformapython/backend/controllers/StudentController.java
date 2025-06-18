@@ -2,6 +2,7 @@ package com.coders.backers.plataformapython.backend.controllers;
 
 import com.coders.backers.plataformapython.backend.dto.student.CreateStudentDto;
 import com.coders.backers.plataformapython.backend.dto.student.StudentDto;
+import com.coders.backers.plataformapython.backend.dto.student.StudentProfileDto;
 import com.coders.backers.plataformapython.backend.dto.student.UpdateStudentDto;
 import com.coders.backers.plataformapython.backend.services.StudentService;
 
@@ -63,5 +64,11 @@ public class StudentController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(Map.of("error", e.getMessage()));
         }
+    }
+
+    @GetMapping("/{id}/perfil")
+    public ResponseEntity<StudentProfileDto> getPerfil(@PathVariable Long id) {
+    StudentProfileDto perfil = studentService.getPerfilEstudiante(id);
+    return ResponseEntity.ok(perfil);
     }
 }
