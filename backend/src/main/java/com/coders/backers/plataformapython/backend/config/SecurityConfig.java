@@ -62,12 +62,11 @@ public class SecurityConfig {
                 
                 // Endpoints solo para ADMIN
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                
-                // Endpoints para DOCENTE y ADMIN
-                .requestMatchers("/api/teacher/**").hasAnyRole("TEACHER", "ADMIN")
+                  // Endpoints para DOCENTE y ADMIN
+                .requestMatchers("/api/teachers/**").hasAnyRole("TEACHER", "ADMIN")
                 
                 // Endpoints para ESTUDIANTE, DOCENTE y ADMIN
-                .requestMatchers("/api/student/**").hasAnyRole("STUDENT", "TEACHER", "ADMIN")
+                .requestMatchers("/api/students/**").hasAnyRole("STUDENT", "TEACHER", "ADMIN")
                 
                 // Endpoints generales (requieren autenticación)
                 .requestMatchers("/api/**").authenticated()
