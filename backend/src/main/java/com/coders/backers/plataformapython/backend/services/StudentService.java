@@ -2,6 +2,7 @@ package com.coders.backers.plataformapython.backend.services;
 
 import com.coders.backers.plataformapython.backend.dto.student.CreateStudentDto;
 import com.coders.backers.plataformapython.backend.dto.student.StudentDto;
+import com.coders.backers.plataformapython.backend.dto.student.StudentProfileDto;
 import com.coders.backers.plataformapython.backend.dto.student.UpdateStudentDto;
 
 import java.io.IOException;
@@ -22,6 +23,8 @@ public interface StudentService {
     Optional<StudentDto> updateStudent(Long id, UpdateStudentDto dto);
 
     Map<String, Object> uploadStudentsFromCsv(MultipartFile file) throws IOException;
+
+    public StudentProfileDto getPerfilEstudiante(Long studentId);
 
 
     void deleteStudent(Long id);
