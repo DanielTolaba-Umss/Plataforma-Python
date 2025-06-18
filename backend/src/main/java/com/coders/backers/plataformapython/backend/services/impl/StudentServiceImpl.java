@@ -7,8 +7,10 @@ import com.coders.backers.plataformapython.backend.dto.student.StudentProfileDto
 import com.coders.backers.plataformapython.backend.dto.student.UpdateStudentDto;
 import com.coders.backers.plataformapython.backend.mapper.StudentMapper;
 import com.coders.backers.plataformapython.backend.models.CourseEntity;
+import com.coders.backers.plataformapython.backend.models.StudentProgressEntity;
 import com.coders.backers.plataformapython.backend.models.userModel.StudentEntity;
 import com.coders.backers.plataformapython.backend.repository.CourseRepository;
+import com.coders.backers.plataformapython.backend.repository.StudentProgressRepository;
 import com.coders.backers.plataformapython.backend.repository.StudentRepository;
 import com.coders.backers.plataformapython.backend.services.StudentService;
 
@@ -144,39 +146,57 @@ public class StudentServiceImpl implements StudentService {
         return result;
     }
 
+    private final StudentProgressRepository studentProgressRepository;
+
     @Override
-public StudentProfileDto getPerfilEstudiante(Long studentId) {
-    StudentEntity student = studentRepository.findById(studentId)
-        .orElseThrow(() -> new RuntimeException("Estudiante no encontrado"));
+    public StudentProfileDto getStudentProfile(Long studentId) {
+        StudentEntity student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Estudiante no encontrado"));
 
-    // Simulación de datos
-    int modulosCompletados = 4;
-    int ejerciciosCompletados = 12;
-    String moduloActual = "Estructuras de Control";
-    int progresoModuloActual = 80;
-    int progresoGeneral = 75;
+        StudentProfileDto dto = new StudentProfileDto();
+        dto.setId(student.getId());
+        dto.setNombreCompleto(student.getName() + " " + student.getLastName());
+        dto.setEmail(student.getEmail());
+        dto.setTelefono(student.getPhone());
+        dto.setFechaInicio(student.getEnrollmentDate().toLocalDate());
+        dto.setNivelActual(student.getCurrentLevel());
 
-    List<ModuloCompletadoDto> modulos = List.of(
-        new ModuloCompletadoDto("Introducción a Python", 95, LocalDate.of(2024, 12, 15)),
-        new ModuloCompletadoDto("Variables y Tipos de Datos", 88, LocalDate.of(2024, 12, 22)),
-        new ModuloCompletadoDto("Operadores y Expresiones", 92, LocalDate.of(2024, 12, 29)),
-        new ModuloCompletadoDto("Funciones Básicas", 90, LocalDate.of(2025, 1, 5))
-    );
+        // Obtener progresos
+        List<StudentProgressEntity> progresos = studentProgressRepository.findByStudent(student);
 
-    StudentProfileDto perfil = new StudentProfileDto();
-    perfil.setId(student.getId());
-    perfil.setNombreCompleto(student.getName() + " " + student.getLastName());
-    perfil.setEmail(student.getEmail());
-    perfil.setTelefono(student.getPhone());
-    perfil.setFechaInicio(student.getEnrollmentDate().toLocalDate());
-    perfil.setNivelActual(student.getCurrentLevel());
-    perfil.setModulosCompletados(modulosCompletados);
-    perfil.setEjerciciosCompletados(ejerciciosCompletados);
-    perfil.setModuloActual(moduloActual);
-    perfil.setProgresoModuloActual(progresoModuloActual);
-    perfil.setProgresoGeneral(progresoGeneral);
-    perfil.setModulosCompletadosDetalles(modulos);
+        List<ModuloCompletadoDto> modulosCompletados = progresos.stream()
+            .map(progreso -> {
+                ModuloCompletadoDto mod = new ModuloCompletadoDto();
+                mod.setTitulo(progreso.getLesson().getTitle());
+                mod.setPorcentaje(progreso.getPorcentaje());
+                mod.setFechaFinalizacion(progreso.getFechaFinalizacion());
+                return mod;
+            })
+            .collect(Collectors.toList());
 
-    return perfil;
-}
+        dto.setModulosCompletadosDetalles(modulosCompletados);
+        dto.setModulosCompletados(modulosCompletados.size());
+
+        // Simulación de ejercicios completados
+        dto.setEjerciciosCompletados(progresos.size() * 3); // cambiar por lógica real si tienes
+
+        // Estimar módulo actual
+        progresos.stream()
+            .filter(p -> p.getPorcentaje() < 100)
+            .findFirst()
+            .ifPresent(moduloActual -> {
+                dto.setModuloActual(moduloActual.getLesson().getTitle());
+                dto.setProgresoModuloActual(moduloActual.getPorcentaje());
+            });
+
+        // Progreso general promedio
+        int progresoGeneral = (int) progresos.stream()
+            .mapToInt(StudentProgressEntity::getPorcentaje)
+            .average().orElse(0.0);
+
+        dto.setProgresoGeneral(progresoGeneral);
+
+        return dto;
+    }
+
 }

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 @Data
 public class ModuloCompletadoDto {
-    private String nombreModulo;
-    private int porcentajeCompletado;  // 0-100
-    private LocalDate fechaCompletado;
+    private String titulo;
+    private int porcentaje;
+    private LocalDate fechaFinalizacion;
 }

@@ -24,8 +24,7 @@ public interface StudentService {
 
     Map<String, Object> uploadStudentsFromCsv(MultipartFile file) throws IOException;
 
-    public StudentProfileDto getPerfilEstudiante(Long studentId);
-
+    StudentProfileDto getStudentProfile(Long studentId);
 
     void deleteStudent(Long id);
 }

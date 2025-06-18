@@ -7,6 +7,7 @@ import com.coders.backers.plataformapython.backend.dto.student.UpdateStudentDto;
 import com.coders.backers.plataformapython.backend.services.StudentService;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,7 +69,13 @@ public class StudentController {
 
     @GetMapping("/{id}/perfil")
     public ResponseEntity<StudentProfileDto> getPerfil(@PathVariable Long id) {
-    StudentProfileDto perfil = studentService.getPerfilEstudiante(id);
+    StudentProfileDto perfil = studentService.getStudentProfile(id);
     return ResponseEntity.ok(perfil);
     }
+
+    @GetMapping("/{id}/perfil")
+    public ResponseEntity<StudentProfileDto> getPerfilEstudiante(@PathVariable Long id) {
+    return ResponseEntity.ok(studentService.getStudentProfile(id));
+    }
+
 }

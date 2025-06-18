@@ -90,4 +90,11 @@ public class CourseEntity {
     
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     private Set<StudentEntity> students = new HashSet<>();
+
+    @Column(name = "nombre")
+    private String nombre;
+
+    public String getNombre() {
+    return this.nombre;
+}
 }
