@@ -5,7 +5,6 @@ import Logo from "../../../../assets/logo.png";
 
 const CertificadoModal = ({ isOpen, onClose, nivel, nombreEstudiante }) => {
   const certificadoRef = useRef();
-
   const fechaActual = new Date().toLocaleDateString("es-ES", {
     year: "numeric",
     month: "long",
@@ -128,7 +127,6 @@ const CertificadoModal = ({ isOpen, onClose, nivel, nombreEstudiante }) => {
         </body>
       </html>
     `);
-
     winPrint.document.close();
     winPrint.focus();
     setTimeout(() => {
@@ -164,6 +162,7 @@ const CertificadoModal = ({ isOpen, onClose, nivel, nombreEstudiante }) => {
     } catch (error) {
       console.error("Error al generar PDF:", error);
       alert("Error al generar el PDF. Por favor, intenta de nuevo.");
+
     }
   };
 
@@ -215,7 +214,6 @@ const CertificadoModal = ({ isOpen, onClose, nivel, nombreEstudiante }) => {
             </div>
           </div>
         </div>
-
         <div className="certificado-actions">
           <button className="action-button print-button" onClick={handlePrint}>
             Imprimir

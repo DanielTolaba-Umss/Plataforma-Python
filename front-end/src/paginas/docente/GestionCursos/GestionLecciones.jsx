@@ -198,7 +198,6 @@ const GestionLecciones = () => {
       },
     }));
   };
-
   const handleCreateLeccion = async (leccionData) => {
     try {
       const response = await leccionesAPI.crear(leccionData);
