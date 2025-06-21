@@ -23,6 +23,6 @@ public interface StudentService {
 
     Map<String, Object> uploadStudentsFromCsv(MultipartFile file) throws IOException;
 
-
     void deleteStudent(Long id);
+
 }

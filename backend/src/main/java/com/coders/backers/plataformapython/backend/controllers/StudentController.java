@@ -56,12 +56,12 @@ public class StudentController {
 
     @PostMapping("/upload-csv")
     public ResponseEntity<Map<String, Object>> uploadCsv(@RequestParam("file") MultipartFile file) {
-    try {
-        Map<String, Object> response = studentService.uploadStudentsFromCsv(file);
-        return ResponseEntity.ok(response);
+        try {
+            Map<String, Object> response = studentService.uploadStudentsFromCsv(file);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(Map.of("error", e.getMessage()));
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 }
