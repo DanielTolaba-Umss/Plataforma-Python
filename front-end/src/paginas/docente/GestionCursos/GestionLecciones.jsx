@@ -134,7 +134,6 @@ const GestionLecciones = () => {
     try {
       const recursos = await getResourceByLesson(leccion.id);
 
-      // VIDEO
       try {
         const video = recursos.find((r) => r.typeId === 3);
         if (video && video.url) {
@@ -147,7 +146,6 @@ const GestionLecciones = () => {
         console.error("Error al obtener el video:", err);
       }
 
-      // PDFS
       try {
         pdfs = recursos
           .filter((r) => r.typeId === 2)
@@ -162,14 +160,12 @@ const GestionLecciones = () => {
       console.error("Error al obtener recursos:", err);
     }
 
-    // PRÁCTICA
     try {
       practica = await practiceJhService.getPracticeByLessonId(leccion.id);
     } catch (err) {
       console.error("Error al obtener la práctica:", err);
     }
 
-    // CASOS DE PRUEBA
     try {
       if (practica?.id) {
         testCases = await testCasesService.getTestCasesByPracticeId(
