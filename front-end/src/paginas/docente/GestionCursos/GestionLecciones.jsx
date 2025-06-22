@@ -126,51 +126,77 @@ const GestionLecciones = () => {
       practica: false,
     });
 
+    let videoUrl = null;
+    let pdfs = [];
+    let practica = null;
+    let testCases = [];
+
     try {
       const recursos = await getResourceByLesson(leccion.id);
-      const video = recursos.find((r) => r.typeId === 3);
-      if (video && video.url) {
-        const rawUrl = video.url;
-        const finalUrl = esYoutube(rawUrl)
-          ? convertToEmbedUrl(rawUrl)
-          : `${environment.apiUrl.replace("/api", "")}${rawUrl}`;
-        setVideoUrl(finalUrl);
-      } else {
-        setVideoUrl(null);
+
+      try {
+        const video = recursos.find((r) => r.typeId === 3);
+        if (video && video.url) {
+          const rawUrl = video.url;
+          videoUrl = esYoutube(rawUrl)
+            ? convertToEmbedUrl(rawUrl)
+            : `${environment.apiUrl.replace("/api", "")}${rawUrl}`;
+        }
+      } catch (err) {
+        console.error("Error al obtener el video:", err);
       }
 
-      const pdfs = recursos.filter((r) => r.typeId === 2);
-      const practica = await practiceJhService.getPracticeByLessonId(
-        leccion.id
-      );
-      const testCases = await testCasesService.getTestCasesByPracticeId(
-        practica.id
-      );
-
-      setLeccionPreview((prev) => ({
-        ...prev,
-        recursos: {
-          pdfs: pdfs.map((pdf) => ({
+      try {
+        pdfs = recursos
+          .filter((r) => r.typeId === 2)
+          .map((pdf) => ({
             titulo: pdf.title,
             url: `${environment.apiUrl.replace("/api", "")}${pdf.url}`,
-          })),
-          practicas: [
-            {
-              titulo: leccion.title,
-              instrucciones: practica.instrucciones,
-              codigoInicial: practica.codigoInicial,
-              solucionReferencia: practica.solucionReferencia,
-              restricciones: practica.restricciones,
-              intentosMax: practica.intentosMax,
-              casosPrueba: testCases,
-            },
-          ],
-        },
-      }));
-    } catch (error) {
-      console.error("Error al cargar recursos de lección:", error);
-      setVideoUrl(null);
+          }));
+      } catch (err) {
+        console.error("Error al procesar PDFs:", err);
+      }
+    } catch (err) {
+      console.error("Error al obtener recursos:", err);
     }
+
+    try {
+      practica = await practiceJhService.getPracticeByLessonId(leccion.id);
+    } catch (err) {
+      console.error("Error al obtener la práctica:", err);
+    }
+
+    try {
+      if (practica?.id) {
+        testCases = await testCasesService.getTestCasesByPracticeId(
+          practica.id
+        );
+      }
+    } catch (err) {
+      console.error("Error al obtener los casos de prueba:", err);
+    }
+
+    setVideoUrl(videoUrl);
+
+    setLeccionPreview((prev) => ({
+      ...prev,
+      recursos: {
+        pdfs: pdfs,
+        practicas: practica
+          ? [
+              {
+                titulo: leccion.title,
+                instrucciones: practica.instrucciones,
+                codigoInicial: practica.codigoInicial,
+                solucionReferencia: practica.solucionReferencia,
+                restricciones: practica.restricciones,
+                intentosMax: practica.intentosMax,
+                casosPrueba: testCases,
+              },
+            ]
+          : [],
+      },
+    }));
   };
   const handleCreateLeccion = async (leccionData) => {
     try {
