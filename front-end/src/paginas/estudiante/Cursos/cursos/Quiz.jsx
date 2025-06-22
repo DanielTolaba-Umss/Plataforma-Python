@@ -12,7 +12,6 @@ const QuizList = () => {
   const [error, setError] = useState(null);
   const [mostrarModalQuiz, setMostrarModalQuiz] = useState(false);
   const [quizSeleccionado, setQuizSeleccionado] = useState(null);
-  const nivelId = localStorage.getItem("nivelId");
 
   useEffect(() => {
     const fetchQuizzesAndQuestions = async () => {
