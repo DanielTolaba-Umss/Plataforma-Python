@@ -14,9 +14,12 @@ const api = axios.create({
 // Interceptor para agregar el token a las peticiones
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            console.log(`Enviando solicitud a ${config.url} con token: ${accessToken.substring(0, 20)}...`);
+            config.headers.Authorization = `Bearer ${accessToken}`;
+        } else {
+            console.warn(`Enviando solicitud a ${config.url} sin token de autenticación`);
         }
         return config;
     },
@@ -25,20 +28,69 @@ api.interceptors.request.use(
     }
 );
 
-// Interceptor para manejar errores
 api.interceptors.response.use(
     (response) => response,
-    (error) => {
+    async (error) => {
+        const originalRequest = error.config;
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            
+            try {
+                const refreshToken = localStorage.getItem('refreshToken');
+                if (!refreshToken) {
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('user');
+                    window.location.href = '/login';
+                    return Promise.reject(error);
+                }
+                
+                const response = await axios.post(`${API_URL}/auth/refresh`, 
+                    { refreshToken },
+                    { 
+                        headers: { 'Content-Type': 'application/json' }
+                    }
+                );
+                
+                const { accessToken, refreshToken: newRefreshToken } = response.data;
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('refreshToken', newRefreshToken);
+
+                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+                return axios(originalRequest);
+            } catch (refreshError) {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+                return Promise.reject(refreshError);
+            }
+        }
+
         if (error.response) {
-            // El servidor respondió con un código de error
             switch (error.response.status) {
                 case 401:
-                    localStorage.removeItem('token');
+                    localStorage.removeItem('accessTokentoken'); 
                     localStorage.removeItem('user');
                     window.location.href = '/login';
                     break;
                 case 403:
-                    console.error('No tienes permisos para realizar esta acción');
+                    console.error('Error 403 - No tienes permisos para realizar esta acción');
+                    console.error('URL de la solicitud:', originalRequest.url);
+                    console.error('Método de la solicitud:', originalRequest.method);
+                    console.error('Token actual:', localStorage.getItem('accessToken'));
+                    
+                    // Decodificar el token para ver su contenido (sólo para depuración)
+                    try {
+                        const token = localStorage.getItem('accessToken');
+                        if (token) {
+                            const base64Url = token.split('.')[1];
+                            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                            const payload = JSON.parse(window.atob(base64));
+                            console.error('Contenido del token:', payload);
+                        }
+                    } catch (e) {
+                        console.error('Error al decodificar el token:', e);
+                    }
                     break;
                 case 404:
                     console.error('Recurso no encontrado');
@@ -47,10 +99,8 @@ api.interceptors.response.use(
                     console.error('Error en la petición:', error.response.data);
             }
         } else if (error.request) {
-            // La petición fue hecha pero no se recibió respuesta
             console.error('No se pudo conectar con el servidor');
         } else {
-            // Error al configurar la petición
             console.error('Error:', error.message);
         }
         return Promise.reject(error);

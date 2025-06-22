@@ -31,51 +31,51 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(cors -> cors.configurationSource(request -> {
-                var config = new org.springframework.web.cors.CorsConfiguration();
-                config.setAllowCredentials(true);
-                config.addAllowedOriginPattern("*");
-                config.addAllowedHeader("*");
-                config.addAllowedMethod("*");
-                return config;
-            }))
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))            .authorizeHttpRequests(auth -> auth
-                // Endpoints públicos (sin autenticación)
-                .requestMatchers(
-                    "/api/auth/login",
-                    "/api/auth/refresh",
-                    "/api/auth/logout",
-                    "/api/auth/email/**",
-                    "/api/public/**",
-                    "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/swagger-ui.html",
-                    "/actuator/health"
-                ).permitAll()
-                  // Endpoints de auth que requieren autenticación
-                .requestMatchers("/api/auth/verify", "/api/auth/change-password").authenticated()
-                
-                // Endpoints de usuario autenticado
-                .requestMatchers("/api/user/**").authenticated()
-                
-                // Endpoints solo para ADMIN
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                  // Endpoints para DOCENTE y ADMIN
-                .requestMatchers("/api/teachers/**").hasAnyRole("TEACHER", "ADMIN")
-                
-                // Endpoints para ESTUDIANTE, DOCENTE y ADMIN
-                .requestMatchers("/api/students/**").hasAnyRole("STUDENT", "TEACHER", "ADMIN")
-                
-                // Endpoints generales (requieren autenticación)
-                .requestMatchers("/api/**").authenticated()
-                
-                // Cualquier otra request
-                .anyRequest().authenticated()
-            )
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> {
+                    var config = new org.springframework.web.cors.CorsConfiguration();
+                    config.setAllowCredentials(true);
+                    config.addAllowedOriginPattern("*");
+                    config.addAllowedHeader("*");
+                    config.addAllowedMethod("*");
+                    return config;
+                }))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        // Endpoints públicos (sin autenticación)
+                        .requestMatchers(
+                                "/api/auth/login",
+                                "/api/auth/refresh",
+                                "/api/auth/logout",
+                                "/api/auth/email/**",
+                                "/api/public/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/actuator/health")
+                        .permitAll()
+                        // Endpoints de auth que requieren autenticación
+                        .requestMatchers("/api/auth/verify", "/api/auth/change-password").authenticated()
+
+                        // Endpoints de usuario autenticado
+                        .requestMatchers("/api/user/**").authenticated()
+
+                        // Endpoints solo para ADMIN
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        // Endpoints para DOCENTE y ADMIN
+                        .requestMatchers("/api/teachers/**").hasAnyRole("TEACHER", "ADMIN")
+
+                        // Endpoints para ESTUDIANTE, DOCENTE y ADMIN
+                        .requestMatchers("/api/students/**").hasAnyRole("STUDENT", "TEACHER", "ADMIN")
+
+                        // Endpoints generales (requieren autenticación)
+                        .requestMatchers("/api/**").authenticated()
+
+                        // Cualquier otra request
+                        .anyRequest().authenticated())
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

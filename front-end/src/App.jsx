@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import AppDocente from "./AppDocente";
 import AppAdmin from "./AppAdmin";
 import AppEstudiante from "./AppEstudiante";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useAuth } from "./hooks/useAuth"; 
 
 function App() {
   const [vista, setVista] = useState(null);
@@ -11,32 +12,63 @@ function App() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const {user, loading, login, logout} = useAuth();
 
-  const usuarios = [
-    { rol: "admin", email: "admin@edu.com", password: "admin111" },
-    { rol: "docente", email: "docente@edu.com", password: "docente222" },
-    {
-      rol: "estudiante",
-      email: "estudiante@edu.com",
-      password: "estudiante333",
-    },
-  ];
+  useEffect(() => {
+    if (user) {
+      const rolMapping = {
+        'ADMIN': 'admin',
+        'TEACHER': 'docente',
+        'STUDENT': 'estudiante'
+      };
+      
+      setVista(rolMapping[user.role]);
+    }
+  }, [user]);
 
-  const handleLogin = () => {
-    const usuario = usuarios.find(
-      (u) => u.email === email && u.password === password
-    );
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    console.log('Token almacenado:', token);
+    console.log('Usuario almacenado:', user);
+    
+    if (token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(window.atob(base64));
+        console.log('Contenido completo del token:', payload);
+      } catch (e) {
+        console.error('Error al decodificar el token', e);
+      }
+    }
+  }, []);
 
-    if (usuario) {
-      setVista(usuario.rol);
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
+  const handleLogin = async () => {
+    try {
+      const userData = await login(email, password);
+      
+      const rolMapping = {
+        'ADMIN': 'admin',
+        'TEACHER': 'docente',
+        'STUDENT': 'estudiante'
+      };
+      
+      setVista(rolMapping[userData.role]);
       setError("");
-      navigate("/");
-    } else {
-      setError("Correo o contraseña incorrectos");
+    } catch (err) {
+      setError(err.message || "Credenciales incorrectas");
     }
   };
 
+
   const volver = () => {
+    logout();
     setVista(null);
     setEmail("");
     setPassword("");
