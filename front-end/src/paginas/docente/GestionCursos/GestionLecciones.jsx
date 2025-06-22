@@ -251,7 +251,7 @@ const GestionLecciones = () => {
   return (
     <div className={styles.coursesContainer}>
       <div className={styles.coursesHeader}>
-        <h2 className={styles.coursesTitle}>Lecciones del {nivelId}</h2>
+        <h2 className={styles.coursesTitle}>Lecciones del Nivel {nivelId}</h2>
         <button
           onClick={() => navigate("/gestion-curso")}
           className={styles.backButton}

@@ -1,5 +1,5 @@
 // src/componentes/Estudiantes/LeccionesNivel.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { leccionesAPI } from "../../../../api/leccionService";
 import CertificadoModal from "./CertificadoModal";
@@ -14,13 +14,18 @@ const LeccionesNivel = () => {
   const [showCertificado, setShowCertificado] = useState(false);
   const navigate = useNavigate();
 
-  const nivel = location.state?.nivel || JSON.parse(localStorage.getItem("nivel"));
+  const nivel = useMemo(() => {
+    return location.state?.nivel || JSON.parse(localStorage.getItem("nivel"));
+  }, [location.state]);
 
   useEffect(() => {
     const fetchLecciones = async () => {
       try {
         setLoading(true);
-        const response = await leccionesAPI.obtenerPorCursoYNivel(id, nivel.level);
+        const response = await leccionesAPI.obtenerPorCursoYNivel(
+          id,
+          nivel.level
+        );
         setLecciones(response.data);
       } catch (err) {
         setError("Error al cargar las lecciones");
@@ -54,7 +59,11 @@ const LeccionesNivel = () => {
           <div
             key={leccion.id}
             className="leccion-card"
-            onClick={() => navigate(`/cursos/${leccion.id}/lecciones/Practica`)}
+            onClick={() =>
+              navigate(`/cursos/${id}/lecciones/${leccion.id}/practica`, {
+                state: { tituloLeccion: leccion.title },
+              })
+            }
             style={{ cursor: "pointer" }}
           >
             <h3 className="leccion-title">{leccion.title}</h3>
@@ -62,18 +71,18 @@ const LeccionesNivel = () => {
           </div>
         ))}
       </div>
-      
-      <div className="curso-footer-buttons" style={{ display: "flex", gap: "10px" }}>
+
+      <div
+        className="curso-footer-buttons"
+        style={{ display: "flex", gap: "10px" }}
+      >
         <button
           className="footer-button"
           onClick={() => navigate(`/cursos/${id}/lecciones/quiz`)}
         >
           Quiz
         </button>
-        <button
-          className="footer-button"
-          onClick={handleObtenerCertificado}
-        >
+        <button className="footer-button" onClick={handleObtenerCertificado}>
           Obtener Certificado
         </button>
       </div>

@@ -31,7 +31,7 @@ const QuizList = () => {
           quizzesFiltrados.map(async (quiz) => {
             try {
               const resPreguntas = await questionsAPI.obtenerPreguntasPorQuiz(
-                quiz.id,
+                quiz.id
               );
               return {
                 ...quiz,
@@ -40,14 +40,14 @@ const QuizList = () => {
             } catch (error) {
               console.warn(
                 `No se pudieron cargar preguntas para el quiz ${quiz.id}`,
-                error,
+                error
               );
               return {
                 ...quiz,
                 preguntas: [],
               };
             }
-          }),
+          })
         );
 
         setQuizzes(quizzesConPreguntas);
@@ -83,12 +83,12 @@ const QuizList = () => {
                     await quizzesAPI.descontarIntento(quizSeleccionado.id);
                     setMostrarModalQuiz(false);
                     navigate(
-                      `/cursos/${courseId}/lecciones/realizar-quiz/${quizSeleccionado.id}`,
+                      `/cursos/${courseId}/lecciones/realizar-quiz/${quizSeleccionado.id}`
                     );
                   } catch (err) {
                     console.error("Error al descontar intento:", err);
                     setError(
-                      "No se pudo descontar un intento. Intenta de nuevo.",
+                      "No se pudo descontar un intento. Intenta de nuevo."
                     );
                     setMostrarModalQuiz(false);
                   }
@@ -109,7 +109,7 @@ const QuizList = () => {
       <div className={styles.coursesHeader}>
         <h2 className={styles.coursesTitle}>Quiz final del nivel </h2>
         <button
-            onClick={() => navigate(`/cursos/${nivelId}/lecciones`)}
+          onClick={() => navigate(`/cursos/${courseId}/lecciones`)}
           className={styles.backButton}
         >
           Volver a lecciones
