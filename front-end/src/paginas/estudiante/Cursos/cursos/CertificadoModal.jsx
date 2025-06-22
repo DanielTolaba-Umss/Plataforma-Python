@@ -1,20 +1,24 @@
 // src/componentes/Estudiantes/CertificadoModal.jsx
-import React, { useRef } from 'react';
-import './CertificadoModal.css';
+import React, { useRef } from "react";
+import "./CertificadoModal.css";
+import Logo from "../../../../assets/logo.png";
 
 const CertificadoModal = ({ isOpen, onClose, nivel, nombreEstudiante }) => {
   const certificadoRef = useRef();
-
-  const fechaActual = new Date().toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  const fechaActual = new Date().toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 
   const handlePrint = () => {
     const printContent = certificadoRef.current;
-    const winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
-    
+    const winPrint = window.open(
+      "",
+      "",
+      "left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0"
+    );
+
     winPrint.document.write(`
       <html>
         <head>
@@ -123,7 +127,6 @@ const CertificadoModal = ({ isOpen, onClose, nivel, nombreEstudiante }) => {
         </body>
       </html>
     `);
-    
     winPrint.document.close();
     winPrint.focus();
     setTimeout(() => {
@@ -134,26 +137,32 @@ const CertificadoModal = ({ isOpen, onClose, nivel, nombreEstudiante }) => {
 
   const handleDownloadPDF = async () => {
     try {
-      const html2canvas = await import('html2canvas');
-      const jsPDF = await import('jspdf');
-      
+      const html2canvas = await import("html2canvas");
+      const jsPDF = await import("jspdf");
+
       const canvas = await html2canvas.default(certificadoRef.current, {
         scale: 2,
         useCORS: true,
-        backgroundColor: null
+        backgroundColor: null,
       });
-      
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF.default('landscape', 'mm', 'a4');
-      
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF.default("landscape", "mm", "a4");
+
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Certificado_Python_${nivel}_${nombreEstudiante.replace(/\s+/g, '_')}.pdf`);
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(
+        `Certificado_Python_${nivel}_${nombreEstudiante.replace(
+          /\s+/g,
+          "_"
+        )}.pdf`
+      );
     } catch (error) {
-      console.error('Error al generar PDF:', error);
-      alert('Error al generar el PDF. Por favor, intenta de nuevo.');
+      console.error("Error al generar PDF:", error);
+      alert("Error al generar el PDF. Por favor, intenta de nuevo.");
+
     }
   };
 
@@ -165,32 +174,35 @@ const CertificadoModal = ({ isOpen, onClose, nivel, nombreEstudiante }) => {
         <button className="close-button" onClick={onClose}>
           ×
         </button>
-        
+
         <div className="certificado-container" ref={certificadoRef}>
           <div className="certificado-border"></div>
-          
+
           <div className="logo">
-            <img 
-              src="../assets/logo.png"
-              alt="Python EDU Logo" 
-              style={{width: '100%', height: '100%', borderRadius: '50%'}}
+            <img
+              src={Logo}
+              alt="Python EDU Logo"
+              style={{ width: "100%", height: "100%", borderRadius: "50%" }}
             />
           </div>
-          
+
           <h1 className="certificado-title">CERTIFICADO</h1>
-          <p className="certificado-subtitle">de Finalización del Curso Básico</p>
-          
-          <div className="student-name">{nombreEstudiante}</div>
-          
-          <p className="completion-text">
-            Ha completado satisfactoriamente el curso de programación en Python 
-            y ha demostrado competencia en los fundamentos del lenguaje de programación.
+          <p className="certificado-subtitle">
+            de Finalización del Curso Básico
           </p>
-          
+
+          <div className="student-name">{nombreEstudiante}</div>
+
+          <p className="completion-text">
+            Ha completado satisfactoriamente el curso de programación en Python
+            y ha demostrado competencia en los fundamentos del lenguaje de
+            programación.
+          </p>
+
           <div className="course-info">
             Python {nivel} - Fundamentos de Programación
           </div>
-          
+
           <div className="date-signature">
             <div className="date">
               <h4>FECHA DE EMISIÓN</h4>
@@ -202,12 +214,14 @@ const CertificadoModal = ({ isOpen, onClose, nivel, nombreEstudiante }) => {
             </div>
           </div>
         </div>
-        
         <div className="certificado-actions">
           <button className="action-button print-button" onClick={handlePrint}>
             Imprimir
           </button>
-          <button className="action-button download-button" onClick={handleDownloadPDF}>
+          <button
+            className="action-button download-button"
+            onClick={handleDownloadPDF}
+          >
             Descargar PDF
           </button>
         </div>
