@@ -12,7 +12,10 @@ const RutasEstudiante = () => {
       <Route path="/" element={<Navigate to="/perfil" replace />} />
       {/* Ruta de lecciones */}
       <Route path="/cursos/:id/lecciones" element={<Lecciones />} />
-      <Route path="/cursos/:id/lecciones/Practica" element={<Prueba />} />
+      <Route
+        path="/cursos/:courseId/lecciones/:lessonId/practica"
+        element={<Prueba />}
+      />
       <Route path="/perfil" element={<PerfilEstudiante />} />
       <Route path="/cursos/:courseId/lecciones/quiz" element={<Quiz />} />
       <Route
