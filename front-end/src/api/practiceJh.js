@@ -1,17 +1,10 @@
-import { API_URL } from "./configuracion";
-
-const PRACTICE_API_URL = `${API_URL}/practice`;
-const TESt_CASES_API_URL = `${API_URL}/test-cases`;
+import api from "./configuracion";
 
 export const practiceJhService = {
-
     async getPracticeByLessonId(lessonId) {
         try {
-            const response = await fetch(`${PRACTICE_API_URL}/lesson/${lessonId}`);
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-            return await response.json();
+            const response = await api.get(`/practice/lesson/${lessonId}`);
+            return response.data;
         } catch (error) {
             console.error(`Error fetching practice with ID ${lessonId}:`, error);
             throw error;
@@ -22,11 +15,8 @@ export const practiceJhService = {
 export const testCasesService = {
     async getTestCasesByPracticeId(practiceId) {
         try {
-            const response = await fetch(`${TESt_CASES_API_URL}/by-practice/${practiceId}`);
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-            return await response.json();
+            const response = await api.get(`/test-cases/by-practice/${practiceId}`);
+            return response.data;
         } catch (error) {
             console.error(`Error fetching test cases for practice ID ${practiceId}:`, error);
             throw error;

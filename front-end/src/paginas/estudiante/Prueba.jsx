@@ -16,6 +16,8 @@ const Prueba = () => {
   const [practicaAbierta, setPracticaAbierta] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log("🚀 ~ Prueba ~ user:", user);
 
   const esYoutube = (url) =>
     url.includes("youtube.com") || url.includes("youtu.be");
@@ -171,7 +173,7 @@ const Prueba = () => {
               practicaAbierta ? "abierto" : "cerrado"
             }`}
           >
-            <Editor titulo="Instrucciones de la práctica:" lessonId={id} />
+            <Editor titulo="Instrucciones de la práctica:" lessonId={id} studentId={user.id} />
           </div>
         </div>
       </div>
