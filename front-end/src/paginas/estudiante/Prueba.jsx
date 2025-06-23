@@ -3,7 +3,7 @@ import "/src/paginas/estudiante/estilos/Prueba.css";
 import Editor from "./Editor"; // 🔥 Editor separado
 import VisorPDF from "./VisorPDF"; // 🔥 VisorPDF separado
 import LiveTranscription from "../../componentes/LiveTranscription"; // 🔥 Componente de transcripción en vivo
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 import { environment } from "../../environment/environment";
 
@@ -11,12 +11,14 @@ import { getResourceByLesson } from "../../api/videoService";
 import { convertToEmbedUrl } from "../../utils/convertYoutubeUrl";
 
 const Prueba = () => {
-  const { id } = useParams();
+  const location = useLocation();
+  const { courseId, lessonId } = useParams();
+  const tituloLeccion = location.state?.tituloLeccion || "Titulo no disponible";
   const [pdfAbierto, setPdfAbierto] = useState(false);
   const [practicaAbierta, setPracticaAbierta] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
-
+  const navigate = useNavigate();
   const esYoutube = (url) =>
     url.includes("youtube.com") || url.includes("youtu.be");
 
@@ -37,7 +39,7 @@ const Prueba = () => {
   useEffect(() => {
     const getResources = async () => {
       try {
-        const leccion = await getResourceByLesson(id);
+        const leccion = await getResourceByLesson(lessonId);
         console.log("🚀 ~ useEffect ~ recursos de lección:", leccion);
 
         // Buscar video (typeId = 3)
@@ -67,17 +69,22 @@ const Prueba = () => {
       }
     };
     getResources();
-  }, [id]);
+  }, [lessonId]);
 
   return (
     <div className="prueba-container">
       <div className="contenedor-titulo-video">
         <header className="prueba-header">
-          <a href="/cursos/1/lecciones" className="volver">
-            &lt; Volver
-          </a>
-          <h1>Fundamentos Python</h1>
-          <h2>Lección 1: Título</h2>
+          <button
+            onClick={() => navigate(`/cursos/${courseId}/lecciones`)}
+            className="volver"
+          >
+            Volver a lecciones
+          </button>
+
+          <h2>
+            Lección {lessonId} : {tituloLeccion}
+          </h2>
         </header>
 
         <section className="video-section">
@@ -171,16 +178,13 @@ const Prueba = () => {
               practicaAbierta ? "abierto" : "cerrado"
             }`}
           >
-            <Editor titulo="Instrucciones de la práctica:" lessonId={id} />
+            <Editor
+              titulo="Instrucciones de la práctica:"
+              lessonId={lessonId}
+            />
           </div>
         </div>
       </div>
-      <footer className="progreso-footer">
-        <div className="progreso-barra">
-          <div className="progreso"></div>
-        </div>
-        <span>25%</span>
-      </footer>
     </div>
   );
 };

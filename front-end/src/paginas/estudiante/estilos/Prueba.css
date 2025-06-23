@@ -18,20 +18,24 @@
 }
 
 .volver {
-  text-decoration: none;
-  color: #fff; /* 🔥 Cambiamos el color del texto a blanco */
-  background-color: #1a73e8; /* 🔥 Azul */
-  padding: 8px 16px;
-  border-radius: 10px; /* 🔥 Bordes redondeados */
-  font-weight: bold;
-  display: inline-block;
+  background-color: #0e2ed1; /* mismo color base */
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  margin-left:85%;
 }
 
 .volver:hover {
-  background-color: #3d2491; /* 🔥 Violeta al pasar el mouse */
-  transform: translateY(-2px); /* 🔥 Efecto de elevación */
-  text-decoration: none; /* 🔥 Quitamos subrayado en hover */
+  background-color: #057eef;
+  transform: translateY(-2px); /* opcional: efecto flotante */
+  text-decoration: none;
 }
 
 .video-section {
