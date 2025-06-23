@@ -1,6 +1,6 @@
 // Archivo: GestionLecciones.jsx
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect} from "react";
+import { useNavigate, useParams} from "react-router-dom";
 import {
   Edit,
   Trash2,
@@ -51,7 +51,11 @@ const GestionLecciones = () => {
     practica: false,
   });
 
-  const nivelId = localStorage.getItem("nivelId");
+  
+
+  const {courseId} = useParams();
+  console.log("ID del nivel:", courseId);
+  const nivelId = courseId ;
 
   useEffect(() => {
     const fetchLecciones = async () => {
@@ -287,7 +291,7 @@ const GestionLecciones = () => {
               <button
                 className={styles.resourcesButton}
                 onClick={() => {
-                  navigate(`/gestion-curso/lecciones/${leccion.id}/recursos`);
+                  navigate(`/gestion-curso/lecciones/${nivelId}/recursos`);
                 }}
               >
                 Recursos
@@ -295,7 +299,7 @@ const GestionLecciones = () => {
               <button
                 className={styles.resourcesButton}
                 onClick={() => {
-                  navigate(`/gestion-curso/lecciones/${leccion.id}/practica`);
+                  navigate(`/gestion-curso/lecciones/${nivelId}/practica`);
                 }}
               >
                 Prácticas

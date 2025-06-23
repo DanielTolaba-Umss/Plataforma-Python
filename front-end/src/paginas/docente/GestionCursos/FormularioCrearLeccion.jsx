@@ -3,18 +3,20 @@ import { X } from "lucide-react";
 // import { useParams } from "react-router-dom";
 import styles from "/src/paginas/docente/estilos/FormularioCrearCurso.module.css";
 
-const FormularioCrearLeccion = ({ onClose, onSubmit }) => {
+const FormularioCrearLeccion = ({ onClose, onSubmit, cursoId}) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   //   const courseId  = useParams();
 
   // ✅ Obtener el ID del nivel guardado
-  const nivelId = localStorage.getItem("nivelId");
+  const nivelId = cursoId
+  console.log("ID del curso:", nivelId);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!nivelId || isNaN(parseInt(nivelId))) {
+      console.error("ID del curso no válido:", nivelId);
       alert(
         "Error: ID del curso no válido. Intenta ingresar desde la pantalla anterior.",
       );

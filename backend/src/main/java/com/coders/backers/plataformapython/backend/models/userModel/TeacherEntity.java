@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 import jakarta.persistence.*;
 
 @Getter
@@ -17,8 +16,7 @@ public class TeacherEntity extends UserEntity {
 
     @Column(name = "specialty")
     private String specialty;
-    
-    
+
     public TeacherEntity(String specialty) {
         this.specialty = specialty;
     }
@@ -26,7 +24,6 @@ public class TeacherEntity extends UserEntity {
     @Override
     @PrePersist
     protected void onCreate() {
-        super.onCreate(); 
+        super.onCreate();
     }
-    
 }

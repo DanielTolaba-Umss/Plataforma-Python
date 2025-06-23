@@ -13,8 +13,6 @@ import com.coders.backers.plataformapython.backend.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 
-
-
 @Getter
 @Setter
 @Entity
@@ -60,7 +58,6 @@ public class UserEntity {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-
     @PrePersist
     protected void onCreate() {
         createdAt = Date.valueOf(LocalDate.now());
@@ -73,6 +70,4 @@ public class UserEntity {
     protected void onUpdate() {
         updatedAt = Date.valueOf(LocalDate.now());
     }
-    
-    
 }
