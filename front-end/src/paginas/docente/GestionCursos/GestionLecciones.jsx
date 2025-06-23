@@ -291,7 +291,7 @@ const GestionLecciones = () => {
               <button
                 className={styles.resourcesButton}
                 onClick={() => {
-                  navigate(`/gestion-curso/lecciones/${nivelId}/recursos`);
+                  navigate(`/gestion-curso/${nivelId}/lecciones/${leccion.id}/recursos`);
                 }}
               >
                 Recursos
@@ -299,7 +299,7 @@ const GestionLecciones = () => {
               <button
                 className={styles.resourcesButton}
                 onClick={() => {
-                  navigate(`/gestion-curso/lecciones/${nivelId}/practica`);
+                  navigate(`/gestion-curso/${nivelId}/lecciones/${leccion.id}/practica`);
                 }}
               >
                 Prácticas

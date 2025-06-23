@@ -19,7 +19,7 @@ export default function RutasDocente() {
           element={<GestionLecciones />}
         />
         <Route
-          path="/gestion-curso/lecciones/:courseId/recursos"
+          path="/gestion-curso/:courseId/lecciones/:lessonId/recursos"
           element={<Recursos />}
         />
         <Route path="/crear-examen" element={<CrearExamen />} />
@@ -33,7 +33,7 @@ export default function RutasDocente() {
           element={<CrearQuizz />}
         />
         <Route
-          path="/gestion-curso/lecciones/:courseId/practica"
+          path="/gestion-curso/:courseId/lecciones/:lessonId/practica"
           element={<Practicas />}
         />
       </Routes>
