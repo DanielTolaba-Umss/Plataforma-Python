@@ -8,7 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import { autoFeedbackService } from "../../api/feedback";
 
 
-const Editor = ({ titulo, lessonId }) => {
+const Editor = ({ titulo, lessonId, studentId }) => {
   const [resultado, setResultado] = useState(null);
   const [retroalimentacion, setRetroalimentacion] = useState("");
   const [practica, setPractica] = useState(null);
@@ -22,8 +22,6 @@ const Editor = ({ titulo, lessonId }) => {
   const [, setCargandoIntentos] = useState(false);
   const editorRef = useRef(null);
   const [codigoInicial, setCodigoInicial] = useState("# Escribe tu código Python aquí");
-
-  const studentId = 1;
 
   useEffect(() => {
     const cargarPractica = async () => {

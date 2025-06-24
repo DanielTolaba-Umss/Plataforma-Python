@@ -13,9 +13,9 @@ import {
 } from "../../api/videoService";
 
 const Recursos = () => {
-  const { courseId } = useParams();
+  const {courseId, lessonId } = useParams();
   const navigate = useNavigate();
-  console.log("🚀 ~ Recursos ~ courseId:", courseId);
+  console.log("🚀 ~ Recursos ~ courseId:", lessonId);
   // Modal states
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -40,7 +40,7 @@ const Recursos = () => {
     url: "",
     title: "",
     typeId: 3, // ID del tipo de recurso (ej: video)
-    contentId: courseId, // ID del contenido al que pertenece
+    contentId: lessonId, // ID del contenido al que pertenece
   });
 
   // Estado para notificaciones
@@ -65,7 +65,7 @@ const Recursos = () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await getResourceByLesson(courseId);
+        const data = await getResourceByLesson(lessonId);
         setResources(data);
         console.log("Recursos cargados:", data);
       } catch (error) {
@@ -77,7 +77,7 @@ const Recursos = () => {
     };
 
     fetchResources();
-  }, [courseId]);
+  }, [lessonId]);
   // Mostrar notificación
   const showNotification = (message, type = "success") => {
     setNotification({
@@ -248,7 +248,7 @@ const Recursos = () => {
       url: "",
       title: "",
       typeId: 3, // ID del tipo de recurso (ej: video)
-      contentId: courseId, // ID del contenido al que pertenece
+      contentId: lessonId, // ID del contenido al que pertenece
     });
     setShowVideoModal(false);
     setModalMode("crear");
@@ -364,7 +364,7 @@ const Recursos = () => {
       const formData = new FormData();
       formData.append("title", pdfData.nombre);
       formData.append("file", pdfData.archivo);
-      formData.append("contentId", courseId);
+      formData.append("contentId", lessonId);
       formData.append("typeId", 2); // ID para PDFs (asumiendo que 2 es para PDFs)
 
       if (modalMode === "crear") {
@@ -380,7 +380,7 @@ const Recursos = () => {
       }
 
       // Refresh resources list
-      const updatedResources = await getResourceByLesson(courseId);
+      const updatedResources = await getResourceByLesson(lessonId);
       setResources(updatedResources);
 
       // Cerrar modal y resetear formulario
@@ -407,14 +407,13 @@ const Recursos = () => {
           url,
           title: title,
           typeId: 3,
-          contentId: courseId,
-        };
-        const response = await createResource(nuevoRecurso);
+          contentId: lessonId,
+        };const response = await createResource(nuevoRecurso);
         console.log("Video por URL guardado:", response);
         showNotification("El video por URL ha sido guardado correctamente");
 
         // Refresh resources list
-        const updatedResources = await getResourceByLesson(courseId);
+        const updatedResources = await getResourceByLesson(lessonId);
         setResources(updatedResources);
       } else {
         // Subir archivo .mp4
@@ -425,7 +424,7 @@ const Recursos = () => {
 
         const titleValue = title;
         const typeId = 3;
-        const contentId = courseId;
+        const contentId = lessonId;
 
         const response = await uploadResourceFile(
           archivo,
@@ -437,7 +436,7 @@ const Recursos = () => {
         showNotification("El video ha sido subido correctamente");
 
         // Refresh resources list
-        const updatedResources = await getResourceByLesson(courseId);
+        const updatedResources = await getResourceByLesson(lessonId);
         setResources(updatedResources);
       }
 

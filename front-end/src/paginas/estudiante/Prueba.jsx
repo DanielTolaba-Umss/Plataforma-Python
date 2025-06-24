@@ -3,7 +3,7 @@ import "/src/paginas/estudiante/estilos/Prueba.css";
 import Editor from "./Editor"; // 🔥 Editor separado
 import VisorPDF from "./VisorPDF"; // 🔥 VisorPDF separado
 import LiveTranscription from "../../componentes/LiveTranscription"; // 🔥 Componente de transcripción en vivo
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 
 import { environment } from "../../environment/environment";
 
@@ -11,6 +11,7 @@ import { getResourceByLesson } from "../../api/videoService";
 import { convertToEmbedUrl } from "../../utils/convertYoutubeUrl";
 
 const Prueba = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { courseId, lessonId } = useParams();
   const tituloLeccion = location.state?.tituloLeccion || "Titulo no disponible";
@@ -18,7 +19,9 @@ const Prueba = () => {
   const [practicaAbierta, setPracticaAbierta] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
-  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log("🚀 ~ Prueba ~ user:", user);
+
   const esYoutube = (url) =>
     url.includes("youtube.com") || url.includes("youtu.be");
 
@@ -178,10 +181,7 @@ const Prueba = () => {
               practicaAbierta ? "abierto" : "cerrado"
             }`}
           >
-            <Editor
-              titulo="Instrucciones de la práctica:"
-              lessonId={lessonId}
-            />
+            <Editor titulo="Instrucciones de la práctica:" lessonId={lessonId} studentId={user.id} />
           </div>
         </div>
       </div>

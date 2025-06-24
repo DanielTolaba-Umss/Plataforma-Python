@@ -13,8 +13,6 @@ import com.coders.backers.plataformapython.backend.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 
-
-
 @Getter
 @Setter
 @Entity
@@ -36,9 +34,7 @@ public class UserEntity {
     @Email(message = "Email should be valid")
     private String email;
 
-    private String phone;
-
-    private String password;
+    private String phone;    private String password;
 
     private boolean active;
 
@@ -46,12 +42,21 @@ public class UserEntity {
     @Column(nullable = false, name = "role")
     private String role;
 
+    // Campos para verificación de email
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;
+    
+    @Column(name = "verification_token")
+    private String verificationToken;
+    
+    @Column(name = "verification_token_expiry")
+    private Date verificationTokenExpiry;
+
     @Column(name = "created_at")
     private Date createdAt;
 
     @Column(name = "updated_at")
     private Date updatedAt;
-
 
     @PrePersist
     protected void onCreate() {
@@ -65,6 +70,4 @@ public class UserEntity {
     protected void onUpdate() {
         updatedAt = Date.valueOf(LocalDate.now());
     }
-    
-    
 }

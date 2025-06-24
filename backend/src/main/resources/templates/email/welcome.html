@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Bienvenido a Plataforma Python!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+        }
+        .content {
+            padding: 40px 30px;
+            color: #333333;
+        }
+        .content h2 {
+            color: #333333;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+        .content p {
+            margin-bottom: 16px;
+            font-size: 16px;
+            color: #555555;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            margin: 25px 0;
+            transition: transform 0.2s;
+            font-size: 16px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #666666;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ddd, transparent);
+            margin: 30px 0;
+        }
+        .highlight {
+            background-color: #e8f5e8;
+            padding: 20px;
+            border-left: 4px solid #4ecdc4;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .feature {
+            flex: 1;
+            min-width: 200px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100% !important;
+            }
+            .header, .content, .footer {
+                padding: 20px !important;
+            }
+            .header h1 {
+                font-size: 24px !important;
+            }
+            .content h2 {
+                font-size: 20px !important;
+            }
+            .features {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon">🎉</div>
+            <h1>¡Bienvenido a <span th:text="${platformName ?: 'Plataforma Python'}">Plataforma Python</span>!</h1>
+        </div>
+        
+        <div class="content">
+            <h2>¡Hola <span th:text="${userName}">Usuario</span>! 🐍</h2>
+            
+            <p>¡Estamos emocionados de tenerte en nuestra comunidad! Tu cuenta como <strong th:text="${userRole}">usuario</strong> ha sido creada exitosamente.</p>
+            
+            <div class="highlight">
+                <p><strong>🚀 ¡Tu viaje de aprendizaje comienza ahora!</strong></p>
+                <p>Con <strong th:text="${platformName ?: 'Plataforma Python'}">Plataforma Python</strong> podrás aprender programación de manera interactiva y práctica.</p>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">📚</span>
+                    <h4>Cursos Interactivos</h4>
+                    <p>Lecciones estructuradas y fáciles de seguir</p>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">💻</span>
+                    <h4>Práctica en Tiempo Real</h4>
+                    <p>Ejecuta código Python directamente en la plataforma</p>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">📊</span>
+                    <h4>Seguimiento de Progreso</h4>
+                    <p>Monitorea tu avance y logros</p>
+                </div>
+            </div>
+            
+            <p>Para comenzar tu experiencia de aprendizaje, haz clic en el botón de abajo:</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a th:href="${loginUrl}" class="btn">🚀 Comenzar a aprender</a>
+            </div>
+            
+            <div style="background-color: #fff3cd; padding: 20px; border-left: 4px solid #ffc107; border-radius: 0 4px 4px 0; margin: 20px 0;">
+                <p><strong>💡 Primeros pasos recomendados:</strong></p>
+                <ol style="margin: 10px 0; padding-left: 20px;">
+                    <li>Completa tu perfil de usuario</li>
+                    <li>Explora los cursos disponibles</li>
+                    <li>Realiza tu primera lección</li>
+                    <li>Únete a la comunidad de estudiantes</li>
+                </ol>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <p style="font-size: 14px; color: #666;">
+                <strong>¿Necesitas ayuda?</strong> Nuestro equipo de soporte está aquí para ayudarte. No dudes en contactarnos si tienes alguna pregunta.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p><strong th:text="${platformName ?: 'Plataforma Python'}">Plataforma Python</strong></p>
+            <p>Aprende programación Python de manera interactiva</p>
+            <div class="divider"></div>
+            <p>¡Gracias por unirte a nuestra comunidad de aprendizaje!</p>
+            <p>Si tienes preguntas, contacta nuestro soporte técnico.</p>
+        </div>
+    </div>
+</body>
+</html>

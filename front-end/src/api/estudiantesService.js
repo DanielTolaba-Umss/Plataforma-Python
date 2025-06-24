@@ -1,14 +1,6 @@
-import { API_URL } from './configuracion';
-import axios from 'axios';
+import api from "./configuracion";
 
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
-
-export const estudiantesApi = {  // Obtener todos los estudiantes
+export const estudiantesApi = { 
   listar: async () => {
     try {
       console.log("Solicitando lista de estudiantes al backend");

@@ -57,6 +57,7 @@ const GestionCurso = () => {
     if (nivelSeleccionado) {
       localStorage.setItem("nivelId", nivelId);
       localStorage.setItem("nivelLevel", nivelSeleccionado.level);
+      console.log("Nivel seleccionado:", nivelId);
       navigate(`/gestion-curso/lecciones/${nivelId}`);
     }
   };

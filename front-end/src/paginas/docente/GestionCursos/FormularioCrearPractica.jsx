@@ -8,7 +8,7 @@ import { testCasesAPI } from "../../../api/testCases";
 import styles from "/src/paginas/docente/estilos/CrearQuiz.module.css";
 
 const FormularioCrearPractica = () => {
-  const { courseId } = useParams();
+  const { lessonId } = useParams();
   // Modal states
   const [practiceData, setPracticeData] = useState({
     instrucciones: "",
@@ -16,7 +16,7 @@ const FormularioCrearPractica = () => {
     solucionReferencia: "",
     restricciones: "",
     intentosMax: 3,
-    leccionId: courseId,
+    leccionId: lessonId,
     testCases: [],
   });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -106,7 +106,7 @@ const FormularioCrearPractica = () => {
         const response = await practiceAPI.obtenerTodas();
         console.log(response.data);
         const filtradas = response.data.filter(
-          (p) => Number(p.leccion?.id) === Number(courseId)
+          (p) => Number(p.leccion?.id) === Number(lessonId)
         );
         setPracticas(filtradas);
       } catch (error) {
@@ -115,7 +115,7 @@ const FormularioCrearPractica = () => {
     };
 
     fetchPracticas();
-  }, [courseId]);
+  }, [lessonId]);
 
   const removeTestCase = (indexToRemove) => {
     setPracticeData((prev) => ({
@@ -164,7 +164,7 @@ const FormularioCrearPractica = () => {
         restricciones: practiceData.restricciones,
         intentosMax: practiceData.intentosMax,
         leccionId:
-          practiceData.leccionId ?? practiceData.leccion?.id ?? courseId,
+          practiceData.leccionId ?? practiceData.leccion?.id ?? lessonId,
       };
 
       if (modalMode === "editar") {
@@ -254,7 +254,7 @@ const FormularioCrearPractica = () => {
 
       const refrescar = await practiceAPI.obtenerTodas();
       const filtradas = refrescar.data.filter(
-        (p) => Number(p.leccionId) === Number(courseId)
+        (p) => Number(p.leccionId) === Number(lessonId)
       );
       setPracticas(filtradas);
       setShowDeleteModal(false);
@@ -284,7 +284,7 @@ const FormularioCrearPractica = () => {
       solucionReferencia: "",
       restricciones: "",
       intentosMax: 3,
-      leccionId: courseId,
+      leccionId: lessonId,
     });
     setShowPracticeModal(true);
   };
@@ -302,7 +302,7 @@ const FormularioCrearPractica = () => {
       solucionReferencia: "",
       restricciones: "",
       intentosMax: 3,
-      leccionId: courseId,
+      leccionId: lessonId,
     });
     setShowPracticeModal(false);
   };
