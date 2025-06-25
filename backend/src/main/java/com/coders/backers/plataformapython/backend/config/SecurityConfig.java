@@ -33,8 +33,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
-                    var config = new org.springframework.web.cors.CorsConfiguration();
-                    config.setAllowCredentials(true);
+                    var config = new org.springframework.web.cors.CorsConfiguration();                    config.setAllowCredentials(true);
                     config.addAllowedOriginPattern("*");
                     config.addAllowedHeader("*");
                     config.addAllowedMethod("*");
@@ -54,15 +53,15 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/actuator/health")
-                        .permitAll()
-                        // Endpoints de auth que requieren autenticación
+                        .permitAll()                        // Endpoints de auth que requieren autenticación
                         .requestMatchers("/api/auth/verify", "/api/auth/change-password").authenticated()
 
+                        // Endpoints solo para ADMIN (DEBE IR PRIMERO)
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        
                         // Endpoints de usuario autenticado
                         .requestMatchers("/api/user/**").authenticated()
 
-                        // Endpoints solo para ADMIN
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Endpoints para DOCENTE y ADMIN
                         .requestMatchers("/api/teachers/**").hasAnyRole("TEACHER", "ADMIN")
 

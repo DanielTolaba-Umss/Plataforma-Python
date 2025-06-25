@@ -50,18 +50,15 @@ class UserValidationsTest {
     void validateShortLastNameTest() {
         UserValidations.ValidationResult result = UserValidations.validateLastName("Li");
         assertFalse(result.isValid());
-    }
-
-    @Test
+    }    @Test
     void validatePasswordTest() {
-        UserValidations.ValidationResult result = UserValidations.validatePassword("Pass123@");
-        assertTrue(result.isValid());
-    }
-
-    @Test
-    void validatePasswordNoSpecialTest() {
         UserValidations.ValidationResult result = UserValidations.validatePassword("Password123");
-        assertFalse(result.isValid());
+        assertTrue(result.isValid());
+    }@Test
+    void validatePasswordNoSpecialTest() {
+        // Actualizado: Ya no requerimos caracteres especiales
+        UserValidations.ValidationResult result = UserValidations.validatePassword("Password123");
+        assertTrue(result.isValid());
     }
 
     @Test
@@ -86,19 +83,17 @@ class UserValidationsTest {
     void validatePhoneWithLettersTest() {
         UserValidations.ValidationResult result = UserValidations.validatePhone("1234567a");
         assertFalse(result.isValid());
-    }
-
-    @Test
+    }    @Test
     void validateTeacherTest() {
         assertDoesNotThrow(() -> {
-            UserValidations.validateTeacher("Juan", "García", "12345678", "Pass123@");
+            UserValidations.validateTeacher("Juan", "García", "12345678", "Password123");
         });
     }
 
     @Test
     void validateInvalidTeacherTest() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            UserValidations.validateTeacher("J", "García", "12345678", "Pass123@");
+            UserValidations.validateTeacher("J", "García", "12345678", "Password123");
         });
         assertTrue(exception.getMessage().contains("nombre"));
     }

@@ -6,6 +6,7 @@ import com.coders.backers.plataformapython.backend.dto.admin.UserResponse;
 import com.coders.backers.plataformapython.backend.enums.Role;
 import com.coders.backers.plataformapython.backend.models.userModel.*;
 import com.coders.backers.plataformapython.backend.repository.UserRepository;
+import com.coders.backers.plataformapython.backend.repository.CourseRepository;
 import com.coders.backers.plataformapython.backend.services.admin.UserManagementService;
 import com.coders.backers.plataformapython.backend.services.email.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional
 public class UserManagementServiceImpl implements UserManagementService {    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
@@ -234,17 +236,62 @@ public class UserManagementServiceImpl implements UserManagementService {    pri
         }
         
         return mapToUserResponse(updatedUser);
-    }
-
-    @Override
+    }    @Override
+    @Transactional
     public void deleteUser(Long id) {
         log.info("Eliminando usuario con ID: {}", id);
         
         UserEntity user = userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
         
-        userRepository.delete(user);
-        log.info("Usuario eliminado exitosamente");
+        try {            // Si es un estudiante, necesitamos limpiar las relaciones en el orden correcto
+            if ("STUDENT".equals(user.getRole())) {
+                log.info("Limpiando relaciones para estudiante ID: {}", id);
+                  try {
+                    // 1. Primero eliminar progreso de lecciones (que depende de inscripciones)
+                    log.info("Paso 1: Eliminando progreso de lecciones para estudiante ID: {}", id);
+                    int deletedProgressRows = userRepository.deleteStudentLessonProgressByUserId(id);
+                    log.info("Paso 1 completado exitosamente - {} registros eliminados de student_lesson_progress", deletedProgressRows);
+                    
+                    // 2. Luego eliminar inscripciones a cursos
+                    log.info("Paso 2: Eliminando inscripciones a cursos para estudiante ID: {}", id);
+                    int deletedEnrollmentRows = userRepository.deleteStudentCourseEnrollmentsByUserId(id);
+                    log.info("Paso 2 completado exitosamente - {} registros eliminados de student_course_enrollment", deletedEnrollmentRows);
+                    
+                    // 3. Finalmente eliminar relaciones de la tabla student_course
+                    log.info("Paso 3: Eliminando relaciones de cursos para estudiante ID: {}", id);
+                    int deletedCourseRows = userRepository.deleteStudentCourseRelations(id);
+                    log.info("Paso 3 completado exitosamente - {} registros eliminados de student_course", deletedCourseRows);
+                    
+                } catch (Exception e) {
+                    log.error("Error en limpieza de relaciones para estudiante ID {}: {}", id, e.getMessage(), e);
+                    throw e;
+                }
+            }
+              // Si es un profesor, limpiar otras relaciones si las hay
+            if ("TEACHER".equals(user.getRole())) {
+                log.info("Limpiando relaciones para profesor ID: {}", id);
+                try {
+                    // Eliminar relaciones de la tabla teacher_course
+                    log.info("Eliminando relaciones de cursos para profesor ID: {}", id);
+                    int deletedTeacherCourseRows = userRepository.deleteTeacherCourseRelations(id);
+                    log.info("Relaciones de cursos eliminadas exitosamente - {} registros eliminados de teacher_course", deletedTeacherCourseRows);
+                    
+                } catch (Exception e) {
+                    log.error("Error en limpieza de relaciones para profesor ID {}: {}", id, e.getMessage(), e);
+                    throw e;
+                }
+            }
+            
+            // Ahora eliminar el usuario
+            log.info("Eliminando usuario de la tabla principal");
+            userRepository.delete(user);
+            log.info("Usuario eliminado exitosamente con ID: {}", id);
+            
+        } catch (Exception e) {
+            log.error("Error al eliminar usuario ID {}: {}", id, e.getMessage(), e);
+            throw new RuntimeException("Error al eliminar usuario: " + e.getMessage(), e);
+        }
     }
 
     @Override
@@ -320,13 +367,12 @@ public class UserManagementServiceImpl implements UserManagementService {    pri
     }
     
     // Métodos adicionales requeridos por AdminController
-    
-    @Override
+      @Override
     @Transactional(readOnly = true)
-    public Page<UserResponse> getUsers(Pageable pageable, String name, String email, String role) {
-        log.info("Obteniendo usuarios con filtros - name: {}, email: {}, role: {}", name, email, role);
+    public Page<UserResponse> getUsers(Pageable pageable, String name, String email, String role, Boolean active) {
+        log.info("Obteniendo usuarios con filtros - name: {}, email: {}, role: {}, active: {}", name, email, role, active);
         
-        return userRepository.findByFilters(name, email, role, pageable)
+        return userRepository.findByFilters(name, email, role, active, pageable)
             .map(this::mapToUserResponse);
     }
     
@@ -351,8 +397,7 @@ public class UserManagementServiceImpl implements UserManagementService {    pri
             .map(this::mapToUserResponse)
             .collect(Collectors.toList());
     }
-    
-    @Override
+      @Override
     @Transactional(readOnly = true)
     public Map<String, Object> getUserStats() {
         log.info("Obteniendo estadísticas generales de usuarios");
@@ -372,6 +417,9 @@ public class UserManagementServiceImpl implements UserManagementService {    pri
         // Estadísticas de verificación
         stats.put("verifiedEmails", userRepository.countByEmailVerified(true));
         stats.put("unverifiedEmails", userRepository.countByEmailVerified(false));
+        
+        // Estadísticas de cursos
+        stats.put("totalCourses", courseRepository.count());
         
         return stats;
     }

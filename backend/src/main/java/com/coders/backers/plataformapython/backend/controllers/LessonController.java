@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,10 +26,9 @@ import com.coders.backers.plataformapython.backend.services.LessonService;
 @RequestMapping("/api/lessons")
 public class LessonController {
 
-    private LessonService lessonService;
-
-    // Create
+    private LessonService lessonService;    // Create
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LessonDto> createLesson(@RequestBody CreateLessonDto createLessonDto) {
         LessonDto savedLesson = lessonService.createLesson(createLessonDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedLesson);
@@ -36,11 +36,13 @@ public class LessonController {
 
     // Read
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<LessonDto> getLessonById(@PathVariable Long id) {
         LessonDto lessonDto = lessonService.getLessonById(id);
         return ResponseEntity.ok(lessonDto);
     }
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<LessonDto>> getAllLessons(
             @RequestParam(value = "active", required = false) Boolean active,
             @RequestParam(value = "title", required = false) String title,
@@ -66,9 +68,9 @@ public class LessonController {
         }
         
         return ResponseEntity.ok(lessons);
-    }
-    
+    }    
     @GetMapping("/course/{courseId}/level/{level}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<LessonDto>> getLessonsByCourseAndLevel(
             @PathVariable Long courseId, 
             @PathVariable String level,
@@ -84,9 +86,9 @@ public class LessonController {
         
         return ResponseEntity.ok(lessons);
     }
-    
-    // Update
+      // Update
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LessonDto> updateLesson(
             @PathVariable Long id, 
             @RequestBody UpdateLessonDto updateLessonDto) {
@@ -95,12 +97,14 @@ public class LessonController {
     }
     
     @PutMapping("/{id}/activate")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LessonDto> activateLesson(@PathVariable Long id) {
         LessonDto activatedLesson = lessonService.activateLesson(id);
         return ResponseEntity.ok(activatedLesson);
     }
     
     @PutMapping("/{id}/deactivate")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LessonDto> deactivateLesson(@PathVariable Long id) {
         LessonDto deactivatedLesson = lessonService.deactivateLesson(id);
         return ResponseEntity.ok(deactivatedLesson);
@@ -108,6 +112,7 @@ public class LessonController {
     
     // Delete
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteLesson(@PathVariable Long id) {
         lessonService.deleteLesson(id);
         return ResponseEntity.noContent().build();
