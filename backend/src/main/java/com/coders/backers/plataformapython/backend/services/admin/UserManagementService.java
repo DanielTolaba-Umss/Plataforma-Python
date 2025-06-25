@@ -73,11 +73,10 @@ public interface UserManagementService {
      * Obtener estadísticas de usuarios
      */
     UserStatistics getUserStatistics();
-    
-    /**
+      /**
      * Obtener usuarios con paginación y filtros
      */
-    Page<UserResponse> getUsers(Pageable pageable, String name, String email, String role);
+    Page<UserResponse> getUsers(Pageable pageable, String name, String email, String role, Boolean active);
     
     /**
      * Obtener usuarios por rol (string)

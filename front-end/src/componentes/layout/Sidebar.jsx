@@ -4,9 +4,7 @@ import { NavLink } from "react-router-dom";
 import "/src/estilos/Sidebar.css";
 import {
   LayoutDashboard,
-  BookOpen,
   Users,
-  GraduationCap,
   Settings,
 } from "lucide-react";
 
@@ -16,10 +14,9 @@ const Sidebar = () => {
       <div className="sidebar-header">Python EDU</div>
       <nav className="sidebar-nav">
         <NavLink to="/" className="sidebar-link">
-          <Users className="sidebar-icon" /> Docentes
-        </NavLink>
-        <NavLink to="/Lista-Estudiantes" className="sidebar-link">
-          <GraduationCap className="sidebar-icon" /> Estudiantes
+          <LayoutDashboard className="sidebar-icon" /> Dashboard
+        </NavLink>        <NavLink to="/gestion-usuarios" className="sidebar-link">
+          <Users className="sidebar-icon" /> Gestión de Usuarios
         </NavLink>
       </nav>
     </aside>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,10 +26,9 @@ import com.coders.backers.plataformapython.backend.services.CourseService;
 @RequestMapping("/api/courses")
 public class CourseController {
 
-    private CourseService courseService;
-
-    // Create
+    private CourseService courseService;    // Create
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
         CourseDto savedCourse = courseService.createCourse(createCourseDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCourse);
@@ -36,12 +36,13 @@ public class CourseController {
 
     // Read
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<CourseDto> getCourseById(@PathVariable Long id) {
         CourseDto courseDto = courseService.getCourseById(id);
         return ResponseEntity.ok(courseDto);
     }
-    
-    @GetMapping
+      @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<CourseDto>> getAllCourses(
             @RequestParam(value = "active", required = false) Boolean active,
             @RequestParam(value = "title", required = false) String title,
@@ -64,6 +65,7 @@ public class CourseController {
     
     // Update
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CourseDto> updateCourse(
             @PathVariable Long id, 
             @RequestBody UpdateCourseDto updateCourseDto) {
@@ -72,12 +74,13 @@ public class CourseController {
     }
     
     @PutMapping("/{id}/activate")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CourseDto> activateCourse(@PathVariable Long id) {
         CourseDto activatedCourse = courseService.activateCourse(id);
         return ResponseEntity.ok(activatedCourse);
     }
-    
-    @PutMapping("/{id}/deactivate")
+      @PutMapping("/{id}/deactivate")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CourseDto> deactivateCourse(@PathVariable Long id) {
         CourseDto deactivatedCourse = courseService.deactivateCourse(id);
         return ResponseEntity.ok(deactivatedCourse);
@@ -85,6 +88,7 @@ public class CourseController {
     
     // Delete
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
         return ResponseEntity.noContent().build();

@@ -24,15 +24,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuario no encontrado con email: " + email));
-
-        // Verificar que el usuario esté activo
+                        "Usuario no encontrado con email: " + email));        // Verificar que el usuario esté activo
         if (!user.isActive()) {
             throw new UsernameNotFoundException("Usuario inactivo: " + email);
-        }        // Verificar que el email esté verificado (temporalmente comentado para testing)
-        // if (!user.isEmailVerified()) {
-        //     throw new UsernameNotFoundException("Email no verificado: " + email);
-        // }
+        }
+
+        // Verificar que el email esté verificado
+        if (!user.isEmailVerified()) {
+            throw new UsernameNotFoundException("Email no verificado: " + email);
+        }
 
         return User.builder()
                 .username(user.getEmail())
