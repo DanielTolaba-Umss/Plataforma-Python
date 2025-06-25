@@ -1,7 +1,7 @@
 // src/componentes/Estudiantes/Sidebar.jsx
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import { cursosAPI } from "/src/api/courseService";
+import studentProfileService from "/src/api/studentProfileService";
 import "/src/componentes/Estudiantes/Sidebar.css";
 import { BookOpen, GraduationCap } from "lucide-react";
 
@@ -21,15 +21,25 @@ const Sidebar = () => {
       setIsCursosOpen(false);
     }
   }, [location.pathname]);
-
   useEffect(() => {
     if (isCursosOpen) {
-      cursosAPI
-        .obtenerTodos()
-        .then((res) => {
-          setNiveles(res.data);
+      // Usar el servicio del estudiante para obtener solo los cursos inscritos
+      studentProfileService
+        .getCourses()
+        .then((courses) => {
+          // Convertir los cursos del estudiante al formato esperado por el sidebar
+          const cursosInscritos = Array.isArray(courses) ? courses : [courses];
+          const nivelesInscritos = cursosInscritos.map(course => ({
+            id: course.courseId,
+            level: course.level,
+            title: course.title,
+            // Agregar más campos si son necesarios
+            nombre: course.title,
+            descripcion: `Curso de ${course.level}`
+          }));
+          setNiveles(nivelesInscritos);
         })
-        .catch((err) => console.error("Error al obtener niveles:", err));
+        .catch((err) => console.error("Error al obtener cursos del estudiante:", err));
     }
   }, [isCursosOpen]);
 

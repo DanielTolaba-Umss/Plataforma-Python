@@ -31,17 +31,8 @@
 
 .perfil-card {
   background: white;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 20px;  border-radius: 10px;
   text-align: center;
-}
-
-.avatar {
-  width: 80px;
-  height: 80px;
-  background-color: #0f766e;
-  border-radius: 999px;
-  margin: 0 auto 10px auto;
 }
 
 .rol {
@@ -231,4 +222,262 @@
 
 .modal-close:hover {
   transform: scale(1.2);
+}
+
+/* Estados de loading, error y success */
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  padding: 40px;
+  text-align: center;
+}
+
+.loading-container p {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.error-container p {
+  font-size: 16px;
+  color: #dc2626;
+  margin-bottom: 20px;
+}
+
+.error-container button {
+  background-color: #3b82f6;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.error-container button:hover {
+  background-color: #2563eb;
+}
+
+/* Estilos para cuando no hay cursos */
+.no-courses,
+.no-certificates {
+  text-align: center;
+  padding: 30px 20px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Fecha de inscripción en los cursos */
+.fecha-inscripcion {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 5px;
+}
+
+/* Mejoras para los botones de cursos completados */
+.btn:disabled {
+  background-color: #10b981;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Estilos para estados de curso */
+.course-status {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.status-completed {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #a7f3d0;
+}
+
+.status-in-progress {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #fde68a;
+}
+
+/* Estados de loading y error */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.error-state {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px;
+  text-align: center;
+  border: 1px solid #fecaca;
+}
+
+/* Botón para ver lecciones */
+.btn-lecciones {
+  background-color: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+.btn-lecciones:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.btn-lecciones:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Modal de lecciones */
+.lessons-modal {
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #1f2937;
+}
+
+.lessons-content {
+  padding: 0;
+}
+
+.lessons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.lesson-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s;
+}
+
+.lesson-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-number {
+  background-color: #3b82f6;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.lesson-info {
+  flex: 1;
+}
+
+.lesson-info h4 {
+  margin: 0 0 8px 0;
+  color: #1f2937;
+  font-size: 18px;
+}
+
+.lesson-description {
+  margin: 0 0 12px 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.lesson-progress {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.lesson-status, .practice-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.lesson-status.completed {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.lesson-status.incomplete {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.practice-status.completed {
+  background-color: #e0e7ff;
+  color: #3730a3;
+  border: 1px solid #c7d2fe;
+}
+
+.practice-status.incomplete {
+  background-color: #f3e8ff;
+  color: #7c2d12;
+  border: 1px solid #e9d5ff;
+}
+
+.no-lessons {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
 }

@@ -1,7 +1,7 @@
 // src/componentes/Estudiantes/LeccionesNivel.jsx
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { leccionesAPI } from "../../../../api/leccionService";
+import studentProfileService from "../../../../api/studentProfileService";
 import CertificadoModal from "./CertificadoModal";
 import "./Lecciones.css";
 
@@ -17,16 +17,13 @@ const LeccionesNivel = () => {
   const nivel = useMemo(() => {
     return location.state?.nivel || JSON.parse(localStorage.getItem("nivel"));
   }, [location.state]);
-
   useEffect(() => {
     const fetchLecciones = async () => {
       try {
         setLoading(true);
-        const response = await leccionesAPI.obtenerPorCursoYNivel(
-          id,
-          nivel.level
-        );
-        setLecciones(response.data);
+        // Usar el servicio del estudiante para obtener las lecciones con progreso
+        const lecciones = await studentProfileService.getCourseLessons(id);
+        setLecciones(lecciones);
       } catch (err) {
         setError("Error al cargar las lecciones");
         console.error(err);
@@ -35,10 +32,10 @@ const LeccionesNivel = () => {
       }
     };
 
-    if (id && nivel?.level) {
+    if (id) {
       fetchLecciones();
     }
-  }, [id, nivel]);
+  }, [id]);
 
   const handleObtenerCertificado = () => {
     setShowCertificado(true);
@@ -53,14 +50,13 @@ const LeccionesNivel = () => {
 
   return (
     <div className="lecciones-container">
-      <h1 className="lecciones-title">Lecciones del nivel: {nivel.level}</h1>
-      <div className="lecciones-grid">
+      <h1 className="lecciones-title">Lecciones del nivel: {nivel.level}</h1>      <div className="lecciones-grid">
         {lecciones.map((leccion) => (
           <div
-            key={leccion.id}
+            key={leccion.lessonId}
             className="leccion-card"
             onClick={() =>
-              navigate(`/cursos/${id}/lecciones/${leccion.id}/practica`, {
+              navigate(`/cursos/${id}/lecciones/${leccion.lessonId}/practica`, {
                 state: { tituloLeccion: leccion.title },
               })
             }
@@ -68,6 +64,19 @@ const LeccionesNivel = () => {
           >
             <h3 className="leccion-title">{leccion.title}</h3>
             <p className="leccion-description">{leccion.description}</p>
+            {/* Mostrar información del progreso */}
+            <div className="leccion-progress">
+              <div className={`status-badge ${leccion.status?.toLowerCase()}`}>
+                {leccion.status === 'COMPLETED' ? '✓ Completada' : 
+                 leccion.status === 'IN_PROGRESS' ? '⏳ En progreso' : 
+                 '⭕ No iniciada'}
+              </div>
+              {leccion.practiceCompleted && (
+                <div className="practice-badge">
+                  Práctica: {leccion.bestPracticeScore}%
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>

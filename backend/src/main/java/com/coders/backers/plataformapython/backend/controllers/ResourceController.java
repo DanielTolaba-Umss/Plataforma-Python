@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,9 +36,8 @@ public class ResourceController {
     public ResourceController(ResourceService resourceService, FileStorageService fileStorageService) {
         this.resourceService = resourceService;
         this.fileStorageService = fileStorageService;
-    }
-
-    @PostMapping("/upload")
+    }    @PostMapping("/upload")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public ResponseEntity<ResourceDto> uploadResource(
             @RequestParam("file") MultipartFile file,
             @RequestParam("title") String title,
@@ -77,41 +77,42 @@ public class ResourceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public ResponseEntity<ResourceDto> create(@RequestBody ResourceDto dto) {
         return ResponseEntity.ok(resourceService.create(dto));
     }
-
+    
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<ResourceDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(resourceService.getById(id));
-    }
-
-    @GetMapping
+    }    @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public ResponseEntity<List<ResourceDto>> getAll() {
         return ResponseEntity.ok(resourceService.getAll());
     }
-
+    
     @GetMapping("/by-lesson/{leccion_id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<ResourceDto>> getResourcesByLesson(@PathVariable Long leccion_id) {
         List<ResourceDto> resources = resourceService.findByLessonId(leccion_id);
         return ResponseEntity.ok(resources);
     }
-
+    
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public ResponseEntity<ResourceDto> update(@PathVariable Long id, @RequestBody ResourceDto dto) {
         return ResponseEntity.ok(resourceService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         resourceService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/upload-pdf")
+    }    @PostMapping("/upload-pdf")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
     public ResponseEntity<ResourceDto> uploadPdf(
         @RequestParam("file") MultipartFile file,
         @RequestParam("title") String title,
@@ -151,8 +152,9 @@ public class ResourceController {
     }
 }
 
-@PutMapping("/upload-pdf/{id}")
-public ResponseEntity<ResourceDto> updatePdf(
+    @PutMapping("/upload-pdf/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+    public ResponseEntity<ResourceDto> updatePdf(
         @PathVariable Long id,
         @RequestParam("file") MultipartFile file,
         @RequestParam("title") String title,
@@ -194,8 +196,9 @@ public ResponseEntity<ResourceDto> updatePdf(
     }
 }
 
-@DeleteMapping("/delete-pdf/{id}")
-public ResponseEntity<Void> deletePdf(@PathVariable Long id) {
+    @DeleteMapping("/delete-pdf/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+    public ResponseEntity<Void> deletePdf(@PathVariable Long id) {
     try {
         ResourceDto resource = resourceService.getById(id);
         if (resource == null) {
@@ -210,9 +213,8 @@ public ResponseEntity<Void> deletePdf(@PathVariable Long id) {
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-}
-
-    @GetMapping("/pdf/{filename}")
+}    @GetMapping("/pdf/{filename}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<Resource> servePdf(@PathVariable String filename) {
         try {
             Path filePath = Paths.get("uploads/pdfs").resolve(filename);
