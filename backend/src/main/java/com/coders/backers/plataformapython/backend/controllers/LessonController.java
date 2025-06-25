@@ -2,6 +2,7 @@ package com.coders.backers.plataformapython.backend.controllers;
 
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import lombok.AllArgsConstructor;
 import com.coders.backers.plataformapython.backend.dto.lesson.CreateLessonDto;
 import com.coders.backers.plataformapython.backend.dto.lesson.LessonDto;
 import com.coders.backers.plataformapython.backend.dto.lesson.UpdateLessonDto;
+import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
 import com.coders.backers.plataformapython.backend.services.LessonService;
 
 @AllArgsConstructor
@@ -26,9 +28,10 @@ import com.coders.backers.plataformapython.backend.services.LessonService;
 @RequestMapping("/api/lessons")
 public class LessonController {
 
-    private LessonService lessonService;    // Create
+    private LessonService lessonService; // Create
+
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<LessonDto> createLesson(@RequestBody CreateLessonDto createLessonDto) {
         LessonDto savedLesson = lessonService.createLesson(createLessonDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedLesson);
@@ -41,6 +44,7 @@ public class LessonController {
         LessonDto lessonDto = lessonService.getLessonById(id);
         return ResponseEntity.ok(lessonDto);
     }
+
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<LessonDto>> getAllLessons(
@@ -48,9 +52,9 @@ public class LessonController {
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "courseId", required = false) Long courseId,
             @RequestParam(value = "level", required = false) String level) {
-        
+
         List<LessonDto> lessons;
-        
+
         if (courseId != null && level != null && active != null && active) {
             lessons = lessonService.getActiveLessonsByCourseIdAndLevel(courseId, level);
         } else if (courseId != null && level != null) {
@@ -66,55 +70,68 @@ public class LessonController {
         } else {
             lessons = lessonService.getAllLessons();
         }
-        
+
         return ResponseEntity.ok(lessons);
-    }    
+    }
+
     @GetMapping("/course/{courseId}/level/{level}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<LessonDto>> getLessonsByCourseAndLevel(
-            @PathVariable Long courseId, 
+            @PathVariable Long courseId,
             @PathVariable String level,
             @RequestParam(value = "active", required = false) Boolean active) {
-        
+
         List<LessonDto> lessons;
-        
+
         if (active != null && active) {
             lessons = lessonService.getActiveLessonsByCourseIdAndLevel(courseId, level);
         } else {
             lessons = lessonService.getLessonsByCourseIdAndLevel(courseId, level);
         }
-        
+
         return ResponseEntity.ok(lessons);
     }
-      // Update
+
+    // Update
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<LessonDto> updateLesson(
-            @PathVariable Long id, 
+            @PathVariable Long id,
             @RequestBody UpdateLessonDto updateLessonDto) {
         LessonDto updatedLesson = lessonService.updateLesson(id, updateLessonDto);
         return ResponseEntity.ok(updatedLesson);
     }
-    
+
     @PutMapping("/{id}/activate")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<LessonDto> activateLesson(@PathVariable Long id) {
         LessonDto activatedLesson = lessonService.activateLesson(id);
         return ResponseEntity.ok(activatedLesson);
     }
-    
+
     @PutMapping("/{id}/deactivate")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<LessonDto> deactivateLesson(@PathVariable Long id) {
         LessonDto deactivatedLesson = lessonService.deactivateLesson(id);
         return ResponseEntity.ok(deactivatedLesson);
     }
-    
     // Delete
+
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteLesson(@PathVariable Long id) {
-        lessonService.deleteLesson(id);
-        return ResponseEntity.noContent().build();
+    @PreAuthorize("hasRole('TEACHER')")
+    public ResponseEntity<?> deleteLesson(@PathVariable Long id) {
+        try {
+            lessonService.deleteLesson(id);
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("No se puede eliminar la lección porque tiene dependencias (recursos, prácticas, progreso de estudiantes)");
+        } catch (Exception e) {
+            e.printStackTrace(); // Para ver el error en logs
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno del servidor: " + e.getMessage());
+        }
     }
 }

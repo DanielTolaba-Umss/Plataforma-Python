@@ -265,16 +265,34 @@ const GestionLecciones = () => {
 
   const handleDeleteLeccion = async () => {
     try {
-      await leccionesAPI.eliminar(leccionToDelete.id);
+      console.log("🔥 Eliminando lección:", leccionToDelete.id);
+      console.log("🔥 URL que se llamará:", `/lessons/${leccionToDelete.id}`);
+      
+      const response = await leccionesAPI.eliminar(leccionToDelete.id);
+      console.log("✅ Respuesta del servidor:", response);
+      
       setLecciones((prev) => prev.filter((l) => l.id !== leccionToDelete.id));
       setShowDeleteModal(false);
       showNotification("Lección eliminada con éxito", "success");
     } catch (error) {
-      console.error("Error al eliminar lección:", error);
-      showNotification(
-        error.response?.data?.message || "Error al eliminar lección",
-        "error"
-      );
+      console.error("❌ Error completo:", error);
+      console.error("❌ Status:", error.response?.status);
+      console.error("❌ Data:", error.response?.data);
+      console.error("❌ Headers:", error.response?.headers);
+      
+      let errorMessage = "Error desconocido";
+      
+      if (error.response?.status === 404) {
+        errorMessage = "Lección no encontrada";
+      } else if (error.response?.status === 403) {
+        errorMessage = "No tienes permisos para eliminar esta lección";
+      } else if (error.response?.status === 409) {
+        errorMessage = "No se puede eliminar: la lección tiene dependencias";
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
+      showNotification(`Error al eliminar lección: ${errorMessage}`, "error");
     }
   };
 

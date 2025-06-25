@@ -1,6 +1,5 @@
 package com.coders.backers.plataformapython.backend.models;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,39 +25,43 @@ public class LessonEntity {
 
     @Column(name = "titulo")
     private String title;
-    
+
     @Column(name = "descripcion")
     private String description;
-    
+
     @Column(name = "active")
     private boolean active;
-    
+
     @Column(name = "create_at")
     private Date createdAt;
 
     @Column(name = "update_at")
     private Date updatedAt;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "curso_id")
     private CourseEntity course;
-    
-    
+
     @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private PracticeEntity practice;
-    
-    
+
     @OneToMany(mappedBy = "leccion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ContenidoModel> contenidos = new ArrayList<>();
 
-    
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ResourceModel> resources = new ArrayList<>();
+
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<StudentLessonProgressEntity> studentProgress = new ArrayList<>();
+
     public LessonEntity(String title, String description, CourseEntity course) {
         this.title = title;
         this.description = description;
         this.course = course;
-    }   
-    public LessonEntity(Long id, String title, String description, boolean active, 
-                       Date createdAt, Date updatedAt, CourseEntity course) {
+    }
+
+    public LessonEntity(Long id, String title, String description, boolean active,
+            Date createdAt, Date updatedAt, CourseEntity course) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -68,10 +71,9 @@ public class LessonEntity {
         this.course = course;
     }
 
-    
-    public LessonEntity(Long id, String title, String description, boolean active, 
-                       Date createdAt, Date updatedAt, CourseEntity course, 
-                       Long quizId, Long practiceId) {
+    public LessonEntity(Long id, String title, String description, boolean active,
+            Date createdAt, Date updatedAt, CourseEntity course,
+            Long quizId, Long practiceId) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -79,16 +81,16 @@ public class LessonEntity {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.course = course;
-       
+
     }
-    
+
     @PrePersist
     protected void onCreate() {
         createdAt = Date.valueOf(LocalDate.now());
         updatedAt = Date.valueOf(LocalDate.now());
-        active = true; 
+        active = true;
     }
-    
+
     @PreUpdate
     protected void onUpdate() {
         updatedAt = Date.valueOf(LocalDate.now());
