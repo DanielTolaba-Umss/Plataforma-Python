@@ -26,9 +26,10 @@ import com.coders.backers.plataformapython.backend.services.CourseService;
 @RequestMapping("/api/courses")
 public class CourseController {
 
-    private CourseService courseService;    // Create
+    private CourseService courseService; // Create
+
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<CourseDto> createCourse(@RequestBody CreateCourseDto createCourseDto) {
         CourseDto savedCourse = courseService.createCourse(createCourseDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCourse);
@@ -41,15 +42,16 @@ public class CourseController {
         CourseDto courseDto = courseService.getCourseById(id);
         return ResponseEntity.ok(courseDto);
     }
-      @GetMapping
+
+    @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<List<CourseDto>> getAllCourses(
             @RequestParam(value = "active", required = false) Boolean active,
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "level", required = false) String level) {
-        
+
         List<CourseDto> courses;
-        
+
         if (title != null && !title.isEmpty()) {
             courses = courseService.searchCoursesByTitle(title);
         } else if (level != null && !level.isEmpty()) {
@@ -59,38 +61,55 @@ public class CourseController {
         } else {
             courses = courseService.getAllCourses();
         }
-        
+
         return ResponseEntity.ok(courses);
     }
-    
+
     // Update
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<CourseDto> updateCourse(
-            @PathVariable Long id, 
+            @PathVariable Long id,
             @RequestBody UpdateCourseDto updateCourseDto) {
         CourseDto updatedCourse = courseService.updateCourse(id, updateCourseDto);
         return ResponseEntity.ok(updatedCourse);
     }
-    
+
     @PutMapping("/{id}/activate")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<CourseDto> activateCourse(@PathVariable Long id) {
         CourseDto activatedCourse = courseService.activateCourse(id);
         return ResponseEntity.ok(activatedCourse);
     }
-      @PutMapping("/{id}/deactivate")
-    @PreAuthorize("hasRole('ADMIN')")
+
+    @PutMapping("/{id}/deactivate")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<CourseDto> deactivateCourse(@PathVariable Long id) {
         CourseDto deactivatedCourse = courseService.deactivateCourse(id);
         return ResponseEntity.ok(deactivatedCourse);
     }
-    
+
     // Delete
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("teachers/{teacherId}")
+    @PreAuthorize("hasAnyRole('TEACHER')")
+    public ResponseEntity<List<CourseDto>> getCoursesByTeacherId(@PathVariable long teacherId) {
+        List<CourseDto> courses = courseService.getCoursesByTeacherId(teacherId);
+        return ResponseEntity.ok(courses);
+    }
+
+    @PostMapping("/teacher/{teacherId}")
+    @PreAuthorize("hasRole('TEACHER')")
+    public ResponseEntity<CourseDto> createCourseAndAssignToTeacher(
+            @PathVariable Long teacherId,
+            @RequestBody CreateCourseDto createCourseDto) {
+        CourseDto savedCourse = courseService.createCourseByTeacherId(createCourseDto, teacherId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCourse);
     }
 }

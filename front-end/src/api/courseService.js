@@ -14,6 +14,8 @@ export const cursosAPI = {
         return response;
     },
     crear: (datos) => api.post('/courses', datos),
+    obtenerPorDocenteId: (id) => api.get(`/courses/teachers/${id}`),
+    crearPorDocente: (teacherId, datos) => api.post(`/courses/teacher/${teacherId}`, datos),
 };
 
 // Nueva API de cursos compatible con formularios admin
@@ -31,6 +33,7 @@ export const courseService = {
   
   // Crear un nuevo curso (solo admin)
   createCourse: (courseData) => api.post('/courses', courseData),
+
   
   // Actualizar un curso (solo admin)
   updateCourse: (id, courseData) => api.put(`/courses/${id}`, courseData),

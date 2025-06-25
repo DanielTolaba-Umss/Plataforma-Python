@@ -5,6 +5,9 @@ import { cursosAPI } from "../../../api/courseService";
 import styles from "/src/paginas/docente/estilos/GestionCurso.module.css";
 
 const GestionCurso = () => {
+  const teacher = JSON.parse(localStorage.getItem("user"));
+  console.log("Docente actual:", teacher);
+  const teacherId = teacher?.id; 
   const navigate = useNavigate();
 
   const [niveles, setNiveles] = useState([]);
@@ -22,7 +25,7 @@ const GestionCurso = () => {
   useEffect(() => {
     const fetchNiveles = async () => {
       try {
-        const response = await cursosAPI.obtenerTodos();
+        const response = await cursosAPI.obtenerPorDocenteId(teacherId);
         if (response.status !== 200)
           throw new Error("Error en la respuesta del servidor");
 
@@ -73,7 +76,7 @@ const GestionCurso = () => {
         return;
       }
 
-      const response = await cursosAPI.crear(nuevoNivel);
+      const response = await cursosAPI.crearPorDocente(teacherId,nuevoNivel);
 
       const createdNivel = {
         id: response.data.id,
@@ -165,6 +168,16 @@ const GestionCurso = () => {
     }
   };
 
+  const getInitials = (name, lastName) => {
+    const getFirstLetter = (str) => {
+      return str && str.trim() ? str.trim().split(' ')[0].charAt(0).toUpperCase() : '';
+    };
+    
+    const firstInitial = getFirstLetter(name);
+    const lastInitial = getFirstLetter(lastName);
+    return firstInitial + lastInitial;
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -176,12 +189,12 @@ const GestionCurso = () => {
             Niveles{" "}
           </h1>
           <div className="admin-profile d-flex align-items-center gap-2">
-            <span className="fw-semibold">Docente</span>
+            <span className="fw-semibold">Docente: {teacher.name} {teacher.lastName}</span>
             <div
               className="admin-avatar bg-success text-white rounded-circle d-flex justify-content-center align-items-center"
               style={{ width: "40px", height: "40px" }}
             >
-              GC
+              {getInitials(teacher.name, teacher.lastName)}
             </div>
           </div>
         </div>
