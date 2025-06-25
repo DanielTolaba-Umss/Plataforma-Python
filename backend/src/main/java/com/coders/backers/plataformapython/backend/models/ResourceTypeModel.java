@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "resource_type")
 public class ResourceTypeModel {
-
+    
     @Id
     @Column(name = "type_id")
     private Long typeId;
