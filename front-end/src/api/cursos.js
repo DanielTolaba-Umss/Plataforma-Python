@@ -1,6 +1,7 @@
 import api from "./configuracion";
 
 export const cursosAPI = {
+  obtenerPorDocenteId: (id) => api.get(`/courses/teachers/${id}`),
   obtenerTodos: () => api.get("/courses"),
   obtenerPorId: (id) => api.get(`/courses/${id}`),
   crear: (curso) => api.post("/courses", curso),
