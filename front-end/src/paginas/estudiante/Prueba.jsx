@@ -39,6 +39,13 @@ const Prueba = () => {
     }
   };
 
+  // Función para manejar cuando se completa una lección
+  const handleLessonCompleted = () => {
+    // Marcar en localStorage que una lección fue completada
+    // Esto será usado por el componente Lecciones para refrescarse
+    localStorage.setItem('lessonCompletedFlag', Date.now().toString());
+  };
+
   useEffect(() => {
     const getResources = async () => {
       try {
@@ -180,7 +187,12 @@ const Prueba = () => {
               practicaAbierta ? "abierto" : "cerrado"
             }`}
           >
-            <Editor titulo="Instrucciones de la práctica:" lessonId={lessonId} studentId={user.id} />
+            <Editor 
+              titulo="Instrucciones de la práctica:" 
+              lessonId={lessonId} 
+              studentId={user.id} 
+              onLessonCompleted={handleLessonCompleted}
+            />
           </div>
         </div>
       </div>

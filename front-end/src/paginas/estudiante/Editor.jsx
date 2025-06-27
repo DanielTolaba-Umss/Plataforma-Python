@@ -6,9 +6,10 @@ import { practiceJhService, testCasesService  } from "../../api/practiceJh";
 import { tryPracticeService } from "../../api/tryPracticeService";
 import ReactMarkdown from 'react-markdown';
 import { autoFeedbackService } from "../../api/feedback";
+import studentProfileService from "../../api/studentProfileService";
 
 
-const Editor = ({ titulo, lessonId, studentId }) => {
+const Editor = ({ titulo, lessonId, studentId, onLessonCompleted }) => {
   const [resultado, setResultado] = useState(null);
   const [retroalimentacion, setRetroalimentacion] = useState("");
   const [practica, setPractica] = useState(null);
@@ -207,6 +208,20 @@ const Editor = ({ titulo, lessonId, studentId }) => {
 
         if (respuesta.approved) {
           setPracticeApproved(true);
+          
+          // Completar automáticamente la lección cuando se aprueba la práctica
+          try {
+            await studentProfileService.completeLessonByPractice(lessonId, respuesta.score || 100);
+            console.log("Lección completada automáticamente al aprobar la práctica");
+            
+            // Notificar al componente padre que la lección fue completada
+            if (onLessonCompleted) {
+              onLessonCompleted();
+            }
+          } catch (error) {
+            console.error("Error al completar la lección automáticamente:", error);
+            // No interrumpir el flujo si hay error al completar la lección
+          }
         }
 
         const feedbackGenerado = await generarFeedbackAutomatico(

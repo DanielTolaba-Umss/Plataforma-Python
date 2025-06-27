@@ -33,4 +33,14 @@ public interface StudentProfileService {
      * Obtiene las lecciones de un curso específico con el progreso del estudiante
      */
     List<StudentLessonDto> getStudentCourseLessons(String email, Long courseId);
+    
+    /**
+     * Inicia una lección (cambia estado a IN_PROGRESS)
+     */
+    boolean startLesson(String email, Long lessonId);
+    
+    /**
+     * Completa una lección cuando pasa los test cases de la práctica
+     */
+    boolean completeLessonByPractice(String email, Long lessonId, Integer score);
 }

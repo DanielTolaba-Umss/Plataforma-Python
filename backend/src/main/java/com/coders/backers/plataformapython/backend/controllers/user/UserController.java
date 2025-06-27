@@ -158,4 +158,78 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @Operation(summary = "Iniciar lección", description = "Marca una lección como iniciada (cambia estado a IN_PROGRESS)")
+    @PostMapping("/lessons/{lessonId}/start")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Object>> startLesson(
+            @PathVariable Long lessonId,
+            Authentication authentication) {
+        log.info("Iniciando lección {} para usuario: {}", lessonId, authentication.getName());
+        
+        try {
+            boolean started = studentProfileService.startLesson(authentication.getName(), lessonId);
+            if (started) {
+                return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Lección iniciada exitosamente",
+                    "status", "IN_PROGRESS"
+                ));
+            } else {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "No se pudo iniciar la lección"
+                ));
+            }
+        } catch (RuntimeException e) {
+            log.error("Error iniciando lección: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of(
+                "success", false,
+                "message", e.getMessage()
+            ));
+        }
+    }
+
+    @Operation(summary = "Completar lección por práctica", description = "Marca una lección como completada cuando pasa los test cases")
+    @PostMapping("/lessons/{lessonId}/complete-practice")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Object>> completeLessonByPractice(
+            @PathVariable Long lessonId,
+            @RequestBody Map<String, Object> request,
+            Authentication authentication) {
+        log.info("Completando lección {} por práctica para usuario: {}", lessonId, authentication.getName());
+        
+        try {
+            Boolean passed = (Boolean) request.get("passed");
+            Integer score = (Integer) request.get("score");
+            
+            if (passed == null || !passed) {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "La práctica debe estar aprobada para completar la lección"
+                ));
+            }
+            
+            boolean completed = studentProfileService.completeLessonByPractice(authentication.getName(), lessonId, score != null ? score : 100);
+            
+            if (completed) {
+                return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Lección completada exitosamente",
+                    "status", "COMPLETED"
+                ));
+            } else {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "No se pudo completar la lección"
+                ));
+            }
+        } catch (RuntimeException e) {
+            log.error("Error completando lección: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of(
+                "success", false,
+                "message", e.getMessage()
+            ));
+        }
+    }
 }

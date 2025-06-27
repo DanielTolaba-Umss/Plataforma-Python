@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -219,5 +220,102 @@ public class StudentProfileServiceImpl implements StudentProfileService {
                     progress != null ? progress.getStatus().name() : "NOT_STARTED"
             );
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean startLesson(String email, Long lessonId) {
+        log.info("Iniciando lección {} para estudiante: {}", lessonId, email);
+        
+        try {
+            StudentEntity student = studentRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Estudiante no encontrado: " + email));
+            
+            LessonEntity lesson = lessonRepository.findById(lessonId)
+                    .orElseThrow(() -> new RuntimeException("Lección no encontrada con id: " + lessonId));
+            
+            // Verificar que el estudiante esté inscrito en el curso de la lección
+            List<StudentCourseEnrollmentEntity> enrollments = enrollmentRepository.findByCourse(lesson.getCourse());
+            boolean isEnrolled = enrollments.stream()
+                    .anyMatch(enrollment -> enrollment.getStudent().getId().equals(student.getId()));
+            
+            if (!isEnrolled) {
+                throw new RuntimeException("El estudiante no está inscrito en este curso");
+            }
+            
+            // Buscar o crear el progreso de la lección
+            Optional<StudentLessonProgressEntity> progressOpt = progressRepository.findByStudentAndLesson(student, lesson);
+            
+            if (progressOpt.isPresent()) {
+                StudentLessonProgressEntity progress = progressOpt.get();
+                if (progress.getStatus() == LessonProgressStatus.NOT_STARTED) {
+                    progress.setStatus(LessonProgressStatus.IN_PROGRESS);
+                    progress.setStartDate(new java.sql.Date(System.currentTimeMillis()));
+                    progressRepository.save(progress);
+                    return true;
+                }
+                return false; // Ya está iniciada o completada
+            } else {
+                // Crear nuevo progreso
+                StudentCourseEnrollmentEntity enrollment = enrollments.stream()
+                        .filter(e -> e.getStudent().getId().equals(student.getId()))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
+                
+                StudentLessonProgressEntity newProgress = new StudentLessonProgressEntity(student, lesson, enrollment);
+                newProgress.setStatus(LessonProgressStatus.IN_PROGRESS);
+                newProgress.setStartDate(new java.sql.Date(System.currentTimeMillis()));
+                progressRepository.save(newProgress);
+                return true;
+            }
+        } catch (Exception e) {
+            log.error("Error iniciando lección: {}", e.getMessage());
+            throw new RuntimeException("Error iniciando lección: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean completeLessonByPractice(String email, Long lessonId, Integer score) {
+        log.info("Completando lección {} por práctica para estudiante: {}", lessonId, email);
+        
+        try {
+            StudentEntity student = studentRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Estudiante no encontrado: " + email));
+            
+            LessonEntity lesson = lessonRepository.findById(lessonId)
+                    .orElseThrow(() -> new RuntimeException("Lección no encontrada con id: " + lessonId));
+            
+            // Buscar el progreso de la lección
+            Optional<StudentLessonProgressEntity> progressOpt = progressRepository.findByStudentAndLesson(student, lesson);
+            
+            if (progressOpt.isPresent()) {
+                StudentLessonProgressEntity progress = progressOpt.get();
+                
+                // Solo puede completarse si está en progreso o no iniciada
+                if (progress.getStatus() == LessonProgressStatus.COMPLETED) {
+                    return false; // Ya está completada
+                }
+                
+                // Marcar como completada
+                progress.setStatus(LessonProgressStatus.COMPLETED);
+                progress.setCompletionDate(new java.sql.Date(System.currentTimeMillis()));
+                if (progress.getStartDate() == null) {
+                    progress.setStartDate(new java.sql.Date(System.currentTimeMillis()));
+                }
+                
+                // Registrar el score de la práctica
+                if (score != null) {
+                    progress.setBestPracticeScore(score);
+                }
+                progress.setPracticeCompleted(true);
+                
+                progressRepository.save(progress);
+                return true;
+            } else {
+                throw new RuntimeException("No se encontró progreso para esta lección");
+            }
+        } catch (Exception e) {
+            log.error("Error completando lección: {}", e.getMessage());
+            throw new RuntimeException("Error completando lección: " + e.getMessage());
+        }
     }
 }

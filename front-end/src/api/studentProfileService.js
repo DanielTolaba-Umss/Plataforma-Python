@@ -85,6 +85,42 @@ export const studentProfileService = {
   },
 
   /**
+   * Iniciar una lección (cambiar estado a IN_PROGRESS)
+   * @param {number} lessonId - ID de la lección
+   */
+  startLesson: async (lessonId) => {
+    try {
+      console.log(`Iniciando lección ${lessonId}`);
+      const response = await api.post(`/user/lessons/${lessonId}/start`);
+      console.log("Respuesta de inicio de lección:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error al iniciar lección:", error.response || error);
+      throw new Error('Error al iniciar lección: ' + (error.response?.data?.message || error.message));
+    }
+  },
+
+  /**
+   * Completar una lección por práctica (cambiar estado a COMPLETED)
+   * @param {number} lessonId - ID de la lección
+   * @param {number} score - Puntuación obtenida
+   */
+  completeLessonByPractice: async (lessonId, score = 100) => {
+    try {
+      console.log(`Completando lección ${lessonId} con puntuación ${score}`);
+      const response = await api.post(`/user/lessons/${lessonId}/complete-practice`, {
+        passed: true,
+        score: score
+      });
+      console.log("Respuesta de completar lección:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error al completar lección:", error.response || error);
+      throw new Error('Error al completar lección: ' + (error.response?.data?.message || error.message));
+    }
+  },
+
+  /**
    * Cambiar la contraseña del usuario autenticado
    * @param {Object} passwordData - Datos para cambio de contraseña
    * @param {string} passwordData.currentPassword - Contraseña actual

@@ -16,6 +16,7 @@ import com.coders.backers.plataformapython.backend.models.userModel.StudentEntit
 import com.coders.backers.plataformapython.backend.repository.TryPracticeRepository;
 import com.coders.backers.plataformapython.backend.services.PracticeService;
 import com.coders.backers.plataformapython.backend.services.StudentService;
+import com.coders.backers.plataformapython.backend.services.StudentProfileService;
 import com.coders.backers.plataformapython.backend.services.TestCaseService;
 import com.coders.backers.plataformapython.backend.services.TryPracticeService;
 import com.coders.backers.plataformapython.backend.utils.CodeRestrictionValidator;
@@ -38,6 +39,7 @@ public class TryPracticeServiceImpl implements TryPracticeService {
     private final PythonExecution pythonExecution;
     private final PracticeService practiceService;
     private final StudentService studentService;
+    private final StudentProfileService studentProfileService;
     private final TestCaseService testCaseService;
     private final CodeRestrictionValidator codeRestrictionValidator;
 
@@ -184,6 +186,23 @@ public class TryPracticeServiceImpl implements TryPracticeService {
             entity.setCreateAt(LocalDateTime.now());
 
             TryPracticeEntity savedEntity = tryPracticeRepository.save(entity);
+
+            // Si la práctica fue aprobada, completar la lección automáticamente
+            if (allTestsPassed) {
+                try {
+                    // Obtener la lección de la práctica
+                    Long lessonId = practice.getLesson().getId();
+                    String studentEmail = student.getEmail();
+                    
+                    // Completar la lección usando el servicio de perfil del estudiante
+                    studentProfileService.completeLessonByPractice(studentEmail, lessonId, 100);
+                    
+                    System.out.println("Lección " + lessonId + " completada automáticamente para estudiante " + studentEmail);
+                } catch (Exception e) {
+                    // Log del error pero no fallar el flujo principal
+                    System.err.println("Error completando lección automáticamente: " + e.getMessage());
+                }
+            }
 
             return TryPracticeMapper.mapToDto(savedEntity);
         } catch (Exception e) {
