@@ -367,10 +367,15 @@ function LoginFormFields({
           />
           <button
             type="button"
-            onClick={toggleShowPassword}
             className="password-toggle"
+            onClick={toggleShowPassword}
+            aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
           >
-            {showPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
+            {showPassword ? (
+              <EyeOffIcon size={20} />
+            ) : (
+              <EyeIcon size={20} />
+            )}
           </button>
         </div>
       </div>

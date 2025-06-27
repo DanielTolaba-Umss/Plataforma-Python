@@ -311,14 +311,23 @@
     flex-direction: column;
     margin-bottom: 3rem;
     text-align: center;
-    background-color: #07023500;
+    
+    background-color: #fefdff00;
 }
 
 .form-title {
     font-size: 1.875rem;
     font-weight: bold;
-    color: white;
+    color: white !important;
     margin-bottom: 0.5rem;
+}
+
+/* Regla adicional para asegurar color blanco en el título */
+.form-container .form-header .form-title,
+.login-form .form-title,
+h2.form-title {
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .form-subtitle {
@@ -386,6 +395,25 @@
     padding-right: 2.5rem !important;
 }
 
+/* Ocultar iconos por defecto del navegador para campos de contraseña */
+.password-input::-ms-reveal,
+.password-input::-ms-clear {
+    display: none;
+}
+
+.password-input::-webkit-credentials-auto-fill-button {
+    display: none !important;
+}
+
+/* Para Edge y otros navegadores basados en Chromium */
+.password-input::-webkit-textfield-decoration-container {
+    display: none !important;
+}
+
+.password-input::-webkit-password-toggle {
+    display: none !important;
+}
+
 .password-toggle {
     position: absolute;
     top: 50%;
@@ -393,14 +421,14 @@
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: #9ca3af;
+    color: white !important;
     cursor: pointer;
     transition: color 0.3s;
     padding: 0;
 }
 
 .password-toggle:hover {
-    color: #ffd438;
+    color: #ffd438 !important;
 }
 
 .forgot-password {
