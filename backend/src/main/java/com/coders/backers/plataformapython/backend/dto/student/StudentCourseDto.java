@@ -19,4 +19,10 @@ public class StudentCourseDto {
     private boolean completado;
     private int leccionesTotales;
     private int leccionesCompletadas;
+    private boolean quizCompletado;
+    private Integer quizScore;
+    private Integer bestQuizScore;
+    private Integer quizAttempts;
+    private int progresoLecciones; // Progreso específico de lecciones (0-50)
+    private int progresoQuiz; // Progreso específico del quiz (0-50)
 }

@@ -43,4 +43,14 @@ public interface StudentProfileService {
      * Completa una lección cuando pasa los test cases de la práctica
      */
     boolean completeLessonByPractice(String email, Long lessonId, Integer score);
+    
+    /**
+     * Completa el quiz de un curso
+     */
+    boolean completeQuiz(String email, Long courseId, Integer score);
+    
+    /**
+     * Incrementa el contador de intentos de quiz
+     */
+    void incrementQuizAttempts(String email, Long courseId);
 }

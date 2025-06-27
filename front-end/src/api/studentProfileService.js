@@ -121,6 +121,43 @@ export const studentProfileService = {
   },
 
   /**
+   * Completar quiz de un curso
+   * @param {number} courseId - ID del curso
+   * @param {number} score - Puntuación obtenida
+   * @param {boolean} passed - Si aprobó el quiz
+   */
+  completeQuiz: async (courseId, score, passed = true) => {
+    try {
+      console.log(`Completando quiz del curso ${courseId} con puntuación ${score}`);
+      const response = await api.post(`/user/quiz/${courseId}/complete`, {
+        score: score,
+        passed: passed
+      });
+      console.log("Respuesta de completar quiz:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error al completar quiz:", error.response || error);
+      throw new Error('Error al completar quiz: ' + (error.response?.data?.message || error.message));
+    }
+  },
+
+  /**
+   * Incrementar intentos de quiz
+   * @param {number} courseId - ID del curso
+   */
+  incrementQuizAttempts: async (courseId) => {
+    try {
+      console.log(`Incrementando intentos de quiz del curso ${courseId}`);
+      const response = await api.post(`/user/quiz/${courseId}/attempt`);
+      console.log("Respuesta de incrementar intentos:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error al incrementar intentos de quiz:", error.response || error);
+      throw new Error('Error al incrementar intentos de quiz: ' + (error.response?.data?.message || error.message));
+    }
+  },
+
+  /**
    * Cambiar la contraseña del usuario autenticado
    * @param {Object} passwordData - Datos para cambio de contraseña
    * @param {string} passwordData.currentPassword - Contraseña actual

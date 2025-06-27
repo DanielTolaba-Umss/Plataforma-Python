@@ -232,4 +232,71 @@ public class UserController {
             ));
         }
     }
+
+    @Operation(summary = "Completar quiz", description = "Marca un quiz como completado con la puntuación obtenida")
+    @PostMapping("/quiz/{courseId}/complete")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Object>> completeQuiz(
+            @PathVariable Long courseId,
+            @RequestBody Map<String, Object> request,
+            Authentication authentication) {
+        log.info("Completando quiz del curso {} para usuario: {}", courseId, authentication.getName());
+        
+        try {
+            Integer score = (Integer) request.get("score");
+            Boolean passed = (Boolean) request.get("passed");
+            
+            if (passed == null || !passed) {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "El quiz debe estar aprobado para completarlo"
+                ));
+            }
+            
+            boolean completed = studentProfileService.completeQuiz(authentication.getName(), courseId, score != null ? score : 100);
+            
+            if (completed) {
+                return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Quiz completado exitosamente",
+                    "score", score
+                ));
+            } else {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "No se pudo completar el quiz"
+                ));
+            }
+        } catch (RuntimeException e) {
+            log.error("Error completando quiz: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of(
+                "success", false,
+                "message", e.getMessage()
+            ));
+        }
+    }
+
+    @Operation(summary = "Incrementar intentos de quiz", description = "Incrementa el contador de intentos de quiz")
+    @PostMapping("/quiz/{courseId}/attempt")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Object>> incrementQuizAttempts(
+            @PathVariable Long courseId,
+            Authentication authentication) {
+        log.info("Incrementando intentos de quiz del curso {} para usuario: {}", courseId, authentication.getName());
+        
+        try {
+            studentProfileService.incrementQuizAttempts(authentication.getName(), courseId);
+            
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Intento de quiz registrado exitosamente"
+            ));
+        } catch (RuntimeException e) {
+            log.error("Error incrementando intentos de quiz: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of(
+                "success", false,
+                "message", e.getMessage()
+            ));
+        }
+    }
 }

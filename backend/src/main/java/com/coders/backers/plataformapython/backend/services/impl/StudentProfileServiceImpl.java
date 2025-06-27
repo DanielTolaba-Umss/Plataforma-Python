@@ -112,20 +112,40 @@ public class StudentProfileServiceImpl implements StudentProfileService {
                     .filter(progress -> progress.getStatus() == LessonProgressStatus.COMPLETED)
                     .count();
             
-            // Calcular progreso porcentual
-            int progressPercentage = totalLessons > 0 ? (completedLessons * 100) / totalLessons : 0;
+            // Actualizar totales en la inscripción si es necesario
+            if (totalLessons != enrollment.getTotalLessons() || 
+                completedLessons != enrollment.getCompletedLessons()) {
+                enrollment.setTotalLessons(totalLessons);
+                enrollment.setCompletedLessons(completedLessons);
+                enrollmentRepository.save(enrollment);
+            }
+            
+            // Calcular progreso de lecciones (50% del total)
+            int lessonProgressPercent = totalLessons > 0 ? (completedLessons * 50) / totalLessons : 0;
+            
+            // Calcular progreso del quiz (50% del total)
+            int quizProgressPercent = (enrollment.getQuizCompleted() != null && enrollment.getQuizCompleted()) ? 50 : 0;
+            
+            // Calcular progreso total
+            int totalProgressPercent = lessonProgressPercent + quizProgressPercent;
             
             return new StudentCourseDto(
                     course.getId(),
                     course.getTitle(),
                     course.getLevel(),
                     course.getDescription(),
-                    progressPercentage,
+                    totalProgressPercent,
                     enrollment.getEnrollmentDate() != null ? 
                         enrollment.getEnrollmentDate().toLocalDate() : LocalDate.now(),
-                    progressPercentage == 100,
+                    totalProgressPercent >= 100,
                     totalLessons,
-                    completedLessons
+                    completedLessons,
+                    enrollment.getQuizCompleted() != null ? enrollment.getQuizCompleted() : false,
+                    enrollment.getQuizScore(),
+                    enrollment.getBestQuizScore(),
+                    enrollment.getQuizAttempts() != null ? enrollment.getQuizAttempts() : 0,
+                    lessonProgressPercent,
+                    quizProgressPercent
             );
         }).collect(Collectors.toList());
     }    @Override
@@ -316,6 +336,57 @@ public class StudentProfileServiceImpl implements StudentProfileService {
         } catch (Exception e) {
             log.error("Error completando lección: {}", e.getMessage());
             throw new RuntimeException("Error completando lección: " + e.getMessage());
+        }
+    }
+    
+    @Override
+    public boolean completeQuiz(String email, Long courseId, Integer score) {
+        log.info("Completando quiz del curso {} para estudiante: {}", courseId, email);
+        
+        try {
+            StudentEntity student = studentRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Estudiante no encontrado: " + email));
+            
+            // Buscar la inscripción del estudiante en el curso
+            List<StudentCourseEnrollmentEntity> enrollments = enrollmentRepository.findByStudent(student);
+            StudentCourseEnrollmentEntity enrollment = enrollments.stream()
+                    .filter(e -> e.getCourse().getId().equals(courseId))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("El estudiante no está inscrito en este curso"));
+            
+            // Completar el quiz
+            enrollment.completeQuiz(score);
+            enrollmentRepository.save(enrollment);
+            
+            return true;
+        } catch (Exception e) {
+            log.error("Error completando quiz: {}", e.getMessage());
+            throw new RuntimeException("Error completando quiz: " + e.getMessage());
+        }
+    }
+    
+    @Override
+    public void incrementQuizAttempts(String email, Long courseId) {
+        log.info("Incrementando intentos de quiz del curso {} para estudiante: {}", courseId, email);
+        
+        try {
+            StudentEntity student = studentRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Estudiante no encontrado: " + email));
+            
+            // Buscar la inscripción del estudiante en el curso
+            List<StudentCourseEnrollmentEntity> enrollments = enrollmentRepository.findByStudent(student);
+            StudentCourseEnrollmentEntity enrollment = enrollments.stream()
+                    .filter(e -> e.getCourse().getId().equals(courseId))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("El estudiante no está inscrito en este curso"));
+            
+            // Incrementar intentos
+            enrollment.incrementQuizAttempts();
+            enrollmentRepository.save(enrollment);
+            
+        } catch (Exception e) {
+            log.error("Error incrementando intentos de quiz: {}", e.getMessage());
+            throw new RuntimeException("Error incrementando intentos de quiz: " + e.getMessage());
         }
     }
 }

@@ -56,6 +56,18 @@ public class StudentCourseEnrollmentEntity {
     @Column(name = "completed_lessons")
     private Integer completedLessons = 0;
     
+    @Column(name = "quiz_completed", nullable = false)
+    private Boolean quizCompleted = false;
+    
+    @Column(name = "quiz_score")
+    private Integer quizScore;
+    
+    @Column(name = "quiz_attempts")
+    private Integer quizAttempts = 0;
+    
+    @Column(name = "best_quiz_score")
+    private Integer bestQuizScore;
+    
     @Column(name = "created_at")
     private Date createdAt;
     
@@ -87,15 +99,28 @@ public class StudentCourseEnrollmentEntity {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = Date.valueOf(LocalDate.now());
-        // Calcular progreso automáticamente
+        
+        // Calcular progreso con 50% lecciones y 50% quiz
+        int lessonProgress = 0;
+        int quizProgress = 0;
+        
+        // Progreso de lecciones (50% del total)
         if (totalLessons > 0) {
-            progressPercentage = (completedLessons * 100) / totalLessons;
-            
-            // Marcar como completado si llegó al 100%
-            if (progressPercentage >= 100 && status == EnrollmentStatus.ACTIVE) {
-                status = EnrollmentStatus.COMPLETED;
-                completionDate = Date.valueOf(LocalDate.now());
-            }
+            lessonProgress = (completedLessons * 50) / totalLessons;
+        }
+        
+        // Progreso del quiz (50% del total)
+        if (quizCompleted != null && quizCompleted) {
+            quizProgress = 50; // Si completó el quiz, obtiene el 50%
+        }
+        
+        // Progreso total = progreso lecciones + progreso quiz
+        progressPercentage = lessonProgress + quizProgress;
+        
+        // Marcar como completado si llegó al 100% (lecciones completadas Y quiz completado)
+        if (progressPercentage >= 100 && status == EnrollmentStatus.ACTIVE) {
+            status = EnrollmentStatus.COMPLETED;
+            completionDate = Date.valueOf(LocalDate.now());
         }
     }
     
@@ -111,5 +136,42 @@ public class StudentCourseEnrollmentEntity {
             this.completedLessons--;
             onUpdate(); // Recalcular progreso
         }
+    }
+    
+    // Método helper para completar el quiz
+    public void completeQuiz(Integer score) {
+        this.quizCompleted = true;
+        this.quizScore = score;
+        this.quizAttempts = (this.quizAttempts != null ? this.quizAttempts : 0) + 1;
+        
+        // Actualizar mejor puntuación
+        if (this.bestQuizScore == null || (score != null && score > this.bestQuizScore)) {
+            this.bestQuizScore = score;
+        }
+        
+        onUpdate(); // Recalcular progreso
+    }
+    
+    // Método helper para incrementar intentos de quiz
+    public void incrementQuizAttempts() {
+        this.quizAttempts = (this.quizAttempts != null ? this.quizAttempts : 0) + 1;
+    }
+    
+    // Método para calcular progreso manual (sin triggers automáticos)
+    public int calculateProgress() {
+        int lessonProgress = 0;
+        int quizProgress = 0;
+        
+        // Progreso de lecciones (50% del total)
+        if (totalLessons != null && totalLessons > 0) {
+            lessonProgress = (completedLessons * 50) / totalLessons;
+        }
+        
+        // Progreso del quiz (50% del total)
+        if (quizCompleted != null && quizCompleted) {
+            quizProgress = 50; // Si completó el quiz, obtiene el 50%
+        }
+        
+        return lessonProgress + quizProgress;
     }
 }
