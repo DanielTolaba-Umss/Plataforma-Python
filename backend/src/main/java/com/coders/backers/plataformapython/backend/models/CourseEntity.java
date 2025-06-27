@@ -8,6 +8,8 @@ import lombok.Setter;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 import com.coders.backers.plataformapython.backend.models.userModel.TeacherEntity;
 import com.coders.backers.plataformapython.backend.models.userModel.StudentEntity;
@@ -90,4 +92,10 @@ public class CourseEntity {
     
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     private Set<StudentEntity> students = new HashSet<>();
+    
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<LessonEntity> lessons = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<StudentCourseEnrollmentEntity> enrollments = new ArrayList<>();
 }

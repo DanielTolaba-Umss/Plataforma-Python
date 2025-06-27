@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
 
 import com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.CourseDto;
@@ -102,6 +103,31 @@ public class CourseServiceImpl implements CourseService {
         CourseEntity courseEntity = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Curso no encontrado con id: " + id));
 
+        // Eliminar el curso (las lecciones y todo lo relacionado se eliminará en cascada)
+        courseRepository.delete(courseEntity);
+    }
+
+    @Override
+    public void deleteCourse(Long id, Authentication authentication) {
+        CourseEntity courseEntity = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Curso no encontrado con id: " + id));
+
+        // Verificar si el usuario es admin o si es el docente asignado al curso
+        String userEmail = authentication.getName();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin) {
+            // Verificar si el docente está asignado a este curso
+            boolean isTeacherOfCourse = courseEntity.getTeachers().stream()
+                    .anyMatch(teacher -> teacher.getEmail().equals(userEmail));
+            
+            if (!isTeacherOfCourse) {
+                throw new RuntimeException("No tienes permisos para eliminar este curso");
+            }
+        }
+
+        // Eliminar el curso (las lecciones y todo lo relacionado se eliminará en cascada)
         courseRepository.delete(courseEntity);
     }
 

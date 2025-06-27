@@ -1,6 +1,8 @@
 package com.coders.backers.plataformapython.backend.models;
 
 import jakarta.persistence.*;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "practice")
@@ -27,6 +29,14 @@ public class PracticeEntity {
     @OneToOne
     @JoinColumn(name = "leccion_id")
     private LessonEntity lesson;
+
+    // Relación con TestCases - eliminación en cascada
+    @OneToMany(mappedBy = "practice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TestCaseEntity> testCases = new ArrayList<>();
+
+    // Relación con TryPractice - eliminación en cascada
+    @OneToMany(mappedBy = "practice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TryPracticeEntity> tryPractices = new ArrayList<>();
 
     public PracticeEntity() {
     }
@@ -95,6 +105,22 @@ public class PracticeEntity {
 
     public void setLesson(LessonEntity lesson) {
         this.lesson = lesson;
+    }
+
+    public List<TestCaseEntity> getTestCases() {
+        return testCases;
+    }
+
+    public void setTestCases(List<TestCaseEntity> testCases) {
+        this.testCases = testCases;
+    }
+
+    public List<TryPracticeEntity> getTryPractices() {
+        return tryPractices;
+    }
+
+    public void setTryPractices(List<TryPracticeEntity> tryPractices) {
+        this.tryPractices = tryPractices;
     }
 
     public PracticeEntity orElseThrow(Object object) {

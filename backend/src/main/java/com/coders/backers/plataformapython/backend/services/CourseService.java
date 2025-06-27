@@ -2,6 +2,8 @@ package com.coders.backers.plataformapython.backend.services;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+
 import com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.CourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.UpdateCourseDto;
@@ -33,6 +35,8 @@ public interface CourseService {
 
     // Delete
     void deleteCourse(Long id);
+    
+    void deleteCourse(Long id, Authentication authentication);
 
     // Búsqueda
     List<CourseDto> searchCoursesByTitle(String title);

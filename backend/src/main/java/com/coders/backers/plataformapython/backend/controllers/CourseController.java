@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import lombok.AllArgsConstructor;
 
 import com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.CourseDto;
+import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
 import com.coders.backers.plataformapython.backend.dto.course.UpdateCourseDto;
 import com.coders.backers.plataformapython.backend.services.CourseService;
 
@@ -92,9 +94,15 @@ public class CourseController {
     // Delete
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
-    public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
-        courseService.deleteCourse(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteCourse(@PathVariable Long id, Authentication authentication) {
+        try {
+            courseService.deleteCourse(id, authentication);
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @GetMapping("teachers/{teacherId}")
