@@ -62,6 +62,13 @@ const Recursos = () => {
   // Cargar recursos al montar el componente
   useEffect(() => {
     const fetchResources = async () => {
+      // Verificar que lessonId esté presente
+      if (!lessonId) {
+        setError("Error: ID de lección no encontrado. Asegúrate de acceder a esta página desde una lección válida.");
+        console.error("Error: lessonId is undefined");
+        return;
+      }
+
       try {
         setLoading(true);
         setError(null);
@@ -451,6 +458,33 @@ const Recursos = () => {
   };
   return (
     <div className="recursos">
+      {/* Verificación temprana del lessonId */}
+      {!lessonId ? (
+        <div className="error-container">
+          <div className="recursos-header">
+            <h2 className="recursos-title">RECURSOS</h2>
+            <button
+              onClick={() => navigate(`/gestion-curso/lecciones/${courseId || ''}`)}
+              className="recursos-back-button"
+            >
+              Volver a lecciones
+            </button>
+          </div>
+          <div className="error-message">
+            <h3>Error: ID de lección no encontrado</h3>
+            <p>No se pudo cargar la página de recursos porque no se encontró un ID de lección válido.</p>
+            <p>Por favor, regresa a la lista de lecciones y selecciona una lección antes de acceder a los recursos.</p>
+            <button
+              onClick={() => navigate(`/gestion-curso/lecciones/${courseId || ''}`)}
+              className="primary-button"
+              style={{ marginTop: '20px' }}
+            >
+              Ir a lecciones
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
       {/* Error Banner */}
       {error && (
         <div className="notification error">
@@ -937,6 +971,8 @@ const Recursos = () => {
             </div>
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );

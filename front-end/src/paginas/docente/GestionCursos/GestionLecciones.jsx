@@ -1,5 +1,5 @@
 // Archivo: GestionLecciones.jsx
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect, useCallback} from "react";
 import { useNavigate, useParams} from "react-router-dom";
 import {
   Edit,
@@ -57,60 +57,61 @@ const GestionLecciones = () => {
   console.log("ID del nivel:", courseId);
   const nivelId = courseId ;
 
-  useEffect(() => {
-    const fetchLecciones = async () => {
-      const nivelLevel = localStorage.getItem("nivelLevel");
-
-      if (!nivelId || !nivelLevel) {
-        console.warn(
-          "Faltan datos para obtener lecciones (nivelId o nivelLevel)"
-        );
-        return;
-      }
-
-      try {
-        const response = await leccionesAPI.obtenerPorCursoYNivel(
-          nivelId,
-          nivelLevel
-        );
-        console.log("🚀 ~ fetchLecciones ~ response:", response);
-
-        if (response.status !== 200) {
-          throw new Error("Error en la respuesta del servidor");
-        }
-
-        const leccionesFormateadas = response.data.map((leccion) => ({
-          id: leccion.id,
-          title: leccion.title || "Sin título",
-          description: leccion.description || "Sin descripción",
-          slug: (leccion.titulo || "").toLowerCase().replace(/\s+/g, "-"),
-          // Datos adicionales para la vista previa (simulados - ajusta según tu API)
-          recursos: leccion.recursos || {
-            videos: leccion.videos || [],
-            pdfs: leccion.pdfs || [],
-            practicas: leccion.practicas || [],
-          },
-          contenido: leccion.contenido || "Contenido de la lección...",
-        }));
-
-        console.log("Datos recibidos:", response.data);
-        setLecciones(leccionesFormateadas);
-      } catch (error) {
-        console.error("Error al cargar lecciones:", error);
-        showNotification(
-          "Error al cargar lecciones: " +
-            (error.response?.data?.message || error.message),
-          "error"
-        );
-      }
-    };
-
-    fetchLecciones();
-  }, [nivelId]);
-
   const showNotification = (message, type) => {
     alert(`${type.toUpperCase()}: ${message}`);
   };
+
+  // Función para cargar lecciones - extraída para reutilizar
+  const fetchLecciones = useCallback(async () => {
+    const nivelLevel = localStorage.getItem("nivelLevel");
+
+    if (!nivelId || !nivelLevel) {
+      console.warn(
+        "Faltan datos para obtener lecciones (nivelId o nivelLevel)"
+      );
+      return;
+    }
+
+    try {
+      const response = await leccionesAPI.obtenerPorCursoYNivel(
+        nivelId,
+        nivelLevel
+      );
+      console.log("🚀 ~ fetchLecciones ~ response:", response);
+
+      if (response.status !== 200) {
+        throw new Error("Error en la respuesta del servidor");
+      }
+
+      const leccionesFormateadas = response.data.map((leccion) => ({
+        id: leccion.id,
+        title: leccion.title || "Sin título",
+        description: leccion.description || "Sin descripción",
+        slug: (leccion.titulo || "").toLowerCase().replace(/\s+/g, "-"),
+        // Datos adicionales para la vista previa (simulados - ajusta según tu API)
+        recursos: leccion.recursos || {
+          videos: leccion.videos || [],
+          pdfs: leccion.pdfs || [],
+          practicas: leccion.practicas || [],
+        },
+        contenido: leccion.contenido || "Contenido de la lección...",
+      }));
+
+      console.log("Datos recibidos:", response.data);
+      setLecciones(leccionesFormateadas);
+    } catch (error) {
+      console.error("Error al cargar lecciones:", error);
+      showNotification(
+        "Error al cargar lecciones: " +
+          (error.response?.data?.message || error.message),
+        "error"
+      );
+    }
+  }, [nivelId]);
+
+  useEffect(() => {
+    fetchLecciones();
+  }, [fetchLecciones]);
 
   // Función para toggle de secciones expandibles
   const toggleSection = (section) => {
@@ -205,15 +206,12 @@ const GestionLecciones = () => {
   const handleCreateLeccion = async (leccionData) => {
     try {
       const response = await leccionesAPI.crear(leccionData);
-      setLecciones((prev) => [
-        ...prev,
-        {
-          id: response.data.leccion_id,
-          title: response.data.title,
-          description: response.data.description,
-          nivelId: response.data.curso_Id,
-        },
-      ]);
+      console.log("✅ Lección creada:", response.data);
+      
+      // En lugar de actualizar manualmente el estado, refrescamos la lista completa
+      // para asegurar consistencia de datos
+      await fetchLecciones();
+      
       showNotification("Lección creada con éxito", "success");
       setShowCreateForm(false);
       localStorage.removeItem("nivelId");
@@ -656,7 +654,7 @@ const GestionLecciones = () => {
                 className={styles.primaryButton}
                 onClick={() => {
                   navigate(
-                    `/gestion-curso/lecciones/${leccionPreview.id}/recursos`
+                    `/gestion-curso/${nivelId}/lecciones/${leccionPreview.id}/recursos`
                   );
                   setShowPreviewModal(false);
                 }}
