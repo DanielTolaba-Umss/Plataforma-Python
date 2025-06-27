@@ -27,15 +27,18 @@ const Sidebar = () => {
       studentProfileService
         .getCourses()
         .then((courses) => {
-          // Convertir los cursos del estudiante al formato esperado por el sidebar
+          // La respuesta del backend ya viene con la estructura correcta (StudentCourseDto)
           const cursosInscritos = Array.isArray(courses) ? courses : [courses];
+          console.log("Cursos obtenidos del backend:", cursosInscritos);
+          
+          // Usar directamente la estructura del backend
           const nivelesInscritos = cursosInscritos.map(course => ({
             id: course.courseId,
             level: course.level,
             title: course.title,
-            // Agregar más campos si son necesarios
-            nombre: course.title,
-            descripcion: `Curso de ${course.level}`
+            description: course.description,
+            // Mantener compatibilidad con el código existente
+            nombre: course.title
           }));
           setNiveles(nivelesInscritos);
         })
@@ -80,7 +83,7 @@ const Sidebar = () => {
                 }`}
                 onClick={() => handleNivelClick(nivel)}
               >
-                {nivel.level}
+                {nivel.title || nivel.nombre}
               </button>
             ))}
           </div>
