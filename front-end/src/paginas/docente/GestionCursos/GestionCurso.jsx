@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { BookOpen, Pencil, Trash2, Plus } from "lucide-react";
+import { BookOpen, Pencil, Trash2, Plus, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cursosAPI } from "../../../api/courseService";
+import AsignarEstudiantesModal from "../../../componentes/especificos/AsignarEstudiantesModal";
 import styles from "/src/paginas/docente/estilos/GestionCurso.module.css";
 
 const GestionCurso = () => {
@@ -21,6 +22,8 @@ const GestionCurso = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [nivelToDelete, setNivelToDelete] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [cursoParaAsignar, setCursoParaAsignar] = useState(null);
 
   useEffect(() => {
     const fetchNiveles = async () => {
@@ -48,12 +51,11 @@ const GestionCurso = () => {
         );
       }
     };
-    fetchNiveles();
-  }, []);
-
-  const showNotification = (message, type) => {
-    alert(`${type.toUpperCase()}: ${message}`);
-  };
+    
+    if (teacherId) {
+      fetchNiveles();
+    }
+  }, [teacherId]);
 
   const handleModuleSelect = (nivelId) => {
     const nivelSeleccionado = niveles.find((n) => n.id === nivelId);
@@ -168,6 +170,20 @@ const GestionCurso = () => {
     }
   };
 
+  const handleAsignarEstudiantes = (curso) => {
+    setCursoParaAsignar(curso);
+    setShowAssignModal(true);
+  };
+
+  const handleCloseAssignModal = () => {
+    setShowAssignModal(false);
+    setCursoParaAsignar(null);
+  };
+
+  const showNotification = (message, type) => {
+    alert(`${type.toUpperCase()}: ${message}`);
+  };
+
   const getInitials = (name, lastName) => {
     const getFirstLetter = (str) => {
       return str && str.trim() ? str.trim().split(' ')[0].charAt(0).toUpperCase() : '';
@@ -233,6 +249,12 @@ const GestionCurso = () => {
                   onClick={() => handleEliminarNivel(nivel.id)}
                 >
                   <Trash2 size={18} />
+                </button>
+                <button
+                  className={styles.assignButton}
+                  onClick={() => handleAsignarEstudiantes(nivel)}
+                >
+                  <Users size={18} />
                 </button>
               </div>
             </div>
@@ -375,6 +397,16 @@ const GestionCurso = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal de asignación de estudiantes */}
+      {showAssignModal && cursoParaAsignar && (
+        <AsignarEstudiantesModal
+          isOpen={showAssignModal}
+          cursoId={cursoParaAsignar.id}
+          cursoNombre={cursoParaAsignar.nombre}
+          onClose={handleCloseAssignModal}
+        />
       )}
     </div>
   );

@@ -9,12 +9,18 @@ import org.springframework.security.core.Authentication;
 import com.coders.backers.plataformapython.backend.dto.course.CreateCourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.CourseDto;
 import com.coders.backers.plataformapython.backend.dto.course.UpdateCourseDto;
+import com.coders.backers.plataformapython.backend.dto.student.StudentDto;
 import com.coders.backers.plataformapython.backend.exception.ResourceNotFoundException;
 import com.coders.backers.plataformapython.backend.mapper.CourseMapper;
+import com.coders.backers.plataformapython.backend.mapper.StudentMapper;
 import com.coders.backers.plataformapython.backend.models.CourseEntity;
+import com.coders.backers.plataformapython.backend.models.StudentCourseEnrollmentEntity;
+import com.coders.backers.plataformapython.backend.models.userModel.StudentEntity;
 import com.coders.backers.plataformapython.backend.models.userModel.TeacherEntity;
 import com.coders.backers.plataformapython.backend.repository.CourseRepository;
+import com.coders.backers.plataformapython.backend.repository.StudentRepository;
 import com.coders.backers.plataformapython.backend.repository.TeacherRepository;
+import com.coders.backers.plataformapython.backend.repositories.StudentCourseEnrollmentRepository;
 import com.coders.backers.plataformapython.backend.services.CourseService;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +31,8 @@ public class CourseServiceImpl implements CourseService {
 
     private CourseRepository courseRepository;
     private TeacherRepository teacherRepository;
+    private StudentRepository studentRepository;
+    private StudentCourseEnrollmentRepository enrollmentRepository;
 
     @Override
     public CourseDto createCourse(CreateCourseDto createCourseDto) {
@@ -163,5 +171,70 @@ public class CourseServiceImpl implements CourseService {
         teacherRepository.save(teacher);
 
         return CourseMapper.mapToModelDto(savedCourse);
+    }
+
+    @Override
+    public void assignStudentsToCourse(Long courseId, List<Long> studentIds, Authentication authentication) {
+        // Verificar que el curso existe
+        CourseEntity course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Curso no encontrado con id: " + courseId));
+
+        // Verificar permisos (solo admin o docente asignado al curso puede asignar estudiantes)
+        String username = authentication.getName();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+        
+        if (!isAdmin) {
+            boolean isAssignedTeacher = course.getTeachers().stream()
+                    .anyMatch(teacher -> teacher.getEmail().equals(username));
+            
+            if (!isAssignedTeacher) {
+                throw new RuntimeException("No tienes permisos para asignar estudiantes a este curso");
+            }
+        }
+
+        // Procesar cada estudiante
+        for (Long studentId : studentIds) {
+            StudentEntity student = studentRepository.findById(studentId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Estudiante no encontrado con id: " + studentId));
+
+            // Verificar si ya está inscrito
+            boolean alreadyEnrolled = enrollmentRepository.findByStudentAndCourse(student, course).isPresent();
+            
+            if (!alreadyEnrolled) {
+                StudentCourseEnrollmentEntity enrollment = new StudentCourseEnrollmentEntity();
+                enrollment.setCourse(course);
+                enrollment.setStudent(student);
+                enrollment.setEnrollmentDate(new java.sql.Date(System.currentTimeMillis()));
+                enrollment.setStatus(com.coders.backers.plataformapython.backend.enums.EnrollmentStatus.ACTIVE);
+                
+                enrollmentRepository.save(enrollment);
+            }
+        }
+    }
+
+    @Override
+    public List<StudentDto> getUnassignedStudents(Long courseId) {
+        // Verificar que el curso existe
+        CourseEntity course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Curso no encontrado con id: " + courseId));
+
+        // Obtener todos los estudiantes
+        List<StudentEntity> allStudents = studentRepository.findAll();
+
+        // Filtrar los que ya están inscritos en el curso
+        List<StudentEntity> enrolledStudents = enrollmentRepository.findByCourse(course)
+                .stream()
+                .map(StudentCourseEnrollmentEntity::getStudent)
+                .collect(Collectors.toList());
+
+        // Obtener estudiantes no inscritos
+        List<StudentEntity> unassignedStudents = allStudents.stream()
+                .filter(student -> !enrolledStudents.contains(student))
+                .collect(Collectors.toList());
+
+        return unassignedStudents.stream()
+                .map(StudentMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 }

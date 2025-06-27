@@ -120,4 +120,33 @@ public class CourseController {
         CourseDto savedCourse = courseService.createCourseByTeacherId(createCourseDto, teacherId);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCourse);
     }
+
+    // Gestión de estudiantes
+    @PostMapping("/{courseId}/assign-students")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    public ResponseEntity<Void> assignStudentsToCourse(
+            @PathVariable Long courseId,
+            @RequestBody List<Long> studentIds,
+            Authentication authentication) {
+        try {
+            courseService.assignStudentsToCourse(courseId, studentIds, authentication);
+            return ResponseEntity.ok().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @GetMapping("/{courseId}/unassigned-students")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    public ResponseEntity<List<com.coders.backers.plataformapython.backend.dto.student.StudentDto>> getUnassignedStudents(
+            @PathVariable Long courseId) {
+        try {
+            List<com.coders.backers.plataformapython.backend.dto.student.StudentDto> students = courseService.getUnassignedStudents(courseId);
+            return ResponseEntity.ok(students);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

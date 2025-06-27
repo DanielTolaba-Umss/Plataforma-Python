@@ -9,4 +9,7 @@ export const cursosAPI = {
   eliminar: (id) => api.delete(`/courses/${id}`),
   obtenerPorModulo: (modulo) => api.get(`/courses/module/${modulo}`),
   crearVideo: (resources) => api.post("/resources", resources),
+  // Gestión de estudiantes
+  asignarEstudiantes: (cursoId, studentIds) => api.post(`/courses/${cursoId}/assign-students`, studentIds),
+  obtenerEstudiantesNoAsignados: (cursoId) => api.get(`/courses/${cursoId}/unassigned-students`),
 };

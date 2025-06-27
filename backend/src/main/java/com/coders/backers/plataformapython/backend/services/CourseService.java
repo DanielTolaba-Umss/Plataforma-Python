@@ -41,4 +41,9 @@ public interface CourseService {
     // Búsqueda
     List<CourseDto> searchCoursesByTitle(String title);
 
+    // Gestión de estudiantes
+    void assignStudentsToCourse(Long courseId, List<Long> studentIds, Authentication authentication);
+    
+    List<com.coders.backers.plataformapython.backend.dto.student.StudentDto> getUnassignedStudents(Long courseId);
+
 }
