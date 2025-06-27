@@ -223,7 +223,7 @@ public class AdminController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    //Comentario de apoyo
     @PostMapping("/users/create-with-enrollment")
     @Operation(summary = "Crear usuario con inscripción/asignación", 
                description = "Endpoint unificado para crear estudiantes con inscripción automática o profesores con asignación de curso")
