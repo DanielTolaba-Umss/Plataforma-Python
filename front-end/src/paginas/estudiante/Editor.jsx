@@ -183,7 +183,7 @@ const Editor = ({ titulo, lessonId, studentId }) => {
 
         const respuesta = await tryPracticeService.createTryPractice({
           code: codigo,
-          studentId: 1, 
+          studentId: studentId, 
           practiceId: practica.id
         });
         

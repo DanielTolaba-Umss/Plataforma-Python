@@ -61,4 +61,21 @@ export const pdfApi = {
       throw error;
     }
   },
+  
+  downloadPdf: async (filename) => {
+    try {
+      const response = await api.get(`/resources/pdf/${filename}`, {
+        responseType: 'blob', // Importante: especificar que esperamos un blob
+      });
+      
+      // Crear una URL blob para el PDF
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      
+      return url;
+    } catch (error) {
+      console.error("Error en pdfApi.downloadPdf:", error);
+      throw error;
+    }
+  },
 };

@@ -37,7 +37,7 @@ public class ResourceController {
         this.resourceService = resourceService;
         this.fileStorageService = fileStorageService;
     }    @PostMapping("/upload")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<ResourceDto> uploadResource(
             @RequestParam("file") MultipartFile file,
             @RequestParam("title") String title,

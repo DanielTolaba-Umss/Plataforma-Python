@@ -57,6 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 
                 // Cargar los detalles del usuario
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+                log.info("JWT Filter: Usuario cargado: {} con authorities: {}", userEmail, userDetails.getAuthorities());
 
                 // Validar el token
                 if (jwtService.isTokenValid(jwt, userDetails)) {
@@ -73,7 +74,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     // Establecer la autenticación en el contexto de seguridad
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                     
-                    log.debug("Usuario autenticado: {} con roles: {}", userEmail, userDetails.getAuthorities());
+                    log.info("JWT Filter: Usuario autenticado: {} con roles: {} para URI: {}", 
+                            userEmail, userDetails.getAuthorities(), request.getRequestURI());
+                    log.info("JWT Filter: Método HTTP: {}", request.getMethod());
+                } else {
+                    log.warn("JWT Filter: Token inválido para usuario: {}", userEmail);
                 }
             }
         } catch (Exception e) {

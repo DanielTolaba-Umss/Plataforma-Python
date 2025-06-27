@@ -48,9 +48,6 @@ public class LessonEntity {
     @OneToMany(mappedBy = "leccion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ContenidoModel> contenidos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<ResourceModel> resources = new ArrayList<>();
-
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<StudentLessonProgressEntity> studentProgress = new ArrayList<>();
 

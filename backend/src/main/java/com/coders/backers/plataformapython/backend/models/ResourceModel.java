@@ -15,13 +15,9 @@ public class ResourceModel {
     @Column(name = "resource_id")
     private Long resourceId;
 
-    // @ManyToOne(optional = false)
-    // @JoinColumn(name = "content_id")
-    // private CourseEntity content;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_id")
-    private LessonEntity content;
+    private ContenidoModel content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
@@ -63,11 +59,11 @@ public class ResourceModel {
         this.resourceId = resourceId;
     }
 
-    public LessonEntity getContent() {
+    public ContenidoModel getContent() {
         return content;
     }
 
-    public void setContent(LessonEntity content) {
+    public void setContent(ContenidoModel content) {
         this.content = content;
     }
 

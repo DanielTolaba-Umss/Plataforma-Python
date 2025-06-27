@@ -261,10 +261,7 @@ public class TryPracticeServiceImpl implements TryPracticeService {
     public List<TryPracticeDto> getByStudentIdAndPracticeId(Long studentId, Long practiceId) {
         List<TryPracticeEntity> tryPractices = tryPracticeRepository.findByStudentIdAndPracticeId(studentId,
                 practiceId);
-        if (tryPractices.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    "No TryPractice found for studentId: " + studentId + " and practiceId: " + practiceId);
-        }
+        // Retorna una lista vacía si no hay intentos en lugar de lanzar excepción
         return tryPractices.stream()
                 .map(TryPracticeMapper::mapToDto)
                 .collect(Collectors.toList());

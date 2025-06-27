@@ -18,8 +18,14 @@ public class PracticeController {
     private final PracticeService practiceService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<PracticeDto> createPracticeModule(@RequestBody CreatePracticeDto dto) {
+        System.out.println("PracticeController: Recibida solicitud POST /api/practice");
+        System.out.println("PracticeController: Usuario autenticado: " + 
+            org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName());
+        System.out.println("PracticeController: Authorities: " + 
+            org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+        
         PracticeDto createdModule = practiceService.createPractice(dto);
         return ResponseEntity.status(201).body(createdModule);
     }
@@ -32,14 +38,14 @@ public class PracticeController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<Void> deletePracticeModule(@PathVariable Long id) {
         practiceService.deletePractice(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public ResponseEntity<PracticeDto> updatePracticeModule(@PathVariable Long id, @RequestBody UpdatePracticeDto dto) {
         PracticeDto updated = practiceService.updatePractice(id, dto);
         return ResponseEntity.ok(updated);

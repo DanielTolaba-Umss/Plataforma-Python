@@ -18,7 +18,7 @@ const Prueba = () => {
   const [pdfAbierto, setPdfAbierto] = useState(false);
   const [practicaAbierta, setPracticaAbierta] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
-  const [pdfUrl, setPdfUrl] = useState(null);
+  const [pdfFilename, setPdfFilename] = useState(null);
   const user = JSON.parse(localStorage.getItem("user"));
   console.log("🚀 ~ Prueba ~ user:", user);
 
@@ -51,22 +51,21 @@ const Prueba = () => {
           let embedUrl = video.url;
           if (esYoutube(embedUrl)) {
             embedUrl = convertToEmbedUrl(video.url);
-          } else {
-            // Para videos locales, usar la URL base de archivos estáticos
-            embedUrl = `${environment.staticUrl}${video.url}`;
-          }
-          console.log("🚀 ~ getResources ~ Video URL:", embedUrl);
-          setVideoUrl(embedUrl);
-        } // Buscar PDF (typeId = 2)
-        const pdf = leccion.find((recurso) => recurso.typeId === 2);
-        if (pdf && pdf.url) {
-          // Extraer el nombre del archivo del URL
-          const filename = pdf.url.split("/").pop();
-          // Usar el endpoint específico para PDFs
-          const pdfUrlComplete = `${environment.apiUrl}/resources/pdf/${filename}`;
-          console.log("🚀 ~ getResources ~ PDF URL:", pdfUrlComplete);
-          setPdfUrl(pdfUrlComplete);
+          } else {          // Para videos locales, usar la URL base de archivos estáticos
+          embedUrl = `${environment.staticUrl}${video.url}`;
         }
+        console.log("🚀 ~ getResources ~ Video URL:", embedUrl);
+        setVideoUrl(embedUrl);
+      }
+      
+      // Buscar PDF (typeId = 2)
+      const pdf = leccion.find((recurso) => recurso.typeId === 2);
+      if (pdf && pdf.url) {
+        // Extraer el nombre del archivo del URL
+        const filename = pdf.url.split("/").pop();
+        console.log("🚀 ~ getResources ~ PDF filename:", filename);
+        setPdfFilename(filename);
+      }
       } catch (error) {
         console.error("Error al cargar los recursos de la lección:", error);
       }
@@ -139,8 +138,8 @@ const Prueba = () => {
               pdfAbierto ? "abierto" : "cerrado"
             }`}
           >
-            {pdfUrl ? (
-              <VisorPDF src={pdfUrl} />
+            {pdfFilename ? (
+              <VisorPDF filename={pdfFilename} />
             ) : (
               <div className="visor-pdf">
                 <h4>Visor de PDF</h4>

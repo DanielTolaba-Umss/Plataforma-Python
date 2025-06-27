@@ -10,10 +10,18 @@ public class PracticeEntity {
     @Column(name = "id")
     private Long id;
 
+    @Column(columnDefinition = "TEXT")
     private String instrucciones;
+    
+    @Column(columnDefinition = "TEXT")
     private String codigoInicial;
+    
+    @Column(columnDefinition = "TEXT")
     private String solucionReferencia;
+    
+    @Column(columnDefinition = "TEXT")
     private String restricciones;
+    
     private Integer intentosMax;
 
     @OneToOne
