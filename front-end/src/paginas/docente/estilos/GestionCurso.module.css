@@ -242,6 +242,22 @@
   background-color: #e6c231;
 }
 
+/* Para el botón de asignar estudiantes */
+.assignButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.assignButton:hover {
+  background-color: #218838;
+}
 
 .addButton {
   position: fixed;

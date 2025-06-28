@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,16 +29,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("/api/teachers")
 @Slf4j
 public class TeacherController {
-    private TeacherService teacherService;
-
-    @PostMapping
+    private TeacherService teacherService;    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherDto> createTeacher(@RequestBody CreateTeacherDto createTeacherDto) {
 
         TeacherDto savedTeacher = teacherService.createTeacher(createTeacherDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTeacher);
-    }
-
-    @GetMapping
+    }    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<TeacherDto>> getAllTeachers(
             @RequestParam(value = "active", required = false) Boolean active,
             @RequestParam(value = "specialty", required = false) String specialty) {
@@ -60,12 +59,14 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('TEACHER') and #id == authentication.principal.id)")
     public ResponseEntity<TeacherDto> getTeacherById(@PathVariable Long id) {
         TeacherDto teacher = teacherService.getTeacherById(id);
         return ResponseEntity.ok(teacher);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('TEACHER') and #id == authentication.principal.id)")
     public ResponseEntity<TeacherDto> updateTeacher(@PathVariable Long id,
             @RequestBody UpdateTeacherDto updateTeacherDto) {
         TeacherDto updatedTeacher = teacherService.updateTeacher(id, updateTeacherDto);
@@ -73,24 +74,26 @@ public class TeacherController {
     }
 
     @PutMapping("/{id}/activate")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherDto> activateTeacher(@PathVariable Long id) {
         TeacherDto activatedTeacher = teacherService.activateTeacher(id);
         return ResponseEntity.ok(activatedTeacher);
-    }
-
-    @PutMapping("/{id}/deactivate")
+    }    @PutMapping("/{id}/deactivate")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TeacherDto> deactivateTeacher(@PathVariable Long id) {
         TeacherDto deactivatedTeacher = teacherService.deactivateTeacher(id);
         return ResponseEntity.ok(deactivatedTeacher);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteTeacher(@PathVariable Long id) {
         teacherService.deleteTeacher(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<TeacherDto>> searchTeachers(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "email", required = false) String email,

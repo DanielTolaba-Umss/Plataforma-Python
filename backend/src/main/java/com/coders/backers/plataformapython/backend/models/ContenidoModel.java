@@ -2,6 +2,8 @@ package com.coders.backers.plataformapython.backend.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "contenido")
@@ -24,6 +26,12 @@ public class ContenidoModel {
     @Column(name = "update_date")
     private LocalDateTime updateDate;
 
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ResourceModel> resources = new ArrayList<>();
+
+    public Long getId() {
+        return contenidoId;
+    }
 
     public Long getContenidoId() {
         return contenidoId;
@@ -63,5 +71,13 @@ public class ContenidoModel {
 
     public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public List<ResourceModel> getResources() {
+        return resources;
+    }
+
+    public void setResources(List<ResourceModel> resources) {
+        this.resources = resources;
     }
 }

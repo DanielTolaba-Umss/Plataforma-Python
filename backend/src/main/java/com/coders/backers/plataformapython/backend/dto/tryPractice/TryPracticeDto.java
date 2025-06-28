@@ -2,7 +2,10 @@ package com.coders.backers.plataformapython.backend.dto.tryPractice;
 
 import lombok.*;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+
+import com.coders.backers.plataformapython.backend.dto.practice.PracticeDto;
+import com.coders.backers.plataformapython.backend.dto.student.StudentDto;
 
 @Getter
 @Setter
@@ -10,11 +13,11 @@ import java.sql.Date;
 @AllArgsConstructor
 public class TryPracticeDto {
     private Long id;
-    private Long estudianteProgresoId;
-    private Long practiceId;
-    private String codigoEnviado;
-    private String resultadosPruebas;
-    private boolean aprobado;
-    private String retroalimentacion;
-    private Date fechaIntento;
+    private StudentDto student;
+    private PracticeDto practice;
+    private String code;
+    private String testResults;
+    private Boolean approved;
+    private String feedback;
+    private LocalDateTime createAt;
 }

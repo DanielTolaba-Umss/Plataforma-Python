@@ -3,7 +3,7 @@ package com.coders.backers.plataformapython.backend.utils;
 import java.util.regex.Pattern;
 
 public class UserValidations {
-    private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+    private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,}$";
     private static final String PHONE_PATTERN = "^[0-9]{8}$";
     private static final String NAME_PATTERN = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]{3,30}(\\s[a-zA-ZáéíóúÁÉÍÓÚñÑ]{2,30})?$";
     private static final String LAST_NAME_PATTERN = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ]{3,30}(\\s[a-zA-ZáéíóúÁÉÍÓÚñÑ]{3,30})?$";
@@ -29,12 +29,10 @@ public class UserValidations {
     public static ValidationResult validatePassword(String password) {
         if (password == null || password.isEmpty()) {
             return new ValidationResult(false, "La contraseña no puede estar vacía");
-        }
-
-        if (!Pattern.matches(PASSWORD_PATTERN, password)) {
+        }        if (!Pattern.matches(PASSWORD_PATTERN, password)) {
             return new ValidationResult(false,
-                    "La contraseña debe contener al menos 8 caracteres, " +
-                            "una mayúscula, una minúscula, un número y un caracter especial (@#$%^&+=)");
+                    "La contraseña debe contener al menos 6 caracteres, " +
+                            "una mayúscula, una minúscula y un número");
         }
 
         return new ValidationResult(true, "Contraseña válida");

@@ -14,5 +14,5 @@ public class UpdateQuizDto {
     private Integer puntuacionAprobacion;
     private boolean aleatorio;
     private boolean active;
-    private Long contenidoId;
+    private Long courseId;
 }

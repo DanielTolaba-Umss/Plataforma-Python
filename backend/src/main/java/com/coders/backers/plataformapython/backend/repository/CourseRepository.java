@@ -10,10 +10,16 @@ import com.coders.backers.plataformapython.backend.models.CourseEntity;
 @Repository
 public interface CourseRepository extends JpaRepository<CourseEntity, Long> {
     List<CourseEntity> findByActive(boolean active);
+
     List<CourseEntity> findByTitle(String title);
+
     List<CourseEntity> findByTitleContainingIgnoreCase(String title);
+
     List<CourseEntity> findByOrdenGreaterThan(int orden);
+
     List<CourseEntity> findByLevel(String level);
+
+    List<CourseEntity> findByTeachers_Id(Long teacherId);
 
     boolean existsByTitle(String title);
 }

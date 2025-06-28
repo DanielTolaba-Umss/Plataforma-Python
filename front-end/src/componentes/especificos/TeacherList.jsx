@@ -24,6 +24,7 @@ const TeacherList = () => {
     active: true, // por defecto activo
   });
   const [errores, setErrores] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -46,7 +47,7 @@ const TeacherList = () => {
   // Dentro del componente
   useEffect(() => {
     const fetchTeachers = async () => {
-      setLoading(true); // 👈 Mostrar modal
+      setLoading(true);
       try {
         const response = await teachersAPI.obtenerTodosDocente();
         setTeachers(response.data);
@@ -54,12 +55,19 @@ const TeacherList = () => {
       } catch (error) {
         console.error("Error al obtener docentes:", error);
       } finally {
-        setLoading(false); // 👈 Ocultar modal
+        setLoading(false);
       }
     };
 
     fetchTeachers();
   }, []);
+
+  const filteredTeachers = teachers.filter(
+    (teacher) =>
+      teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      teacher.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      teacher.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -126,7 +134,7 @@ const TeacherList = () => {
     setShowForm(true);
     setNewTeacher({
       ...docente,
-      password: "", // no precargar la contraseña
+      password: "",
     });
   };
 
@@ -253,6 +261,7 @@ const TeacherList = () => {
                     placeholder="Teléfono"
                     value={newTeacher.phone}
                     onChange={handleChange}
+                    maxLength={8}
                     className="input-field"
                   />
                   {errores.phone && (
@@ -310,8 +319,10 @@ const TeacherList = () => {
 
         <input
           type="text"
-          placeholder="🔍 Buscar docentes..."
+          placeholder="🔍 Buscar por nombre o email..."
           className="input-busqueda-docente"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
 
         <table className="tabla-docentes">
@@ -325,7 +336,7 @@ const TeacherList = () => {
             </tr>
           </thead>
           <tbody>
-            {teachers.map((docente) => (
+            {filteredTeachers.map((docente) => (
               <tr key={docente.id}>
                 <td>
                   {docente.name} {docente.lastName}

@@ -1,10 +1,7 @@
-import { API_URL } from "./configuracion";
-import axios from "axios";
-
-const VIDEO_API_URL = `${API_URL}/resources`;
+import api from "./configuracion";
 
 export const getAllResources = async () => {
-  const response = await axios.get(VIDEO_API_URL);
+  const response = await api.get('/resources');
   console.log("🚀 ~ getAllResources ~ response:", response);
   return response.data;
 };
@@ -13,29 +10,29 @@ export const getAllResources = async () => {
 
 export const getResourceByLesson = async (lessonId) => {
   console.log("🚀 ~ getResourceByLesson ~ lessonId:", lessonId);
-  const response = await axios.get(`${VIDEO_API_URL}/by-lesson/${lessonId}`);
+  const response = await api.get(`/resources/by-lesson/${lessonId}`);
   console.log("🚀 ~ getResourceByLesson ~ response:", response);
   return response.data;
 };
 
 export const getResourceById = async (id) => {
-  const response = await axios.get(`${VIDEO_API_URL}/${id}`);
+  const response = await api.get(`/resources/${id}`);
   return response.data;
 };
 
 export const createResource = async (resource) => {
   console.log("🚀 ~ createResource ~ resource:", resource);
-  const response = await axios.post(VIDEO_API_URL, resource);
+  const response = await api.post('/resources', resource);
   return response.data;
 };
 
 export const updateResource = async (id, resource) => {
-  const response = await axios.put(`${VIDEO_API_URL}/${id}`, resource);
+  const response = await api.put(`/resources/${id}`, resource);
   return response.data;
 };
 
 export const deleteResource = async (id) => {
-  await axios.delete(`${VIDEO_API_URL}/${id}`);
+  await api.delete(`/resources/${id}`);
 };
 
 export const uploadResourceFile = async (file, title, typeId, contentId) => {
@@ -46,7 +43,7 @@ export const uploadResourceFile = async (file, title, typeId, contentId) => {
   formData.append("typeId", typeId);
   formData.append("contentId", contentId);
 
-  const response = await axios.post(`${VIDEO_API_URL}/upload`, formData, {
+  const response = await api.post(`/resources/upload`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

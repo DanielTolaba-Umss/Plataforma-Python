@@ -1,0 +1,121 @@
+# =============================================================================
+# ARCHIVO DE CONFIGURACIÓN DE EJEMPLO
+# =============================================================================
+# Copia este archivo como 'application.properties' y configura los valores
+# según tu entorno de desarrollo o producción.
+
+# Application Name
+spring.application.name=backend
+
+# =============================================================================
+# DATABASE CONFIGURATION
+# =============================================================================
+# Configuración de la base de datos PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/plataforma_python_db
+spring.datasource.username=postgres
+spring.datasource.password=tu_password_postgresql
+
+# JPA/Hibernate Configuration
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# =============================================================================
+# SERVER CONFIGURATION
+# =============================================================================
+# Puerto del servidor (opcional, por defecto 8080)
+# server.port=8081
+
+# =============================================================================
+# FILE UPLOAD CONFIGURATION
+# =============================================================================
+# Directorio para almacenar archivos PDF subidos
+pdf.upload.directory=uploads/pdf
+
+# Configuración de tamaño máximo de archivos
+spring.servlet.multipart.max-file-size=100MB
+spring.servlet.multipart.max-request-size=100MB
+
+# Ubicación de recursos estáticos
+spring.web.resources.static-locations=file:uploads/
+
+# =============================================================================
+# JWT CONFIGURATION
+# =============================================================================
+# Configuración de JSON Web Tokens para autenticación
+app.jwt.secret=${JWT_SECRET:tu_clave_secreta_jwt_muy_segura_aqui}
+app.jwt.access-expiry=1800000
+app.jwt.refresh-expiry=604800000
+
+# =============================================================================
+# EMAIL CONFIGURATION (SMTP)
+# =============================================================================
+# Configuración para envío de emails (ejemplo con Gmail)
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=${EMAIL_USERNAME:tu_email@gmail.com}
+spring.mail.password=${EMAIL_PASSWORD:tu_app_password_gmail}
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# Para Gmail:
+# 1. Habilita la verificación en 2 pasos en tu cuenta de Google
+# 2. Ve a "Contraseñas de aplicación" en tu cuenta de Google
+# 3. Genera una contraseña de aplicación para "Correo"
+# 4. Usa esa contraseña generada en EMAIL_PASSWORD
+
+# Para otros proveedores de email, ajusta host y puerto:
+# Outlook/Hotmail: smtp-mail.outlook.com:587
+# Yahoo: smtp.mail.yahoo.com:587
+
+# =============================================================================
+# EMAIL VERIFICATION CONFIGURATION
+# =============================================================================
+# Configuración para verificación de email
+app.email.verification.expiry=86400000
+app.email.verification.base-url=${FRONTEND_URL:http://localhost:3000}
+
+# =============================================================================
+# REDIS CONFIGURATION
+# =============================================================================
+# Configuración de Redis para almacenar tokens de email
+spring.data.redis.host=${REDIS_HOST:localhost}
+spring.data.redis.port=${REDIS_PORT:6379}
+spring.data.redis.password=${REDIS_PASSWORD:}
+spring.data.redis.database=0
+spring.data.redis.timeout=2000ms
+spring.data.redis.lettuce.pool.max-active=8
+spring.data.redis.lettuce.pool.max-idle=8
+spring.data.redis.lettuce.pool.min-idle=0
+
+# =============================================================================
+# LOGGING CONFIGURATION
+# =============================================================================
+# Configuración de logs para debugging (opcional)
+logging.level.com.coders.backers.plataformapython.backend.security=DEBUG
+logging.level.com.coders.backers.plataformapython.backend.services.security=DEBUG
+logging.level.org.springframework.security=DEBUG
+
+# =============================================================================
+# VARIABLES DE ENTORNO RECOMENDADAS
+# =============================================================================
+# Para mayor seguridad, se recomienda usar variables de entorno:
+# 
+# JWT_SECRET=tu_clave_jwt_super_secreta
+# EMAIL_USERNAME=tu_email@gmail.com
+# EMAIL_PASSWORD=tu_app_password
+# REDIS_HOST=localhost
+# REDIS_PORT=6379
+# REDIS_PASSWORD=tu_redis_password
+# FRONTEND_URL=http://localhost:3000
+#
+# En Windows (PowerShell):
+# $env:JWT_SECRET="tu_clave_jwt_super_secreta"
+# $env:EMAIL_USERNAME="tu_email@gmail.com"
+# $env:EMAIL_PASSWORD="tu_app_password"
+#
+# En Linux/Mac:
+# export JWT_SECRET="tu_clave_jwt_super_secreta"
+# export EMAIL_USERNAME="tu_email@gmail.com"
+# export EMAIL_PASSWORD="tu_app_password"

@@ -1,0 +1,799 @@
+.coursesContainer {
+  flex: 1;
+  background-color: #e5e5e5;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.coursesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.coursesTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+}
+
+.backButton {
+  background-color: #0e2ed1;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.backButton:hover {
+  background-color: #057eef;
+}
+
+.coursesGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .coursesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.courseCard {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #e5e5e5;
+  height: auto;
+}
+
+.courseCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #ffd438;
+}
+
+.courseCardContent {
+  position: relative;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.courseTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.courseDescription {
+  color: #6b7280;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.actionsContainer {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.resourcesButton {
+  margin-top: 10px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.editButton {
+  background-color: #306998;
+  color: white;
+}
+
+.editButton:hover {
+  background-color: #300898;
+}
+
+.deleteButton {
+  background-color: #ffd438;
+  color: #300898;
+}
+
+.deleteButton:hover {
+  background-color: #e6c231;
+}
+
+.floatingButton {
+  background-color: #306998;
+  color: white;
+  padding: 1rem;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.floatingButton:hover {
+  background-color: #300898;
+}
+
+/* MODALES */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-top: 4px solid #ffd438;
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal de Vista Previa - Estilos específicos */
+
+.previewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.previewTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.previewDescription {
+  margin-bottom: 20px;
+}
+
+.previewDescription p {
+  color: #6b7280;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.previewContent {
+  margin-bottom: 25px;
+}
+
+.previewContent h3 {
+  color: #300898;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.previewContent p {
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.previewResources {
+  margin-bottom: 25px;
+}
+
+.previewResources h3 {
+  color: #300898;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.resourcesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.resourceType {
+  background-color: #f9fafb;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.resourceTypeHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #306998;
+  font-weight: 600;
+}
+
+.resourceItems {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resourceItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.resourceItem svg {
+  color: #4299e1;
+  flex-shrink: 0;
+}
+
+.resourceItem span {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.previewActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.primaryButton {
+  background-color: #306998;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.primaryButton:hover {
+  background-color: #300898;
+}
+
+.secondaryButton {
+  background-color: #ffd438;
+  color: #300898;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.secondaryButton:hover {
+  background-color: #e6c231;
+}
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modalButton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirmButton {
+  background-color: #306998;
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.confirmButton:hover {
+  background-color: #300898;
+}
+
+.cancelButton {
+  background-color: #ffd438;
+  color: #300898;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancelButton:hover {
+  background-color: #e6c231;
+}
+
+/* NOTIFICACIONES */
+.notification {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  color: white;
+  z-index: 1001;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+}
+
+.notification.success {
+  background-color: #306998;
+}
+
+.notification.error {
+  background-color: #ffd438;
+  color: #300898;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Recursos */
+.resourcesList {
+  margin: 20px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Opciones */
+.optionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.optionCard {
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.optionCard:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e0;
+  transform: translateY(-2px);
+}
+
+.optionCard h4 {
+  margin: 8px 0 4px;
+  font-size: 16px;
+}
+
+.optionCard p {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.optionIconContainer {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.optionIcon {
+  color: #4299e1;
+}
+
+/* Formularios */
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #300898;
+  font-weight: 500;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.formGroup textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: #ffd438;
+}
+.floatingButtonsContainer {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1000;
+}
+.quizzButton {
+  background-color: #306998;
+  color: white;
+  padding: 1rem;
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: bold;
+  font-size: 1rem;
+}
+.dualButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Responsive para el modal de vista previa */
+@media (max-width: 768px) {
+  .previewModal {
+    width: 95%;
+    max-height: 95vh;
+    margin: 10px;
+  }
+
+  .resourcesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .previewActions {
+    flex-direction: column;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+}
+
+/* Responsive para el modal de confirmación */
+/*quizzes*/
+.courseMetadata {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #444;
+}
+
+.courseMetadata p {
+  margin: 4px 0;
+}
+.quizTable {
+  width: 100%;
+  max-width: 600px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1rem 0;
+  font-size: 14px;
+}
+
+.quizTableHeader,
+.quizTableRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding: 10px 16px;
+}
+
+.quizTableHeader {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+}
+
+.quizTableRow {
+  background-color: #fff;
+}
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.mainContent {
+  padding: 5rem;
+  margin-top: -4rem;
+}
+
+.formContainer {
+  width: 100%;
+}
+
+.quizForm {
+  max-height: 80vh;
+  overflow-y: auto;
+  padding-right: 12px;
+  box-sizing: content-box;
+
+  position: relative;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formInput,
+.formTextarea,
+.formSelect {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Botones estilizados */
+.modalButton {
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+.cancelButton {
+  background-color: #ccc;
+  color: #333;
+}
+
+.confirmButton {
+  background-color: #28a745;
+  color: white;
+}
+
+.loadingSpinner {
+  border: 2px solid transparent;
+  border-top-color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.submitButton {
+  background-color: #306998;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  margin-top: 0.5rem;
+}
+
+.submitButton:hover {
+  background-color: #300898;
+}
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.formCheckbox {
+  margin: 0;
+  vertical-align: middle;
+}
+.checkboxLabelContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.toggleCircle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #4caf50;
+  background-color: white;
+  transition: background-color 0.3s ease;
+}
+
+.toggleCircle.active {
+  background-color: #4caf50;
+}
+
+.toggleCircle:hover {
+  background-color: #e0f2e9;
+}
+
+.toggleCircle.active:hover {
+  background-color: #45a049;
+}
+
+.testCaseCard {
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.testCaseCard code {
+  background-color: #eef2f7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.publicLabel {
+  font-size: 0.85rem;
+  color: #2563eb;
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+.testCaseContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.deleteButton {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 4px;
+  transition: transform 0.2s ease;
+}
+
+.deleteButton:hover {
+  transform: scale(1.1);
+}
+
+.boton-editar {
+  background-color: #306998;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton-editar:hover {
+  background-color: #300898; /* lila */
+}

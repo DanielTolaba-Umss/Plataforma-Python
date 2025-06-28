@@ -33,6 +33,56 @@
     color: #374151;
 }
 
+/* Header con título y botón de volver */
+.recursos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Botón de volver - mismo estilo que en GestionLecciones */
+.recursos-back-button {
+    background-color: #0e2ed1;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.recursos-back-button:hover {
+    background-color: #057eef;
+}
+
+/* Header con título y botón de volver */
+.recursos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Botón de volver - mismo estilo que en GestionLecciones */
+.recursos-back-button {
+    background-color: #0e2ed1;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.recursos-back-button:hover {
+    background-color: #057eef;
+}
+
 .busqueda-container {
     position: relative;
     margin-bottom: 1.5rem;
@@ -82,7 +132,7 @@
     padding: 0.9rem 1rem;
     font-weight: 600;
     display: grid;
-    grid-template-columns: 1.5fr 1.5fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
     border-bottom: 1px solid #f1f1f1;
 }
 
@@ -90,8 +140,110 @@
     background-color: white;
     padding: 0.9rem 1rem;
     display: grid;
-    grid-template-columns: 1.5fr 1.5fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
     border-bottom: 1px solid #f1f1f1;
+}
+
+/* Estilos específicos para tabla de videos con 4 columnas */
+.videos-table-header {
+    background-color: white;
+    padding: 0.9rem 1rem;
+    font-weight: 600;
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1fr 1fr;
+    border-bottom: 1px solid #f1f1f1;
+    gap: 0.5rem;
+}
+
+.videos-table-row {
+    background-color: white;
+    padding: 0.9rem 1rem;
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1fr 1fr;
+    border-bottom: 1px solid #f1f1f1;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Estilos para videos en la tabla */
+.videos-table-row video {
+    max-width: 160px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para enlaces en la tabla */
+.videos-table-row a {
+    color: #3b82f6;
+    text-decoration: underline;
+    word-break: break-word;
+    font-size: 0.9rem;
+}
+
+.videos-table-row a:hover {
+    color: #1d4ed8;
+}
+
+/* Ajustar espaciado para contenido de videos */
+.videos-table-row > div {
+    display: flex;
+    align-items: center;
+}
+
+.videos-table-row > div:first-child {
+    font-weight: 500;
+}
+
+/* Estilos específicos para tabla de videos con 4 columnas */
+.videos-table-header {
+    background-color: white;
+    padding: 0.9rem 1rem;
+    font-weight: 600;
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1fr 1fr;
+    border-bottom: 1px solid #f1f1f1;
+    gap: 0.5rem;
+}
+
+.videos-table-row {
+    background-color: white;
+    padding: 0.9rem 1rem;
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1fr 1fr;
+    border-bottom: 1px solid #f1f1f1;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* Estilos para videos en la tabla */
+.videos-table-row video {
+    max-width: 160px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para enlaces en la tabla */
+.videos-table-row a {
+    color: #3b82f6;
+    text-decoration: underline;
+    word-break: break-word;
+    font-size: 0.9rem;
+}
+
+.videos-table-row a:hover {
+    color: #1d4ed8;
+}
+
+/* Ajustar espaciado para contenido de videos */
+.videos-table-row > div {
+    display: flex;
+    align-items: center;
+}
+
+.videos-table-row > div:first-child {
+    font-weight: 500;
 }
 
 .recursos-button-container {
@@ -642,4 +794,136 @@
 .loading-container p {
   color: #6b7280;
   font-size: 1rem;
+}
+
+/* Estilos responsivos */
+@media (max-width: 1024px) {
+  .tabla-container {
+    width: 95%;
+    margin-right: 20px;
+    padding: 1rem;
+  }
+
+  .videos-table-header,
+  .videos-table-row {
+    grid-template-columns: 1fr 1.5fr 0.8fr 0.8fr;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+  }
+
+  .videos-table-row video {
+    max-width: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .recursos {
+    padding: 1rem;
+  }
+
+  .recursos-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .recursos-title {
+    font-size: 1.3rem;
+  }
+
+  .tabla-container {
+    width: 100%;
+    margin-right: 0;
+    padding: 0.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .videos-table-header,
+  .videos-table-row {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .videos-table-header > div,
+  .videos-table-row > div {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f1f1f1;
+  }
+
+  .videos-table-header > div:before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .videos-table-row video {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+  .action-buttons {
+    justify-content: center;
+  }
+
+  .recursos-button-container {
+    bottom: 1rem;
+    right: 1rem;
+    width: 120px;
+  }
+
+  .recursos-button {
+    width: 120px;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+/* Error container cuando lessonId es undefined */
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 2rem;
+}
+
+.error-message {
+    background-color: #fff;
+    border: 2px solid #ef4444;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.error-message h3 {
+    color: #ef4444;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.error-message p {
+    color: #374151;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.primary-button {
+    background-color: #0e2ed1;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.primary-button:hover {
+    background-color: #0c26b8;
 }

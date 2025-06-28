@@ -11,46 +11,8 @@ h2 {
 .form-card {
   background: white;
   padding: 25px;
-  border-radius: 10px;
-  max-width: 600px;
+  border-radius: 10px;  max-width: 600px;
   margin: auto;
-}
-
-.avatar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 100px;
-  position: relative;
-}
-
-.avatar-circle {
-  width: 90px;
-  height: 90px;
-  background-color: #0f766e;
-  border-radius: 9999px;
-}
-.avatar-image {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #0f766e;
-}
-.btn-foto {
-  background-color: #e5e7eb;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-top: 10px;
-  z-index: 1;
-}
-
-.btn-foto:hover {
-  background-color: #d1d5db;
 }
 
 .form-card label {
@@ -79,18 +41,6 @@ h2 {
   flex: 1;
 }
 
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.checkbox-group label {
-  font-size: 14px;
-  color: #374151;
-}
-
 .btn-group {
   display: flex;
   justify-content: flex-end;
@@ -114,4 +64,25 @@ h2 {
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
+}
+
+/* Estilos para la sección de contraseña */
+.password-section {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.password-section h3 {
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.password-note {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 20px;
+  font-style: italic;
 }

@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Archivos de uploads (PDFs, etc.)
+uploads/
+
+# Logs
+*.log
+logs/

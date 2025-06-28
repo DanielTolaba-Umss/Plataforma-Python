@@ -41,12 +41,12 @@ public class StudentServiceTest {
     }
 
     @Test
-    void createStudent_WithCourses_ShouldAssignCoursesCorrectly() {
-        // Arrange
+    void createStudent_WithCourses_ShouldAssignCoursesCorrectly() {        // Arrange
         CreateStudentDto createDto = new CreateStudentDto();
         createDto.setNombres("Juan");
         createDto.setApellidos("Pérez");
         createDto.setEmail("juan.perez@example.com");
+        createDto.setPassword("Password123");
         createDto.setCursos(Arrays.asList(1L, 2L));
 
         CourseEntity course1 = new CourseEntity();
@@ -90,12 +90,12 @@ public class StudentServiceTest {
     }
 
     @Test
-    void createStudent_WithoutCourses_ShouldCreateStudentWithEmptyCourses() {
-        // Arrange
+    void createStudent_WithoutCourses_ShouldCreateStudentWithEmptyCourses() {        // Arrange
         CreateStudentDto createDto = new CreateStudentDto();
         createDto.setNombres("María");
         createDto.setApellidos("García");
         createDto.setEmail("maria.garcia@example.com");
+        createDto.setPassword("Password123");
 
         StudentEntity studentEntity = new StudentEntity();
         studentEntity.setId(2L);
@@ -119,9 +119,7 @@ public class StudentServiceTest {
         
         verify(studentRepository).save(any(StudentEntity.class));
         verifyNoInteractions(courseRepository);
-    }
-
-    @Test
+    }    @Test
     void updateStudent_WithNewCourses_ShouldUpdateCoursesCorrectly() {
         // Arrange
         Long studentId = 1L;
@@ -129,6 +127,7 @@ public class StudentServiceTest {
         updateDto.setNombres("Juan Carlos");
         updateDto.setApellidos("Pérez");
         updateDto.setEmail("juan.carlos.perez@example.com");
+        updateDto.setPassword("Password123");
         updateDto.setCursos(Arrays.asList(3L, 4L));
 
         StudentEntity existingStudent = new StudentEntity();
@@ -201,17 +200,16 @@ public class StudentServiceTest {
         when(studentRepository.findById(studentId)).thenReturn(Optional.of(studentEntity));
 
         // Act
-        Optional<StudentDto> result = studentService.getStudentById(studentId);
+        StudentDto result = studentService.getStudentById(studentId);
 
         // Assert
-        assertTrue(result.isPresent());
-        StudentDto studentDto = result.get();
-        assertEquals("Ana", studentDto.getNombres());
-        assertEquals("López", studentDto.getApellidos());
-        assertEquals("ana.lopez@example.com", studentDto.getEmail());
-        assertNotNull(studentDto.getCursos());
-        assertEquals(1, studentDto.getCursos().size());
-        assertTrue(studentDto.getCursos().contains(1L));
+
+        assertEquals("Ana", result.getNombres());
+        assertEquals("López",result.getApellidos());
+        assertEquals("ana.lopez@example.com", result.getEmail());
+        assertNotNull(result.getCursos());
+        assertEquals(1, result.getCursos().size());
+        assertTrue(result.getCursos().contains(1L));
         
         verify(studentRepository).findById(studentId);
     }

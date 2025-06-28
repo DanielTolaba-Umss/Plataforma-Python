@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import "/src/paginas/estudiante/estilos/Prueba.css";
 import Editor from "./Editor"; // 🔥 Editor separado
 import VisorPDF from "./VisorPDF"; // 🔥 VisorPDF separado
-import { useParams } from "react-router-dom";
+import LiveTranscription from "../../componentes/LiveTranscription"; // 🔥 Componente de transcripción en vivo
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 
 import { environment } from "../../environment/environment";
 
@@ -10,46 +11,89 @@ import { getResourceByLesson } from "../../api/videoService";
 import { convertToEmbedUrl } from "../../utils/convertYoutubeUrl";
 
 const Prueba = () => {
-  const { id } = useParams();
-  const [vistaActual, setVistaActual] = useState("pdf");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { courseId, lessonId } = useParams();
+  const tituloLeccion = location.state?.tituloLeccion || "Titulo no disponible";
+  const [pdfAbierto, setPdfAbierto] = useState(false);
+  const [practicaAbierta, setPracticaAbierta] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
+  const [pdfFilename, setPdfFilename] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log("🚀 ~ Prueba ~ user:", user);
 
   const esYoutube = (url) =>
     url.includes("youtube.com") || url.includes("youtu.be");
 
+  const togglePdf = () => {
+    setPdfAbierto(!pdfAbierto);
+    if (!pdfAbierto) {
+      setPracticaAbierta(false); // Cerrar práctica si se abre PDF
+    }
+  };
+
+  const togglePractica = () => {
+    setPracticaAbierta(!practicaAbierta);
+    if (!practicaAbierta) {
+      setPdfAbierto(false); // Cerrar PDF si se abre práctica
+    }
+  };
+
+  // Función para manejar cuando se completa una lección
+  const handleLessonCompleted = () => {
+    // Marcar en localStorage que una lección fue completada
+    // Esto será usado por el componente Lecciones para refrescarse
+    localStorage.setItem('lessonCompletedFlag', Date.now().toString());
+  };
+
   useEffect(() => {
-    const getVideo = async () => {
+    const getResources = async () => {
       try {
-        const leccion = await getResourceByLesson(id);
-        console.log("🚀 ~ useEffect ~ leccion:", leccion);
-        let embedUrl = leccion[0].url;
+        const leccion = await getResourceByLesson(lessonId);
+        console.log("🚀 ~ useEffect ~ recursos de lección:", leccion);
 
-        if (esYoutube(embedUrl)) {
-          embedUrl = convertToEmbedUrl(leccion[0].url);
-        } else {
-          embedUrl = `${environment.apiUrl}${leccion[0].url}`;
+        // Buscar video (typeId = 3)
+        const video = leccion.find((recurso) => recurso.typeId === 3);
+        if (video && video.url) {
+          let embedUrl = video.url;
+          if (esYoutube(embedUrl)) {
+            embedUrl = convertToEmbedUrl(video.url);
+          } else {          // Para videos locales, usar la URL base de archivos estáticos
+          embedUrl = `${environment.staticUrl}${video.url}`;
         }
-        console.log("🚀 ~ getVideo ~ embedUrl:", embedUrl);
-
-        if (embedUrl) {
-          setVideoUrl(embedUrl);
-        }
+        console.log("🚀 ~ getResources ~ Video URL:", embedUrl);
+        setVideoUrl(embedUrl);
+      }
+      
+      // Buscar PDF (typeId = 2)
+      const pdf = leccion.find((recurso) => recurso.typeId === 2);
+      if (pdf && pdf.url) {
+        // Extraer el nombre del archivo del URL
+        const filename = pdf.url.split("/").pop();
+        console.log("🚀 ~ getResources ~ PDF filename:", filename);
+        setPdfFilename(filename);
+      }
       } catch (error) {
-        console.error("Error al cargar la lección:", error);
+        console.error("Error al cargar los recursos de la lección:", error);
       }
     };
-    getVideo();
-  }, []);
+    getResources();
+  }, [lessonId]);
 
   return (
     <div className="prueba-container">
       <div className="contenedor-titulo-video">
         <header className="prueba-header">
-          <a href="/cursos/1/lecciones" className="volver">
-            &lt; Volver
-          </a>
-          <h1>Fundamentos Python</h1>
-          <h2>Lección 1: Título</h2>
+          <button
+            onClick={() => navigate(`/cursos/${courseId}/lecciones`)}
+            className="volver"
+          >
+            Volver a lecciones
+          </button>
+
+          <h2>
+            Lección {lessonId} : {tituloLeccion}
+          </h2>
         </header>
 
         <section className="video-section">
@@ -74,57 +118,84 @@ const Prueba = () => {
             ) : (
               <p>Cargando video...</p>
             )}
-          </div>
-
+          </div>{" "}
           <div
             className="transcriptor"
             role="region"
             aria-label="Transcriptor del video"
           >
-            <h3>TRANSCRIPTOR</h3>
-            <p>
-              El transcriptor aparecerá aquí cuando el video esté
-              reproduciéndose...
-            </p>
+            <LiveTranscription />
           </div>
         </section>
-      </div>
+      </div>{" "}
+      <div className="contenido-acordeon">
+        {/* Acordeón PDF */}
+        <div className="acordeon-item">
+          <div
+            className={`acordeon-header ${pdfAbierto ? "activo" : ""}`}
+            onClick={togglePdf}
+          >
+            <h3>📄 Material PDF</h3>
+            <span className={`acordeon-flecha ${pdfAbierto ? "abierta" : ""}`}>
+              ▼
+            </span>
+          </div>
+          <div
+            className={`acordeon-contenido ${
+              pdfAbierto ? "abierto" : "cerrado"
+            }`}
+          >
+            {pdfFilename ? (
+              <VisorPDF filename={pdfFilename} />
+            ) : (
+              <div className="visor-pdf">
+                <h4>Visor de PDF</h4>
+                <div
+                  style={{
+                    padding: "2rem",
+                    textAlign: "center",
+                    backgroundColor: "#f8f9fa",
+                    borderRadius: "8px",
+                    margin: "1rem 0",
+                  }}
+                >
+                  <p>No hay PDF disponible para esta lección.</p>
+                  <small>
+                    El docente aún no ha subido material de apoyo en PDF.
+                  </small>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
 
-      <div className="acciones">
-        <div className="tabs-central">
-          <span
-            className={`tab ${vistaActual === "pdf" ? "activo" : ""}`}
-            onClick={() => setVistaActual("pdf")}
+        {/* Acordeón Práctica */}
+        <div className="acordeon-item">
+          <div
+            className={`acordeon-header ${practicaAbierta ? "activo" : ""}`}
+            onClick={togglePractica}
           >
-            PDF
-          </span>
-          <span
-            className={`tab ${vistaActual === "practica" ? "activo" : ""}`}
-            onClick={() => setVistaActual("practica")}
+            <h3>💻 Práctica</h3>
+            <span
+              className={`acordeon-flecha ${practicaAbierta ? "abierta" : ""}`}
+            >
+              ▼
+            </span>
+          </div>
+          <div
+            className={`acordeon-contenido ${
+              practicaAbierta ? "abierto" : "cerrado"
+            }`}
           >
-            Práctica
-          </span>
+            <Editor 
+              titulo="Instrucciones de la práctica:" 
+              lessonId={lessonId} 
+              studentId={user.id} 
+              onLessonCompleted={handleLessonCompleted}
+            />
+          </div>
         </div>
       </div>
-
-      {/* 🔥 Mostrar solo uno según la vista */}
-      {vistaActual === "pdf" && (
-        <VisorPDF src="/src/assets/pythonbookPrueba.pdf" /> // Cambiar ruta del PDF
-      )}
-
-      {vistaActual === "practica" && (
-        <Editor
-          titulo="Instrucciones de la práctica:"
-          descripcion="Escribir un programa que pregunte el nombre del usuario en la consola y después de que el usuario lo introduzca muestre por pantalla la cadena ¡Hola nombre!, donde nombre es el nombre que el usuario haya introducido."
-        />
-      )}
-
-      <footer className="progreso-footer">
-        <div className="progreso-barra">
-          <div className="progreso"></div>
-        </div>
-        <span>25%</span>
-      </footer>
     </div>
   );
 };

@@ -8,6 +8,29 @@ export const useAuth = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const checkAuthentication = async () => {
+            const accessToken = localStorage.getItem('accessToken');
+            if (accessToken) {
+                try {
+                    const currentUser = authAPI.getCurrentUser();
+                    setUser(currentUser);
+                } catch (error) {
+                    console.error('Error al verificar el token:', error);
+                    const refreshed = await authAPI.refreshToken();
+                    if (refreshed) {
+                        setUser(authAPI.getCurrentUser());
+                    } else {
+                        setUser(null);
+                    }
+                }
+            }
+            setLoading(false);
+        };
+        
+        checkAuthentication();
+    }, []);
+
+    useEffect(() => {
         const currentUser = authAPI.getCurrentUser();
         if (currentUser) {
             setUser(currentUser);

@@ -1,0 +1,273 @@
+/* Modal Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Container */
+.modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal Header */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #0e2ed1;
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.modalTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Modal Content */
+.modalContent {
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.cursoInfo {
+  margin-bottom: 20px;
+  padding: 16px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.cursoInfo p {
+  margin: 0 0 8px 0;
+  font-size: 0.95rem;
+}
+
+.cursoInfo p:last-child {
+  margin-bottom: 0;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+/* Error Message */
+.errorMessage {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+/* No Students State */
+.noStudents {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+}
+
+.noStudents p {
+  margin: 0 0 8px 0;
+}
+
+/* Students List */
+.estudiantesList {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.estudianteItem {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.estudianteItem:last-child {
+  border-bottom: none;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  gap: 12px;
+}
+
+.checkboxLabel:hover {
+  background-color: #f1f5f9;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #667eea;
+  cursor: pointer;
+}
+
+.estudianteInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.estudianteNombre {
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.estudianteEmail {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+/* Modal Actions */
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 24px;
+  border-top: 1px solid #e5e7eb;
+  background-color: #f8fafc;
+  border-radius: 0 0 12px 12px;
+}
+
+.cancelButton,
+.assignButton {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+  border: 1px solid;
+}
+
+.cancelButton {
+  background-color: white;
+  border-color: #d1d5db;
+  color: #374151;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.assignButton {
+  background: #0e2ed1;
+  border-color: #0e2ed1;
+  color: white;
+}
+
+.assignButton:hover:not(:disabled) {
+  background: #057eef;
+  border-color: #057eef;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(14, 46, 209, 0.3);
+}
+
+.assignButton:disabled,
+.cancelButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+  
+  .modalHeader,
+  .modalContent,
+  .modalActions {
+    padding: 16px;
+  }
+  
+  .modalActions {
+    flex-direction: column;
+  }
+  
+  .cancelButton,
+  .assignButton {
+    width: 100%;
+  }
+}
