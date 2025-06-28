@@ -10,6 +10,55 @@ const AsignarEstudiantesModal = ({ isOpen, onClose, cursoId, cursoNombre }) => {
   const [asignando, setAsignando] = useState(false);
   const [error, setError] = useState(null);
 
+  const showSuccessNotification = (message) => {
+    // Crear una notificación personalizada de éxito
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 16px 24px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      z-index: 9999;
+      max-width: 400px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      background-color: #10b981;
+      animation: slideIn 0.3s ease-out;
+    `;
+    
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Agregar estilos de animación si no existen
+    if (!document.querySelector('#notification-styles')) {
+      const style = document.createElement('style');
+      style.id = 'notification-styles';
+      style.textContent = `
+        @keyframes slideIn {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+          from { transform: translateX(0); opacity: 1; }
+          to { transform: translateX(100%); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Remover la notificación después de 4 segundos
+    setTimeout(() => {
+      notification.style.animation = 'slideOut 0.3s ease-in';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          document.body.removeChild(notification);
+        }
+      }, 300);
+    }, 4000);
+  };
+
   const cargarEstudiantesNoAsignados = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -53,8 +102,8 @@ const AsignarEstudiantesModal = ({ isOpen, onClose, cursoId, cursoNombre }) => {
       // Recargar la lista para mostrar solo los no asignados
       await cargarEstudiantesNoAsignados();
       setEstudiantesSeleccionados([]);
-      // Mostrar mensaje de éxito
-      alert(`Se asignaron ${estudiantesSeleccionados.length} estudiantes al curso exitosamente`);
+      // Mostrar mensaje de éxito con notificación visual
+      showSuccessNotification(`Se asignaron ${estudiantesSeleccionados.length} estudiantes al curso exitosamente`);
     } catch (error) {
       console.error("Error al asignar estudiantes:", error);
       if (error.response?.status === 403) {

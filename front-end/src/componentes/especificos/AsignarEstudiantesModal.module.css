@@ -53,7 +53,7 @@
   align-items: center;
   padding: 24px;
   border-bottom: 1px solid #e5e7eb;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0e2ed1;
   color: white;
   border-radius: 12px 12px 0 0;
 }
@@ -229,14 +229,16 @@
 }
 
 .assignButton {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: #667eea;
+  background: #0e2ed1;
+  border-color: #0e2ed1;
   color: white;
 }
 
 .assignButton:hover:not(:disabled) {
+  background: #057eef;
+  border-color: #057eef;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(14, 46, 209, 0.3);
 }
 
 .assignButton:disabled,

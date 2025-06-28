@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 //import "docente/estilos/Recursos.css";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Edit, Trash, X, Upload, CheckCircle2 } from "lucide-react";
 import ErrorModal from "../../../componentes/comunes/ErrorModal";
 import { practiceAPI } from "../../../api/practice";
@@ -8,14 +8,15 @@ import { testCasesAPI } from "../../../api/testCases";
 import styles from "/src/paginas/docente/estilos/CrearQuiz.module.css";
 
 const FormularioCrearPractica = () => {
-  const { lessonId } = useParams();
+  const { lessonId, courseId } = useParams();
+  const navigate = useNavigate();
   // Modal states
   const [practiceData, setPracticeData] = useState({
     instrucciones: "",
     codigoInicial: "",
     solucionReferencia: "",
     restricciones: "",
-    intentosMax: 3,
+    intentosMax: 1, // Cambiado a 1 como valor por defecto
     leccionId: lessonId,
     testCases: [],
   });
@@ -283,7 +284,7 @@ const FormularioCrearPractica = () => {
       codigoInicial: "",
       solucionReferencia: "",
       restricciones: "",
-      intentosMax: 3,
+      intentosMax: 1, // Cambiado a 1
       leccionId: lessonId,
     });
     setShowPracticeModal(true);
@@ -301,7 +302,7 @@ const FormularioCrearPractica = () => {
       codigoInicial: "",
       solucionReferencia: "",
       restricciones: "",
-      intentosMax: 3,
+      intentosMax: 1, // Cambiado a 1
       leccionId: lessonId,
     });
     setShowPracticeModal(false);
@@ -396,7 +397,31 @@ const FormularioCrearPractica = () => {
         <ErrorModal message={errorMessage} onClose={closeErrorModal} />
       )}
 
-      <h2 className="recursos-title">Práctica</h2>
+      <div className="recursos-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h2 className="recursos-title">Práctica</h2>
+        <button
+          onClick={() => navigate(`/gestion-curso/lecciones/${courseId}`)}
+          className="recursos-back-button"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '8px 16px',
+            backgroundColor: '#0e2ed1',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: '500',
+            transition: 'background-color 0.3s ease'
+          }}
+          onMouseEnter={(e) => e.target.style.backgroundColor = '#057eef'}
+          onMouseLeave={(e) => e.target.style.backgroundColor = '#0e2ed1'}
+        >
+          Volver a lecciones
+        </button>
+      </div>
       <div className="recursos-content-wrapper">
         {loading ? (
           <div className="loading-container">
@@ -537,7 +562,8 @@ const FormularioCrearPractica = () => {
                   />
                 </div>
 
-                <div className="modal-form-full">
+                {/* Campo de Intentos Máximos oculto - se mantiene el valor por defecto */}
+                {/* <div className="modal-form-full">
                   <label>Intentos Máximos:</label>
                   <select
                     name="intentosMax"
@@ -550,7 +576,7 @@ const FormularioCrearPractica = () => {
                     <option value="2">2 Intentos</option>
                     <option value="3">3 Intentos</option>
                   </select>
-                </div>
+                </div> */}
 
                 {/* Sección de Casos de Prueba */}
                 <div className="modal-form-full">

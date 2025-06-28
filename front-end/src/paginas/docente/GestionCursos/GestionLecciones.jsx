@@ -22,6 +22,7 @@ import { leccionesAPI } from "../../../api/leccionService";
 import { convertToEmbedUrl } from "../../../utils/convertYoutubeUrl";
 import { environment } from "../../../environment/environment";
 import { getResourceByLesson } from "../../../api/videoService";
+import { pdfApi } from "../../../api/pdfService";
 import Practicas from "./FormularioCrearPractica";
 
 const GestionLecciones = () => {
@@ -51,6 +52,9 @@ const GestionLecciones = () => {
     practica: false,
   });
 
+  // Estado para almacenar URLs blob que necesitan limpieza
+  const [blobUrls, setBlobUrls] = useState([]);
+
   
 
   const {courseId} = useParams();
@@ -58,7 +62,60 @@ const GestionLecciones = () => {
   const nivelId = courseId ;
 
   const showNotification = (message, type) => {
-    alert(`${type.toUpperCase()}: ${message}`);
+    // Crear una notificación personalizada sin usar alert
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 16px 24px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      z-index: 9999;
+      max-width: 400px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      background-color: ${type === 'success' ? '#10b981' : '#ef4444'};
+      animation: slideIn 0.3s ease-out;
+    `;
+    
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Agregar estilos de animación si no existen
+    if (!document.querySelector('#notification-styles')) {
+      const style = document.createElement('style');
+      style.id = 'notification-styles';
+      style.textContent = `
+        @keyframes slideIn {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+          from { transform: translateX(0); opacity: 1; }
+          to { transform: translateX(100%); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Remover la notificación después de 4 segundos
+    setTimeout(() => {
+      notification.style.animation = 'slideOut 0.3s ease-in';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          document.body.removeChild(notification);
+        }
+      }, 300);
+    }, 4000);
+  };
+
+  // Función para cerrar modal de preview y limpiar recursos
+  const closePreviewModal = () => {
+    // Limpiar URLs blob para evitar memory leaks
+    blobUrls.forEach(url => URL.revokeObjectURL(url));
+    setBlobUrls([]);
+    setShowPreviewModal(false);
   };
 
   // Función para cargar lecciones - extraída para reutilizar
@@ -113,6 +170,13 @@ const GestionLecciones = () => {
     fetchLecciones();
   }, [fetchLecciones]);
 
+  // Limpiar URLs blob al desmontar el componente
+  useEffect(() => {
+    return () => {
+      blobUrls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [blobUrls]);
+
   // Función para toggle de secciones expandibles
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
@@ -123,6 +187,10 @@ const GestionLecciones = () => {
 
   // Función para mostrar la vista previa
   const handleShowPreview = async (leccion) => {
+    // Limpiar URLs blob anteriores
+    blobUrls.forEach(url => URL.revokeObjectURL(url));
+    setBlobUrls([]);
+
     setLeccionPreview(leccion);
     setShowPreviewModal(true);
     setExpandedSections({
@@ -152,12 +220,32 @@ const GestionLecciones = () => {
       }
 
       try {
-        pdfs = recursos
-          .filter((r) => r.typeId === 2)
-          .map((pdf) => ({
-            titulo: pdf.title,
-            url: `${environment.apiUrl.replace("/api", "")}${pdf.url}`,
-          }));
+        const pdfResources = recursos.filter((r) => r.typeId === 2);
+        const newBlobUrls = [];
+        pdfs = await Promise.all(
+          pdfResources.map(async (pdf) => {
+            try {
+              // Extraer el nombre del archivo de la URL
+              const filename = pdf.url.split('/').pop();
+              const blobUrl = await pdfApi.downloadPdf(filename);
+              newBlobUrls.push(blobUrl); // Almacenar para limpieza posterior
+              return {
+                titulo: pdf.title,
+                url: blobUrl,
+                filename: filename
+              };
+            } catch (err) {
+              console.error(`Error al cargar PDF ${pdf.title}:`, err);
+              return {
+                titulo: pdf.title,
+                url: null,
+                filename: pdf.url.split('/').pop(),
+                error: true
+              };
+            }
+          })
+        );
+        setBlobUrls(newBlobUrls); // Almacenar las URLs para limpieza
       } catch (err) {
         console.error("Error al procesar PDFs:", err);
       }
@@ -518,20 +606,47 @@ const GestionLecciones = () => {
                       {leccionPreview.recursos?.pdfs?.length > 0 ? (
                         leccionPreview.recursos.pdfs.map((pdf, index) => (
                           <div key={index} className={styles.documentItem}>
-                            {/* <span className={styles.pdfTitle}>
+                            <h5 style={{ marginBottom: '8px', color: '#333' }}>
                               {pdf.titulo || `Documento ${index + 1}`}
-                            </span> */}
-                            <iframe
-                              src={pdf.url}
-                              title={`PDF Preview ${index + 1}`}
-                              width="100%"
-                              height="500px"
-                              style={{
-                                border: "1px solid #ccc",
-                                marginTop: "8px",
-                                borderRadius: "8px",
-                              }}
-                            />
+                            </h5>
+                            {pdf.error ? (
+                              <div style={{ 
+                                padding: '20px', 
+                                textAlign: 'center', 
+                                border: '1px solid #ff6b6b',
+                                borderRadius: '8px',
+                                backgroundColor: '#ffe0e0'
+                              }}>
+                                <FileText size={24} style={{ color: '#ff6b6b', marginBottom: '8px' }} />
+                                <p style={{ color: '#d63031', margin: 0 }}>
+                                  Error al cargar el PDF: {pdf.filename}
+                                </p>
+                              </div>
+                            ) : pdf.url ? (
+                              <iframe
+                                src={pdf.url}
+                                title={`PDF Preview ${index + 1}`}
+                                width="100%"
+                                height="500px"
+                                style={{
+                                  border: "1px solid #ccc",
+                                  borderRadius: "8px",
+                                }}
+                              />
+                            ) : (
+                              <div style={{ 
+                                padding: '20px', 
+                                textAlign: 'center', 
+                                border: '1px solid #ddd',
+                                borderRadius: '8px',
+                                backgroundColor: '#f8f9fa'
+                              }}>
+                                <FileText size={24} style={{ color: '#6c757d', marginBottom: '8px' }} />
+                                <p style={{ color: '#6c757d', margin: 0 }}>
+                                  Cargando PDF...
+                                </p>
+                              </div>
+                            )}
                           </div>
                         ))
                       ) : (
@@ -656,14 +771,14 @@ const GestionLecciones = () => {
                   navigate(
                     `/gestion-curso/${nivelId}/lecciones/${leccionPreview.id}/recursos`
                   );
-                  setShowPreviewModal(false);
+                  closePreviewModal();
                 }}
               >
                 Ir a recursos
               </button>
               <button
                 className={styles.secondaryButton}
-                onClick={() => setShowPreviewModal(false)}
+                onClick={closePreviewModal}
               >
                 Cerrar
               </button>
