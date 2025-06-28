@@ -120,14 +120,9 @@ public class StudentProfileServiceImpl implements StudentProfileService {
                 enrollmentRepository.save(enrollment);
             }
             
-            // Calcular progreso de lecciones (50% del total)
-            int lessonProgressPercent = totalLessons > 0 ? (completedLessons * 50) / totalLessons : 0;
-            
-            // Calcular progreso del quiz (50% del total)
-            int quizProgressPercent = (enrollment.getQuizCompleted() != null && enrollment.getQuizCompleted()) ? 50 : 0;
-            
-            // Calcular progreso total
-            int totalProgressPercent = lessonProgressPercent + quizProgressPercent;
+            // Calcular progreso basado únicamente en lecciones completadas (100%)
+            // Los quizzes y prácticas no contribuyen al progreso del curso
+            int totalProgressPercent = totalLessons > 0 ? (completedLessons * 100) / totalLessons : 0;
             
             return new StudentCourseDto(
                     course.getId(),
@@ -144,8 +139,8 @@ public class StudentProfileServiceImpl implements StudentProfileService {
                     enrollment.getQuizScore(),
                     enrollment.getBestQuizScore(),
                     enrollment.getQuizAttempts() != null ? enrollment.getQuizAttempts() : 0,
-                    lessonProgressPercent,
-                    quizProgressPercent
+                    totalProgressPercent, // progreso de lecciones = progreso total
+                    0 // progreso del quiz no contribuye al progreso del curso
             );
         }).collect(Collectors.toList());
     }    @Override

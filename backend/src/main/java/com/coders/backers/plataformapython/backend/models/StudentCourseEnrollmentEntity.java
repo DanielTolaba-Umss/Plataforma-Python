@@ -100,24 +100,15 @@ public class StudentCourseEnrollmentEntity {
     protected void onUpdate() {
         updatedAt = Date.valueOf(LocalDate.now());
         
-        // Calcular progreso con 50% lecciones y 50% quiz
-        int lessonProgress = 0;
-        int quizProgress = 0;
-        
-        // Progreso de lecciones (50% del total)
+        // Calcular progreso basado únicamente en lecciones completadas (100%)
+        // Los quizzes y prácticas no contribuyen al progreso del curso
         if (totalLessons > 0) {
-            lessonProgress = (completedLessons * 50) / totalLessons;
+            progressPercentage = (completedLessons * 100) / totalLessons;
+        } else {
+            progressPercentage = 0;
         }
         
-        // Progreso del quiz (50% del total)
-        if (quizCompleted != null && quizCompleted) {
-            quizProgress = 50; // Si completó el quiz, obtiene el 50%
-        }
-        
-        // Progreso total = progreso lecciones + progreso quiz
-        progressPercentage = lessonProgress + quizProgress;
-        
-        // Marcar como completado si llegó al 100% (lecciones completadas Y quiz completado)
+        // Marcar como completado si completó todas las lecciones
         if (progressPercentage >= 100 && status == EnrollmentStatus.ACTIVE) {
             status = EnrollmentStatus.COMPLETED;
             completionDate = Date.valueOf(LocalDate.now());
@@ -159,19 +150,12 @@ public class StudentCourseEnrollmentEntity {
     
     // Método para calcular progreso manual (sin triggers automáticos)
     public int calculateProgress() {
-        int lessonProgress = 0;
-        int quizProgress = 0;
-        
-        // Progreso de lecciones (50% del total)
+        // Progreso basado únicamente en lecciones completadas (100%)
+        // Los quizzes y prácticas no contribuyen al progreso del curso
         if (totalLessons != null && totalLessons > 0) {
-            lessonProgress = (completedLessons * 50) / totalLessons;
+            return (completedLessons * 100) / totalLessons;
         }
         
-        // Progreso del quiz (50% del total)
-        if (quizCompleted != null && quizCompleted) {
-            quizProgress = 50; // Si completó el quiz, obtiene el 50%
-        }
-        
-        return lessonProgress + quizProgress;
+        return 0;
     }
 }

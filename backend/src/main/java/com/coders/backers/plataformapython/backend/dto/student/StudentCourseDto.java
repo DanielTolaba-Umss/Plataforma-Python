@@ -23,6 +23,6 @@ public class StudentCourseDto {
     private Integer quizScore;
     private Integer bestQuizScore;
     private Integer quizAttempts;
-    private int progresoLecciones; // Progreso específico de lecciones (0-50)
-    private int progresoQuiz; // Progreso específico del quiz (0-50)
+    private int progresoLecciones; // Progreso específico de lecciones (0-100) - determina el progreso total del curso
+    private int progresoQuiz; // Progreso específico del quiz (no contribuye al progreso del curso)
 }
